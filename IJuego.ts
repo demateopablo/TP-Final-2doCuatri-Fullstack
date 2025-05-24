@@ -1,4 +1,6 @@
+import { Jugador } from "./Jugador";
+
 export interface IJuego{
-  jugar(): void;
-  pagar(): void;
+  jugar(jugador:Jugador): void;
+  pagar(pPago: number): number;
 }
