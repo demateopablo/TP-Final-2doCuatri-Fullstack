@@ -1,12 +1,14 @@
+import * as rdl from 'readline-sync';
 import { Juego } from "../../Juego";
 import { Jugador } from "../../Jugador";
 import { Dado } from "./Dado";
 
 export class Craps extends Juego{
+  private pagoGanador: number = 2;
   private dado1: Dado;
   private dado2: Dado;
 
-  constructor(nombre: string, apuestaMin:number){
+  constructor(nombre: string, apuestaMin:number = 1000){
     super(nombre,apuestaMin);
     this.dado1 = new Dado(6);
     this.dado2 = new Dado(6);
@@ -24,42 +26,54 @@ export class Craps extends Juego{
     return "ninguno";
   }
 
-
   jugar(jugador:Jugador): void {
-    if(super.jugadorApto(jugador.monedero)){
-      let punto: number | null = null;
-      let sumaDados = this.dado1.arrojarDado() + this.dado2.arrojarDado();
-      let resultado = this.verSiEsPase(sumaDados);
-
-      if (resultado === "punto") {
-        punto = sumaDados;
-        console.log(`El punto es ${punto}`);
-      }else {
-        console.log(`La tirada inicial es ${sumaDados}.  ${resultado}`);
-        return;
-      }
-
-      while (true) {
-        sumaDados = this.dado1.arrojarDado() + this.dado2.arrojarDado();
-        resultado = this.verSiEsPunto(sumaDados, punto!);
-        if (resultado === "gana") {
-          console.log(`El punto ${punto} sale. Gana.`);
-          break;
+    if(super.jugadorApto(jugador.getMonedero())){
+      console.log(`Estas por jugar ${this.nombre}`);
+      let apuesta: number = rdl.questionInt("\nCuanto dinero deseas apostar?")
+        if(apuesta > this.apuestaMin){
+          jugador.modificarSaldo((-1)*apuesta);
+          let punto: number | null = null;
+          let sumaDados = this.dado1.arrojarDado() + this.dado2.arrojarDado();
+          let resultado = this.verSiEsPase(sumaDados);
+          if (resultado === "punto") {
+            punto = sumaDados;
+            console.log(`El punto es ${punto}`);
+          }else {
+            console.log(`La tirada inicial es ${sumaDados}.  ${resultado}`);
+            if (resultado === "gana") {
+              jugador.modificarSaldo(this.pagar(apuesta));
+            }
+            console.log(jugador.toString());
+            return;
+          }
+          let contador: number = 0;
+          while (true) {
+            contador++;
+            sumaDados = this.dado1.arrojarDado() + this.dado2.arrojarDado();
+            console.log(`Tirada ${contador} sale ${sumaDados}`);
+            resultado = this.verSiEsPunto(sumaDados, punto!);
+            if (resultado === "gana") {
+              console.log(`El punto ${punto} sale. Gana.`);
+              jugador.modificarSaldo(this.pagar(apuesta));
+              console.log(jugador.toString());
+              break;
+            }
+            if (resultado === "pierde") {
+              console.log(`Sale un 7. Pierde.`);
+              console.log(jugador.toString());
+              break;
+            }
+          }
+        }else{
+          console.log("No dispones de dinero suficiente");
+          jugador.apostar(this);
         }
-        if (resultado === "pierde") {
-          console.log(`Sale un 7. Pierde.`);
-          break;
-        }
-      }
     }else{
       console.log("No posee dinero suficiente");
-      
     }
   }
 
-  pagar(pPago:number): number {
-    let montoAPagar: number = pPago;
-
-    return montoAPagar;
+  pagar(apuesta:number): number {
+    return apuesta * this.pagoGanador;
   }
 }
