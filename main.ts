@@ -1,4 +1,4 @@
-import { Aplicacion } from "./app";
+import { Aplicacion } from "./Aplicacion";
 import { Casino } from "./Casino";
 import { Craps } from "./games/Craps/Craps";
 import { Jugador } from "./Jugador";
