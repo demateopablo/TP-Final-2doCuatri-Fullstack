@@ -2,13 +2,13 @@ import { Juego } from "./Juego";
 
 export class Jugador{
   private nombre:string;
-  private edad: number
+  private edad: number;
   private monedero:number;
 
-  constructor(nombre: string, edad: number, monedero: number){
+  constructor(nombre: string, edad: number){
     this.nombre = nombre;
     this.edad = edad;
-    this.monedero = monedero;
+    this.monedero = 0;
   }
 
   getNombre(): string{
@@ -24,7 +24,6 @@ export class Jugador{
   }
 
   modificarSaldo(monto: number): void{
-    // let suma: number = this.getMonedero() + monto;
     this.monedero += monto;
   }
 
@@ -33,7 +32,7 @@ export class Jugador{
   }
 
   toString(): string{
-    return `\nNombre: ${this.nombre}\n\tEdad: ${this.edad}\n\tDinero: ${this.monedero}\n`;
+    return `\nNombre:\t${this.nombre}\nEdad:\t${this.edad}\nSaldo:\t${this.monedero}`;
   }
 
 

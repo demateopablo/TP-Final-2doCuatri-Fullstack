@@ -10,10 +10,12 @@ export abstract class Juego implements IJuego{
     this.apuestaMin = apuestaMin;
   }
 
+  //Verifica si el jugador tiene saldo suficiente para jugar al juego
   jugadorApto(monedero: number): boolean{
-    return (monedero > this.apuestaMin)
+    return (monedero >= this.apuestaMin)
   }
 
+  //Imprime nombre del juego
   toString(): string{
     return this.nombre;
   }
