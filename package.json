@@ -1,0 +1,27 @@
+{
+  "name": "money.for.nothing",
+  "version": "1.0.0",
+  "description": "Programa de casino para jugar realizando apuestas",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/demateopablo/TP-Final-2doCuatri-Fullstack.git"
+  },
+  "keywords": [
+    "casino"
+  ],
+  "author": "Arias-Demateo-Seguel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/demateopablo/TP-Final-2doCuatri-Fullstack/issues"
+  },
+  "homepage": "https://github.com/demateopablo/TP-Final-2doCuatri-Fullstack#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10",
+    "tsc": "^2.0.4",
+    "typescript": "^5.8.2"
+  }
+}
