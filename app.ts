@@ -4,7 +4,7 @@ import { Jugador } from "./Jugador";
 
 export class Aplicacion{
 
-  public static instancia: Aplicacion;
+  public static instancia: Aplicacion; // patron de diseño Singleton
   private casino: Casino;
   private jugador: Jugador;
 
@@ -24,7 +24,17 @@ export class Aplicacion{
   //   }
   // }
 
-  getJugadore(): void{
+  // patron de diseño Singleton
+  public static getInstancia(casino: Casino, jugador: Jugador): Aplicacion{
+    if(!this.instancia){
+        this.instancia = new Aplicacion(casino, jugador);
+    }else{
+        console.log("la instancia ya existe");
+    }
+    return this.instancia;
+  }
+
+  getJugador(): void{
     console.log(`\n${this.jugador.toString()}`);
   }
 
@@ -48,4 +58,5 @@ export class Aplicacion{
     } while (opcElegida < 0 || opcElegida > cantOpciones)
     return opcElegida;
   }
+  
 }
