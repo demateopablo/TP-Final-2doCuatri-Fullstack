@@ -1,5 +1,5 @@
-import { Juego } from './Juego.ts'
-import { Jugador } from './Jugador.ts'
+import { Juego } from '../../Juego'
+import { Jugador } from '../../Jugador'
 //Objetivo del juego:
 // El objetivo del Black Jack es que el jugador obtenga una suma de cartas lo más cercana posible a 21 sin pasarse, y ganarle al crupier.
 //Cartas:
