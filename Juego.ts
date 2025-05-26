@@ -1,15 +1,26 @@
-import { IJuego } from './IJuego';
-import { Jugador } from './Jugador';
+import { IJuego } from "./IJuego";
+import { Jugador } from "./Jugador";
 
 export abstract class Juego implements IJuego{
-    nombre:string;
-    apuestaMinima:Number;
+  protected nombre: string;
+  protected apuestaMin: number;
 
-    constructor(pNombre:string,pApuestaMinima:number){
-        this.nombre=pNombre;
-        this.apuestaMinima=pApuestaMinima;
-    }
+  constructor(nombre: string, apuestaMin: number){
+    this.nombre = nombre;
+    this.apuestaMin = apuestaMin;
+  }
 
-    abstract jugar(jugador: Jugador): void;
-    abstract pagar(): number;
+  //Verifica si el jugador tiene saldo suficiente para jugar al juego
+  jugadorApto(monedero: number): boolean{
+    return (monedero >= this.apuestaMin)
+  }
+
+  //Imprime nombre del juego
+  toString(): string{
+    return this.nombre;
+  }
+
+  abstract jugar(jugador:Jugador): void;
+  abstract pagar(pago: number, jugador: Jugador): void;
+
 }
