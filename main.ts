@@ -1,6 +1,7 @@
 import { Aplicacion } from "./Aplicacion";
 import { Casino } from "./Casino";
 import { Craps } from "./games/Craps/Craps";
+import { Blackjack } from "./games/Blackjack/Blackjack";
 import { Jugador } from "./Jugador";
 
 let moneyForNothing: Casino = new Casino("Money.for(nothing)");
