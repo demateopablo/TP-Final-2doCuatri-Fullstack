@@ -25,6 +25,10 @@ export class Casino {
     return this.juegos[index];
   }
 
+  getCantJuegos(): number{
+    return this.juegos.length;
+  }
+
   agregarJuego(juego: Juego): void{
     this.juegos.push(juego);
   }

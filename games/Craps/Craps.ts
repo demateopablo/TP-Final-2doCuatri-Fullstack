@@ -8,7 +8,7 @@ export class Craps extends Juego{
   private dado1: Dado;
   private dado2: Dado;
 
-  constructor(nombre: string, apuestaMin:number = 1000){
+  constructor(nombre: string, apuestaMin: number){
     super(nombre,apuestaMin);
     this.dado1 = new Dado(6);
     this.dado2 = new Dado(6);
@@ -28,9 +28,9 @@ export class Craps extends Juego{
 
   jugar(jugador:Jugador): void {
     if(super.jugadorApto(jugador.getMonedero())){
-      console.log(`Estas por jugar ${this.nombre}`);
-      let apuesta: number = rdl.questionInt("\nCuanto dinero deseas apostar?")
-        if(apuesta > this.apuestaMin){
+      console.log(`Hola ${jugador.getNombre()}, estas por jugar ${this.nombre} `);
+      let apuesta: number = rdl.questionInt("\nCuanto dinero deseas apostar?: ")
+        if(apuesta >= this.apuestaMin){
           jugador.modificarSaldo((-1)*apuesta);
           let punto: number | null = null;
           let sumaDados = this.dado1.arrojarDado() + this.dado2.arrojarDado();
@@ -41,7 +41,7 @@ export class Craps extends Juego{
           }else {
             console.log(`La tirada inicial es ${sumaDados}.  ${resultado}`);
             if (resultado === "gana") {
-              jugador.modificarSaldo(this.pagar(apuesta));
+              jugador.modificarSaldo(this.pagar(apuesta) + apuesta);
             }
             console.log(jugador.toString());
             return;
@@ -54,7 +54,7 @@ export class Craps extends Juego{
             resultado = this.verSiEsPunto(sumaDados, punto!);
             if (resultado === "gana") {
               console.log(`El punto ${punto} sale. Gana.`);
-              jugador.modificarSaldo(this.pagar(apuesta));
+              jugador.modificarSaldo(this.pagar(apuesta) + apuesta);
               console.log(jugador.toString());
               break;
             }
@@ -64,16 +64,17 @@ export class Craps extends Juego{
               break;
             }
           }
-        }else{
-          console.log("No dispones de dinero suficiente");
-          jugador.apostar(this);
-        }
+      }else{
+        console.log("No dispones de dinero suficiente");
+        jugador.apostar(this);
+      }
     }else{
       console.log("No posee dinero suficiente");
     }
   }
 
   pagar(apuesta:number): number {
-    return apuesta * this.pagoGanador;
+    console.log(apuesta * this.pagoGanador);
+    return (apuesta * this.pagoGanador);
   }
 }

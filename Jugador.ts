@@ -24,6 +24,7 @@ export class Jugador{
   }
 
   modificarSaldo(monto: number): void{
+    // let suma: number = this.getMonedero() + monto;
     this.monedero += monto;
   }
 
