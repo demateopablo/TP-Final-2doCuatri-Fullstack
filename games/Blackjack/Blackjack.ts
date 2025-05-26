@@ -54,8 +54,8 @@ export class Blackjack extends Juego {
         cartasCrupier.push(this.repartirCarta());
     }
 
-    pagar(): number {
-        return 1;
+    pagar(apuesta:number,jugador:Jugador): void {
+        console.log("Hola");
     }
 
 }
