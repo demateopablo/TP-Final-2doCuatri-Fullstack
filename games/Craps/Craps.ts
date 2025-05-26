@@ -4,7 +4,7 @@ import { Jugador } from "../../Jugador";
 import { Dado } from "./Dado";
 
 export class Craps extends Juego{
-  private pagoGanador: number = 2;
+  private pagoGanador: number = 1; // paga 1:1
   private dado1: Dado;
   private dado2: Dado;
 
@@ -65,7 +65,7 @@ export class Craps extends Juego{
             }
           }
       }else{
-        console.log("No dispones de dinero suficiente");
+        console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}`);
         jugador.apostar(this);
       }
     }else{
@@ -75,7 +75,7 @@ export class Craps extends Juego{
 
   //TODO: creo que podriamos hacer el metodo pagar :void y pasar la apuesta por parametro junto con el jugador y modificar desde aca el monedero
   pagar(apuesta:number, jugador: Jugador): void {
-    jugador.modificarSaldo((apuesta) + apuesta);
+    jugador.modificarSaldo((apuesta * this.pagoGanador) + apuesta);
     // console.log(apuesta * this.pagoGanador);
     // return (apuesta * this.pagoGanador);
   }
