@@ -41,7 +41,7 @@ export class Craps extends Juego{
           }else {
             console.log(`La tirada inicial es ${sumaDados}.  ${resultado}`);
             if (resultado === "gana") {
-              jugador.modificarSaldo(this.pagar(apuesta) + apuesta);
+              this.pagar(apuesta, jugador);
             }
             console.log(jugador.toString());
             return;
@@ -54,7 +54,7 @@ export class Craps extends Juego{
             resultado = this.verSiEsPunto(sumaDados, punto!);
             if (resultado === "gana") {
               console.log(`El punto ${punto} sale. Gana.`);
-              jugador.modificarSaldo(this.pagar(apuesta) + apuesta);
+              this.pagar(apuesta, jugador);
               console.log(jugador.toString());
               break;
             }
@@ -74,8 +74,9 @@ export class Craps extends Juego{
   }
 
   //TODO: creo que podriamos hacer el metodo pagar :void y pasar la apuesta por parametro junto con el jugador y modificar desde aca el monedero
-  pagar(apuesta:number): number {
-    console.log(apuesta * this.pagoGanador);
-    return (apuesta * this.pagoGanador);
+  pagar(apuesta:number, jugador: Jugador): void {
+    jugador.modificarSaldo((apuesta) + apuesta);
+    // console.log(apuesta * this.pagoGanador);
+    // return (apuesta * this.pagoGanador);
   }
 }
