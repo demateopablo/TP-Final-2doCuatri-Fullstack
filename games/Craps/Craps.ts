@@ -73,6 +73,7 @@ export class Craps extends Juego{
     }
   }
 
+  //TODO: creo que podriamos hacer el metodo pagar :void y pasar la apuesta por parametro junto con el jugador y modificar desde aca el monedero
   pagar(apuesta:number): number {
     console.log(apuesta * this.pagoGanador);
     return (apuesta * this.pagoGanador);
