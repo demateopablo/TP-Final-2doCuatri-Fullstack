@@ -49,9 +49,9 @@ export class Aplicacion{
 
     let fabrica = new FabricaDeJuegos();
 
-    for(let opcion of todosLosJuegos){
-      let juego = fabrica.crear(opcion);
-      this.casino.agregarJuego(juego);
+    for(let juego of todosLosJuegos){
+      let nuevoJuego = fabrica.crear(juego);
+      this.casino.agregarJuego(nuevoJuego);
     }
 
     this.mostrarMenu();
