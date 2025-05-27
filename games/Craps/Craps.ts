@@ -8,8 +8,8 @@ export class Craps extends Juego{
   private dado1: Dado;
   private dado2: Dado;
 
-  constructor(nombre: string, apuestaMin: number){
-    super(nombre,apuestaMin);
+  constructor(){
+    super("Craps",1000);
     this.dado1 = new Dado(6);
     this.dado2 = new Dado(6);
   }
