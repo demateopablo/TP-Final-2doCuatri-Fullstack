@@ -1,6 +1,7 @@
 import * as rdl from 'readline-sync';
 import { Casino } from "./Casino";
 import { Jugador } from "./Jugador";
+import { FabricaDeJuegos } from './FabricaDeJuegos';
 
 export class Aplicacion{
 
@@ -13,25 +14,47 @@ export class Aplicacion{
     this.jugador = jugador;
   }
 
+  
   // registrarJugador(jugador: Jugador){
-  //   try {
-  //     if (jugador.getEdad() > this.casino.getEdadMin()) {
-  //       this.jugadores.push(jugador);
-  //     }
-  //   } catch (error) {
-  //     let e: Error = new Error("\nNo tienes edad suficiente para ingresar al casino\n")
-  //     console.log(e.message);
-  //   }
-  // }
+    //   try {
+      //     if (jugador.getEdad() > this.casino.getEdadMin()) {
+        //       this.jugadores.push(jugador);
+        //     }
+        //   } catch (error) {
+          //     let e: Error = new Error("\nNo tienes edad suficiente para ingresar al casino\n")
+          //     console.log(e.message);
+          //   }
+          // }
+          
+          // patron de diseño Singleton
 
-  // patron de diseño Singleton
   public static getInstancia(casino: Casino, jugador: Jugador): Aplicacion{
-    if(!this.instancia){
+    if(!this.instancia){  
         this.instancia = new Aplicacion(casino, jugador);
     }else{
         console.log("la instancia ya existe");
     }
     return this.instancia;
+  }
+
+  inicializar(){
+    
+    let todosLosJuegos = [
+      "Craps",
+      "Blackjack",
+      "Tragamonedas3",
+      "Tragamonedas5",
+      "Ruleta",
+    ];
+
+    let fabrica = new FabricaDeJuegos();
+
+    for(let opcion of todosLosJuegos){
+      let juego = fabrica.crear(opcion);
+      this.casino.agregarJuego(juego);
+    }
+
+    this.mostrarMenu();
   }
 
   getJugador(): void{
