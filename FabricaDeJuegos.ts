@@ -6,8 +6,8 @@ export class FabricaDeJuegos{
     public crear(opcion:string):Juego{
 
         switch(opcion){
-            case "1": return new Craps();
-            case "2": return new Blackjack();
+            case "Craps": return new Craps();
+            case "Blackjack": return new Blackjack();
             // case "3" :return TragaMonedas3();
             // case "4":return TragaMonedas5();
             // case "5": return new Ruleta();

@@ -39,12 +39,12 @@ export class Aplicacion{
 
   inicializar(){
     
-    let todosLosJuegos = [
+    let todosLosJuegos: string[] = [
       "Craps",
       "Blackjack",
-      "Tragamonedas3",
-      "Tragamonedas5",
-      "Ruleta",
+      // "Tragamonedas3",
+      // "Tragamonedas5",
+      // "Ruleta",
     ];
 
     let fabrica = new FabricaDeJuegos();
