@@ -1,4 +1,5 @@
 import * as rdl from 'readline-sync';
+import * as fs from 'fs';
 import { Casino } from "./Casino";
 import { Jugador } from "./Jugador";
 import { FabricaDeJuegos } from './FabricaDeJuegos';
@@ -25,14 +26,15 @@ export class Aplicacion{
           //     console.log(e.message);
           //   }
           // }
-          
-          // patron de diseño Singleton
+
+
+  // patron de diseño Singleton
 
   public static getInstancia(casino: Casino, jugador: Jugador): Aplicacion{
-    if(!this.instancia){  
-        this.instancia = new Aplicacion(casino, jugador);
+    if(!this.instancia){
+      this.instancia = new Aplicacion(casino, jugador);
     }else{
-        console.log("la instancia ya existe");
+      console.log("la instancia ya existe");
     }
     return this.instancia;
   }
@@ -81,5 +83,9 @@ export class Aplicacion{
     } while (opcElegida < 0 || opcElegida > cantOpciones)
     return opcElegida;
   }
-  
+
+  exportarSaldo(){
+    fs.writeFileSync(`${Date.now()}_saldo.txt`, this.jugador.toString());
+    console.log('\nSaldo guardado correctamente.');
+  }
 }
