@@ -69,7 +69,7 @@ export class Aplicacion{
     console.log("0 Salir");
     let opcion: number = this.preguntar("Elija una opcion: ",this.casino.getCantJuegos());
     if (opcion == 0) {
-      console.log("Funcion salir y exportar saldo");
+      this.exportarSaldo(); return;
     }else{
       this.casino.getJuego(opcion-1).jugar(this.jugador);
     }

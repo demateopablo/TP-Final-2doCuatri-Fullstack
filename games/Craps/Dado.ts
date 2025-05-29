@@ -12,4 +12,8 @@ export class Dado{
   arrojarDado(): number{
     return this.generadorAleatorio.generarNumeroAleatorio()
   }
+
+  imprimirCaraDado(valor: number): number{
+    return 9856+(valor-1);
+  }
 }
