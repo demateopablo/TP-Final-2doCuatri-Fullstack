@@ -19,9 +19,11 @@
     "start": "tsc main.ts && node main.js"
   },
   "dependencies": {
+    "fs": "^0.0.1-security",
     "readline-sync": "^1.4.10"
   },
   "devDependencies": {
+    "@types/node": "^22.15.24",
     "@types/readline-sync": "^1.4.8",
     "typescript": "^5.8.3"
   },

@@ -5,13 +5,11 @@ import { Dado } from "./Dado";
 
 export class Craps extends Juego{
   private pagoGanador: number = 1; // paga 1:1
-  private dado1: Dado;
-  private dado2: Dado;
+  private dado: Dado;
 
   constructor(){
     super("Craps",1000);
-    this.dado1 = new Dado(6);
-    this.dado2 = new Dado(6);
+    this.dado = new Dado(6);
   }
 
   verSiEsPase(sumaDados: number): string{
@@ -26,6 +24,14 @@ export class Craps extends Juego{
     return "ninguno";
   }
 
+  tirarDosDados(): number{
+    let dado1: number = this.dado.arrojarDado();
+    let dado2: number = this.dado.arrojarDado();
+    console.log(`\n${String.fromCodePoint(this.dado.imprimirCaraDado(dado1))} ${String.fromCodePoint(this.dado.imprimirCaraDado(dado2))}`);
+    console.log(`${(dado1)} ${(dado2)}\n`);
+    return dado1+dado2;
+  }
+
   jugar(jugador:Jugador): void {
     console.log(`Hola ${jugador.getNombre()}, estas por jugar ${this.nombre} `);
     let apuesta: number = rdl.questionInt("\nCuanto dinero deseas apostar?: $")
@@ -33,8 +39,8 @@ export class Craps extends Juego{
         if(apuesta >= this.apuestaMin){
           jugador.modificarSaldo((-1)*apuesta);
           let punto: number | null = null;
-          let sumaDados = this.dado1.arrojarDado() + this.dado2.arrojarDado();
-          let resultado = this.verSiEsPase(sumaDados);
+          let sumaDados: number = this.tirarDosDados();
+          let resultado: string = this.verSiEsPase(sumaDados);
           if (resultado === "punto") {
             punto = sumaDados;
             console.log(`El punto es ${punto}`);
@@ -43,29 +49,29 @@ export class Craps extends Juego{
             if (resultado === "gana") {
               this.pagar(apuesta, jugador);
             }
-            console.log(jugador.toString());
+            console.log(`${jugador.toString()}\n`);
             return;
           }
           let contador: number = 0;
           while (true) {
             contador++;
-            sumaDados = this.dado1.arrojarDado() + this.dado2.arrojarDado();
+            sumaDados = this.tirarDosDados();
             console.log(`Tirada ${contador} sale ${sumaDados}`);
             resultado = this.verSiEsPunto(sumaDados, punto!);
             if (resultado === "gana") {
-              console.log(`El punto ${punto} sale. Gana.`);
+              console.log(`\n-----------------\nEl punto ${punto} sale. Gana!!!\n-----------------`);
               this.pagar(apuesta, jugador);
               console.log(jugador.toString());
               break;
             }
             if (resultado === "pierde") {
-              console.log(`Sale un 7. Pierde.`);
+              console.log(`\n-----------------\nSale un 7. Pierde.\n-----------------`);
               console.log(jugador.toString());
               break;
             }
           }
       }else{
-        console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}`);
+        console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
         jugador.apostar(this);
       }
     }else{
@@ -73,10 +79,8 @@ export class Craps extends Juego{
     }
   }
 
-  //TODO: creo que podriamos hacer el metodo pagar :void y pasar la apuesta por parametro junto con el jugador y modificar desde aca el monedero
   pagar(apuesta:number, jugador: Jugador): void {
     jugador.modificarSaldo((apuesta * this.pagoGanador) + apuesta);
-    // console.log(apuesta * this.pagoGanador);
-    // return (apuesta * this.pagoGanador);
+
   }
 }

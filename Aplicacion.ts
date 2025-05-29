@@ -1,4 +1,5 @@
 import * as rdl from 'readline-sync';
+import * as fs from 'fs';
 import { Casino } from "./Casino";
 import { Jugador } from "./Jugador";
 import { FabricaDeJuegos } from './FabricaDeJuegos';
@@ -93,7 +94,7 @@ export class Aplicacion {
       this.casino.getJuego(opcion - 1).jugar(this.jugador);
       this.volverAJugarOIrAlMenu(opcion);
     } else if (op === 0) {
-      console.log("Funcion salir y exportar saldo");
+      this.exportarSaldo(); return;
     }
     else this.mostrarMenu();
   }
@@ -106,4 +107,8 @@ export class Aplicacion {
     return opcElegida;
   }
 
+  exportarSaldo(){
+    fs.writeFileSync(`${Date.now()}_saldo.txt`, this.jugador.toString());
+    console.log('\nSaldo guardado correctamente.');
+  }
 }
