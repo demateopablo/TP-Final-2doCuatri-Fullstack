@@ -35,8 +35,8 @@ export class Craps extends Juego{
   }
 
   jugar(jugador:Jugador): void {
-    console.log(`Hola ${jugador.getNombre()}, estas por jugar ${this.nombre} `);
-    let apuesta: number = rdl.questionInt("\nCuanto dinero deseas apostar?: $")
+    // console.log(`Hola ${jugador.getNombre()}, estas por jugar ${this.nombre} `);
+    let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
     if(super.jugadorApto(jugador.getMonedero(),apuesta)){
       if(apuesta >= this.apuestaMin){
         jugador.modificarSaldo((-1)*apuesta);
@@ -87,7 +87,7 @@ export class Craps extends Juego{
     while (true) {
       contador++;
       sumaDados = this.tirarDosDados();
-      console.log(`Tirada ${contador} sale ${sumaDados}`);
+      console.log(`Tirada ${contador} sale ${sumaDados}\t→ Recuerde, el punto es ${punto}`);
       if (opcApuestaInicial === 1) {
         if (sumaDados === punto) {
           console.log(`\n-----------------\nEl punto ${punto} sale. Gana!!!\n-----------------`);
