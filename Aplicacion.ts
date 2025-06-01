@@ -74,7 +74,7 @@ export class Aplicacion {
       this.mostrarMenu();
     }
     else if (opcion == 0) {
-      console.log("Funcion salir y exportar saldo");
+      this.exportarSaldo();
       return;
     } else {
       this.casino.getJuego(opcion - 1).jugar(this.jugador);
@@ -107,8 +107,9 @@ export class Aplicacion {
     return opcElegida;
   }
 
-  exportarSaldo(){
-    fs.writeFileSync(`${Date.now()}_saldo.txt`, this.jugador.toString());
+  exportarSaldo() {
+    let fecha: string = new Date().toLocaleDateString().replace("/","-").replace("/","-");
+    fs.writeFileSync(`./saldos/${fecha}_saldo.txt`, this.jugador.toString());
     console.log('\nSaldo guardado correctamente.');
   }
 }
