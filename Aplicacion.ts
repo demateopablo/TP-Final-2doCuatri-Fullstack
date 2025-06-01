@@ -41,13 +41,14 @@ export class Aplicacion {
       this.casino.agregarJuego(nuevoJuego);
     }
 
-    console.log(`\n  ~~ Bienvenido a Casino ${this.casino.getNombre()} ~~ `);
-    console.log(`→ Tu saldo actual es de: $${this.jugador.getMonedero()}. ¡No olvides hacer tu recarga!`);
-
+    console.clear();
+    console.log(`  ~~ Bienvenid@ al Casino ${this.casino.getNombre()} ~~  `);
+    console.log(`→ Tu saldo actual es de: $${this.jugador.getMonedero()}. ¡No olvides hacer tu recarga!\n`);
     this.mostrarMenu();
   }
 
   crearJugador(): Jugador {
+    console.clear();
     let nombre: string = rdl.question("Ingresa tu nombre: ");
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");
     let jugador = new Jugador(nombre, edad);
@@ -59,7 +60,6 @@ export class Aplicacion {
   }
 
   mostrarMenu(): void {
-    console.log("");
     this.casino.listarJuegos();
     console.log("----------");
     console.log(`${this.casino.getCantJuegos() + 1} Cargar saldo`);
@@ -70,7 +70,7 @@ export class Aplicacion {
     if (opcion == this.casino.getCantJuegos() + 1) {
       let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
       this.jugador.modificarSaldo(saldo);
-      console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}`);
+      console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
       this.mostrarMenu();
     }
     else if (opcion == 0) {
@@ -108,7 +108,7 @@ export class Aplicacion {
   }
 
   exportarSaldo() {
-    let fecha: string = new Date().toLocaleDateString().replace("/","-").replace("/","-");
+    let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
     fs.writeFileSync(`./saldos/${fecha}_saldo.txt`, this.jugador.toString());
     console.log('\nSaldo guardado correctamente.');
   }
