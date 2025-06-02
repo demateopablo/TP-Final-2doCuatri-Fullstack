@@ -61,18 +61,18 @@ export class Craps extends Juego{
             if (resultado === "gana") {
               console.log(`\n-----------------\nEl punto ${punto} sale. Gana!!!\n-----------------`);
               this.pagar(apuesta, jugador);
-              console.log(jugador.toString());
+              console.log("\n",jugador.toString());
               break;
             }
             if (resultado === "pierde") {
               console.log(`\n-----------------\nSale un 7. Pierde.\n-----------------`);
-              console.log(jugador.toString());
+              console.log("\n",jugador.toString());
               break;
             }
           }
       }else{
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
-        jugador.apostar(this);
+        this.jugar(jugador);
       }
     }else{
       console.log("No posee dinero suficiente");
