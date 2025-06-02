@@ -69,7 +69,7 @@ export class Blackjack extends Juego {
 
     private mezclarMazo(): void {
         for (let i = this.MAZO.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+            const j = new generadorNumeroAleatorio(0, i + 1).generarNumeroAleatorio();
             [this.MAZO[i], this.MAZO[j]] = [this.MAZO[j], this.MAZO[i]];
         }
     }
