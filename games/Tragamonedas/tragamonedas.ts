@@ -1,17 +1,26 @@
 import { Juego } from "../../Juego";
 import { Jugador } from "../../Jugador";
 
-export class TragaMonedas extends Juego{
+export class Tragamonedas extends Juego {
+  private rodillos: string[][];
 
-    constructor(){
-        super("Tragamonedas", 1000)
-    }
+  constructor(cantRodillos: number, rodillo: string[]) {
+    super("Tragamonedas", 500)
+    this.rodillos = new Array(cantRodillos);
+    this.agregarRodillos(rodillo);
+  }
 
-    jugar(jugador: Jugador): void {
-        throw new Error("Method not implemented.");
+  agregarRodillos(rodillo: string[]): void {
+    for (let i = 0; i < this.rodillos.length; i++) {
+      this.rodillos.push(rodillo)
     }
-    pagar(apuesta: number, jugador: Jugador): void {
-        throw new Error("Method not implemented.");
-    }
-    
+  }
+
+  jugar(jugador: Jugador): void {
+    //logica
+  };
+
+  pagar(apuesta: number, jugador: Jugador): void {
+    //logica
+  };
 }

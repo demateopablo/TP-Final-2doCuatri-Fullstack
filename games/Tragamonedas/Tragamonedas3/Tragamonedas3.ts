@@ -1,6 +1,9 @@
-import { TragaMonedas } from "../tragamonedas";
+import { Tragamonedas } from "../tragamonedas";
 
-export class TragaMonedas3 extends TragaMonedas {
-    
+export class Tragamonedas3 extends Tragamonedas {
+
+    constructor() {
+        super(3,["🛩️","♦️","♥️","👍","🤩"]);
+    }
     
 }
