@@ -35,7 +35,6 @@ export class Craps extends Juego{
   }
 
   jugar(jugador:Jugador): void {
-    // console.log(`Hola ${jugador.getNombre()}, estas por jugar ${this.nombre} `);
     let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
     if(super.jugadorApto(jugador.getMonedero(),apuesta)){
       if(apuesta >= this.apuestaMin){
@@ -43,7 +42,7 @@ export class Craps extends Juego{
         this.logicaScraps(jugador,apuesta)
       }else{
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
-        jugador.apostar(this);
+        this.jugar(jugador);
       }
     }else{
       console.log("No posee dinero suficiente");
