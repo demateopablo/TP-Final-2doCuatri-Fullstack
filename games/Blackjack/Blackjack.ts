@@ -69,7 +69,7 @@ export class Blackjack extends Juego {
 
     private mezclarMazo(): void {
         for (let i = this.MAZO.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
+            const j = new generadorNumeroAleatorio(0, i + 1).generarNumeroAleatorio();
             [this.MAZO[i], this.MAZO[j]] = [this.MAZO[j], this.MAZO[i]];
         }
     }
@@ -110,7 +110,7 @@ export class Blackjack extends Juego {
                 if (gano) this.pagar(apuesta, jugador);
             } else {
                 console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
-                jugador.apostar(this);
+                this.jugar(jugador);
             }
         } else {
             console.log("No posees dinero suficiente");
