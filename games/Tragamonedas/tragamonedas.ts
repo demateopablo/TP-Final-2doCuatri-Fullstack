@@ -1,12 +1,15 @@
+import { generadorNumeroAleatorio } from "../../generadorNumeroAleatorio";
 import { Juego } from "../../Juego";
 import { Jugador } from "../../Jugador";
 
 export class Tragamonedas extends Juego {
-  private rodillos: string[][];
+  protected rodillos: string[][];
+  protected nrosAleatorios: generadorNumeroAleatorio;
 
   constructor(cantRodillos: number, rodillo: string[]) {
     super("Tragamonedas", 500)
     this.rodillos = new Array(cantRodillos);
+    this.nrosAleatorios = new generadorNumeroAleatorio(0, rodillo.length)
     this.agregarRodillos(rodillo);
   }
 
