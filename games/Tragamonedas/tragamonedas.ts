@@ -4,13 +4,17 @@ import { Jugador } from "../../Jugador";
 
 export class Tragamonedas extends Juego {
   protected rodillo: string[];
+  protected matrizRodillos: string[][];
   protected cantRodillos: number;
+  protected cantLineas: number;
   protected nrosAleatorios: generadorNumeroAleatorio;
 
-  constructor(cantRodillos: number, rodillo: string[]) {
+  constructor(cantRodillos: number, cantLineas: number, rodillo: string[]) {
     super("Tragamonedas", 500)
     this.rodillo = rodillo;
+    this.matrizRodillos = Array.from({ length: cantRodillos }, () => Array(cantRodillos).fill(0));
     this.cantRodillos = cantRodillos;
+    this.cantLineas = cantLineas;
     this.nrosAleatorios = new generadorNumeroAleatorio(0, rodillo.length - 1)
     // this.agregarRodillos(rodillo);
   }

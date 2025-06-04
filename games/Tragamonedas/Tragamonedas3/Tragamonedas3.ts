@@ -5,7 +5,7 @@ import { Tragamonedas } from "../tragamonedas";
 export class Tragamonedas3 extends Tragamonedas {
 
   constructor() {
-    super(3, ["🛩️", "♦️", "♥️", "👍", "🤩"]);
+    super(3, 3, ["🛩️", "♦️", "♥️", "👍", "🤩"]);
   }
 
   jugar(jugador: Jugador): void {
@@ -13,7 +13,8 @@ export class Tragamonedas3 extends Tragamonedas {
     if(super.jugadorApto(jugador.getMonedero(),apuesta)){
       if(apuesta >= this.apuestaMin){
         jugador.modificarSaldo((-1)*apuesta);
-        this.logicaTragamonedas(jugador,apuesta)
+        this.girarRuleta();
+        // this.logicaTragamonedas(jugador,apuesta)
       }else{
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
         this.jugar(jugador);
@@ -23,21 +24,40 @@ export class Tragamonedas3 extends Tragamonedas {
     }
   }
 
-  logicaTragamonedas(jugador: Jugador,apuesta: number){
-    this.mostrarEnConsola(this.girarRuleta());
-  }
+  // logicaTragamonedas(jugador: Jugador,apuesta: number){
+  //   this.mostrarEnConsola(this.girarRuleta());
+  // }
 
-  girarRuleta(): number[]{
-    let indices: number[] = new Array(this.cantRodillos);
-    for (let i = 0; i < indices.length; i++) {
-      indices[i] = (this.nrosAleatorios.generarNumeroAleatorio());
+  girarRuleta(): void{
+    // let linea: string[] = [];
+    let indice: number;
+    // let indices: number[] = new Array(this.cantRodillos);
+    for (let i = 0; i < this.cantLineas; i++) {
+      for (let j = 0; j < this.cantRodillos; j++) {
+        indice = this.nrosAleatorios.generarNumeroAleatorio();
+        console.log(indice);
+        this.agregarAMatriz(this.rodillo[indice])
+      }
     }
-    console.log(indices);
-    return indices
+    console.log(this.rodillo);
+    console.log(this.matrizRodillos);
+    this.mostrarEnConsola();
+    // return indices
   }
 
-  mostrarEnConsola(indices: number[]){
-    console.log(`Linea central: | ${this.rodillo[indices[0]]} | ${this.rodillo[indices[1]]} | ${this.rodillo[indices[2]]} `);
+  agregarAMatriz(item: string):void{
+    for (let i = 0; i < this.cantRodillos; i++) {
+      for (let j = 0; j < this.cantRodillos; j++) {
+        this.matrizRodillos[i][j] = item;
+      }
+    }
+  }
+
+  mostrarEnConsola(){
+    for (let i = 0; i < this.cantRodillos; i++) {
+      console.log(`Linea ${i}: | ${this.matrizRodillos[i][0]}  | ${this.matrizRodillos[i][1]}  | ${this.matrizRodillos[i][2]}  |`);
+      // console.log(`Linea central: | ${this.rodillo[indices[0]]} | ${this.rodillo[indices[1]]} | ${this.rodillo[indices[2]]} `);
+    }
   }
 
 }
