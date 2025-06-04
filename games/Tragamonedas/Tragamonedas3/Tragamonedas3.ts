@@ -5,7 +5,10 @@ import { Tragamonedas } from "../tragamonedas";
 export class Tragamonedas3 extends Tragamonedas {
 
   constructor() {
-    super(3, 3, ["🛩️", "♦️", "♥️", "👍", "🤩"]);
+    // super(3, 3, [" GUS", " TA ", " VO ", " A  ", "RIAS"]);
+    super(3, 5, ["🛩️ ", "♦️ ", "♥️ ", "👍", "🤩"]);
+    // super(3, 3, ["🛩️ ", "♦️ ", "♥️ "]);
+
   }
 
   jugar(jugador: Jugador): void {
@@ -13,8 +16,7 @@ export class Tragamonedas3 extends Tragamonedas {
     if(super.jugadorApto(jugador.getMonedero(),apuesta)){
       if(apuesta >= this.apuestaMin){
         jugador.modificarSaldo((-1)*apuesta);
-        this.girarRuleta();
-        // this.logicaTragamonedas(jugador,apuesta)
+        this.girarRodillos();
       }else{
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
         this.jugar(jugador);
@@ -24,40 +26,50 @@ export class Tragamonedas3 extends Tragamonedas {
     }
   }
 
-  // logicaTragamonedas(jugador: Jugador,apuesta: number){
-  //   this.mostrarEnConsola(this.girarRuleta());
-  // }
-
-  girarRuleta(): void{
-    // let linea: string[] = [];
+  girarRodillos(): void{
     let indice: number;
-    // let indices: number[] = new Array(this.cantRodillos);
     for (let i = 0; i < this.cantLineas; i++) {
       for (let j = 0; j < this.cantRodillos; j++) {
         indice = this.nrosAleatorios.generarNumeroAleatorio();
-        console.log(indice);
-        this.agregarAMatriz(this.rodillo[indice])
+        this.matrizRodillos[i][j] = this.rodillo[indice];
       }
     }
-    console.log(this.rodillo);
-    console.log(this.matrizRodillos);
     this.mostrarEnConsola();
-    // return indices
   }
 
-  agregarAMatriz(item: string):void{
-    for (let i = 0; i < this.cantRodillos; i++) {
+  mostrarEnConsola():void{
+    let matrizToString: string = '';
+    for (let i = 0; i < this.cantLineas; i++) {
+      matrizToString += `Linea ${i+1}: |`;
       for (let j = 0; j < this.cantRodillos; j++) {
-        this.matrizRodillos[i][j] = item;
+        matrizToString += ` ${this.matrizRodillos[i][j]} |`;
       }
+      matrizToString +="\n";
+    }
+    console.log(`${matrizToString}`);
+    this.verSiGana();
+  }
+  verSiGana() {
+    if (this.matrizRodillos[0][0]===this.matrizRodillos[0][1] && this.matrizRodillos[0][1]===this.matrizRodillos[0][2]) {
+      console.log(`Coincidencia en linea superior!!`);
+      //this.pagar()
+    }
+    if (this.matrizRodillos[1][0]===this.matrizRodillos[1][1] && this.matrizRodillos[1][1]===this.matrizRodillos[1][2]) {
+      console.log(`Coincidencia en linea central!!`);
+      // console.log("Ganaste pa!!!");
+      //this.pagar()
+    }
+    if (this.matrizRodillos[2][0]===this.matrizRodillos[2][1] && this.matrizRodillos[2][1]===this.matrizRodillos[2][2]) {
+      console.log(`Coincidencia en linea inferior!!`);
+      // console.log("Ganaste pa!!!");
+      //this.pagar()
     }
   }
 
-  mostrarEnConsola(){
-    for (let i = 0; i < this.cantRodillos; i++) {
-      console.log(`Linea ${i}: | ${this.matrizRodillos[i][0]}  | ${this.matrizRodillos[i][1]}  | ${this.matrizRodillos[i][2]}  |`);
-      // console.log(`Linea central: | ${this.rodillo[indices[0]]} | ${this.rodillo[indices[1]]} | ${this.rodillo[indices[2]]} `);
-    }
+  pagar(apuesta: number, jugador: Jugador): void {
+      
   }
+
+
 
 }
