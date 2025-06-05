@@ -61,7 +61,7 @@ export abstract class Tragamonedas extends Juego {
   }
 
   mostrarEnConsola():void{
-    let matrizToString: string = '';
+    let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {
       matrizToString += `Linea ${i+1}: |`;
       for (let j = 0; j < this.cantRodillos; j++) {
