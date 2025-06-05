@@ -1,5 +1,5 @@
 import * as rdl from 'readline-sync';
-import { generadorNumeroAleatorio } from "../../generadorNumeroAleatorio";
+import { generadorNumeroAleatorio } from "../../GeneradorNumeroAleatorio";
 import { Juego } from "../../Juego";
 import { Jugador } from "../../Jugador";
 
@@ -50,6 +50,7 @@ export abstract class Tragamonedas extends Juego {
     return jugador.getMonedero();
   }
 
+  // Gira los rodillos de la tragamonedas y llena la matriz con los valores aleatorios
   girarRodillos(): void{
     let indice: number;
     for (let i = 0; i < this.cantLineas; i++) {
@@ -60,6 +61,7 @@ export abstract class Tragamonedas extends Juego {
     }
   }
 
+  // Muestra la matriz de rodillos en la consola
   mostrarEnConsola():void{
     let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {

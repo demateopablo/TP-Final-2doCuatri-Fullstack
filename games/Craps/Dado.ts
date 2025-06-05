@@ -1,4 +1,4 @@
-import { generadorNumeroAleatorio } from "../../generadorNumeroAleatorio";
+import { generadorNumeroAleatorio } from "../../GeneradorNumeroAleatorio";
 
 export class Dado{
   private caras: number;

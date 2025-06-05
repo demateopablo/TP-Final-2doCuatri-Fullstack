@@ -1,5 +1,5 @@
 import { Jugador } from "../../../Jugador";
-import { Tragamonedas } from "../tragamonedas";
+import { Tragamonedas } from "../Tragamonedas";
 
 export class Tragamonedas5 extends Tragamonedas {
     
