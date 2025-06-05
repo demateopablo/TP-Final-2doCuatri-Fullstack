@@ -12,43 +12,18 @@ export class Tragamonedas3 extends Tragamonedas {
   }
 
   jugar(jugador: Jugador): void {
-    let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
-    if(super.jugadorApto(jugador.getMonedero(),apuesta)){
-      if(apuesta >= this.apuestaMin){
-        jugador.modificarSaldo((-1)*apuesta);
-        this.girarRodillos();
-      }else{
-        console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
-        this.jugar(jugador);
-      }
-    }else{
-      console.log("No posee dinero suficiente");
-    }
+    const PESOS: number = super.pedirApuesta(jugador);
+    let cantTiradasPosibles: number = Math.floor(PESOS/this.apuestaMin);
+    jugador.modificarSaldo(PESOS % this.apuestaMin); //devuelve el resto
+    console.log(`Usted dispone de ${cantTiradasPosibles} giros`);
+    let opcGiros: number;
+    do{
+      opcGiros = rdl.questionInt(`Ingrese la opcion deseada:\n\t1 - Girar una vez\n\t2 - Girar todas las veces posibles\n\t0 - Retirarse`);
+
+    }while (opcGiros > 2 && opcGiros < 0)
+
   }
 
-  girarRodillos(): void{
-    let indice: number;
-    for (let i = 0; i < this.cantLineas; i++) {
-      for (let j = 0; j < this.cantRodillos; j++) {
-        indice = this.nrosAleatorios.generarNumeroAleatorio();
-        this.matrizRodillos[i][j] = this.rodillo[indice];
-      }
-    }
-    this.mostrarEnConsola();
-  }
-
-  mostrarEnConsola():void{
-    let matrizToString: string = '';
-    for (let i = 0; i < this.cantLineas; i++) {
-      matrizToString += `Linea ${i+1}: |`;
-      for (let j = 0; j < this.cantRodillos; j++) {
-        matrizToString += ` ${this.matrizRodillos[i][j]} |`;
-      }
-      matrizToString +="\n";
-    }
-    console.log(`${matrizToString}`);
-    this.verSiGana();
-  }
   verSiGana() {
     if (this.matrizRodillos[0][0]===this.matrizRodillos[0][1] && this.matrizRodillos[0][1]===this.matrizRodillos[0][2]) {
       console.log(`Coincidencia en linea superior!!`);
