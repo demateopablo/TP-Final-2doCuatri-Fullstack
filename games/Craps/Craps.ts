@@ -37,7 +37,7 @@ export class Craps extends Juego{
   jugar(jugador:Jugador): void {
     let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
     if(super.jugadorApto(jugador.getMonedero(),apuesta)){
-      if(apuesta >= this.apuestaMin){
+      if(super.leAlcanzaParaJugar(apuesta)){
         jugador.modificarSaldo((-1)*apuesta);
         this.logicaScraps(jugador,apuesta)
       }else{
