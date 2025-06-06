@@ -19,3 +19,30 @@ Generar un programa en el cual se puedan realizar apuestas dentro de un casino.
 7. Generar el UML (diagrama de clases) correspondiente al programa que van a desarrollar (diseño libre).
 8. Incorporar excel con pruebas funcionales.
 9. Se debe realizar en un Proyecto NPM Nuevo.
+
+---------
+
+## ▶️ Instrucciones para ejecutar el proyecto
+
+### 1. Clonar el repositorio
+
+```bash
+git clone <url-del-repo>
+cd <carpeta-del-proyecto>
+```
+
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Ejecutar el programa
+
+```bash
+npm run start
+```
+
+>[!note]
+>Asegurate de tener Node.js instalado.
+
