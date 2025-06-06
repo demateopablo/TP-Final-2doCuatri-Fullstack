@@ -3,11 +3,13 @@ import { Jugador } from "../../../Jugador";
 import { Tragamonedas } from "../Tragamonedas";
 
 export class Tragamonedas3 extends Tragamonedas {
+  private mu: number = (this.cantLineas+1)/2;
+  private sigma: number = 0.7;
 
   constructor() {
     // super(3, 3, [" GUS", " TA ", " VO ", " A  ", "RIAS"]);
-    // super(3, 3, ["🛩️ ", "♦️ ", "♥️ ", "👍", "🤩"]);
-    super(3, 3, ["🛩️ ", "♦️ ", "♥️ "]);
+    // super(3, 5, ["🛩️ ", "♦️ ", "♥️ ", "👍", "🤩"]);
+    super(3, 5, ["🛩️ ", "♦️ ", "♥️ ", "🤩"]);
 
   }
 
@@ -18,6 +20,7 @@ export class Tragamonedas3 extends Tragamonedas {
     jugador.modificarSaldo(PESOS % this.apuestaMin); //devuelve el resto
     console.log(`Usted dispone de ${cantTiradasPosibles} giros`);
     this.menuCantGiros(cantTiradasPosibles);
+    console.log(`\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
   }
 
   menuCantGiros(cantTiradasPosibles: number) {
@@ -29,10 +32,16 @@ export class Tragamonedas3 extends Tragamonedas {
   }
 
   opcCantGiros(opc: number, cantTiradasPosibles: number): void {
+    let multiplicadorGanancia: number = 0;
     switch (opc) {
       case 1:
         super.jugar(this.jugador);
+        multiplicadorGanancia = this.verSiGana();
+        if (multiplicadorGanancia != 0) {
+          this.pagar(this.apuestaMin * multiplicadorGanancia);
+        }
         cantTiradasPosibles--;
+        console.log(`------- Giros restantes: ${cantTiradasPosibles} -------`);
         if (cantTiradasPosibles > 0) {
           this.menuCantGiros(cantTiradasPosibles);
         }
@@ -40,11 +49,15 @@ export class Tragamonedas3 extends Tragamonedas {
       case 2:
         for (let i = 0; i < cantTiradasPosibles; i++) {
           super.jugar(this.jugador);
+          multiplicadorGanancia += this.verSiGana();
+          console.log(multiplicadorGanancia);
         }
+        console.log(multiplicadorGanancia);
+        this.pagar(this.apuestaMin * multiplicadorGanancia);
         break;
       default: // 0
-        this.jugador.modificarSaldo(cantTiradasPosibles * this.apuestaMin);
-        console.log(`Usted se ha retirado del juego.\n\t→ El dinero restante se ha devuelto a su monedero. Saldo actual: $${this.jugador.getMonedero()}`);
+          this.jugador.modificarSaldo(cantTiradasPosibles * this.apuestaMin);
+          console.log(`Usted se ha retirado del juego.\n\t→ El dinero restante se ha devuelto a su monedero. Saldo actual: $${this.jugador.getMonedero()}`);
         return;
     }
   }
@@ -60,40 +73,20 @@ export class Tragamonedas3 extends Tragamonedas {
     return match;
   }
 
-  verSiGana() {
-
+  verSiGana(): number {
     let multiplicadorGanancia: number = 0;
-
+    let gauss: number = 0;
     for (let i = 0; i < this.cantLineas; i++) {
       if (this.verificarFila(i)) {
         console.log(`Coincidencia en linea ${i + 1}`);
-        multiplicadorGanancia += 0.5;
+        gauss = Math.ceil(((super.gaussiana(i+1,this.mu,this.sigma)*100)/2)+1);
+        console.log(gauss);
+        multiplicadorGanancia += gauss
+        console.log(multiplicadorGanancia);
       }
     }
-    if (multiplicadorGanancia === 0) return;
-
-    //Falta hacer un multiplicador dinamico en base a la linea que haga match
-    /* if(matchEnLinea1){
-      this.apuestaMin * (1 + multiplicadorGanancia); 
-    }
-    this.pagar(gananciaTotal); */
-
-    let gananciaTotal:number = this.apuestaMin * (1 + multiplicadorGanancia);
-
-    this.pagar(gananciaTotal);
-
-    /*     if (this.matrizRodillos[0][0] === this.matrizRodillos[0][1] && this.matrizRodillos[0][1] === this.matrizRodillos[0][2]) {
-          console.log(`Coincidencia en linea superior!!`);
-          //this.pagar()
-        }
-        if (this.matrizRodillos[1][0] === this.matrizRodillos[1][1] && this.matrizRodillos[1][1] === this.matrizRodillos[1][2]) {
-          console.log(`Coincidencia en linea central!!`);
-    
-        }
-        if (this.matrizRodillos[2][0] === this.matrizRodillos[2][1] && this.matrizRodillos[2][1] === this.matrizRodillos[2][2]) {
-          console.log(`Coincidencia en linea inferior!!`);
-    
-        } */
+    if (multiplicadorGanancia === 0) return 0;
+    return multiplicadorGanancia;
   }
 
   pagar(apuesta: number): void {

@@ -41,8 +41,7 @@ export class Aplicacion {
       this.casino.agregarJuego(nuevoJuego);
     }
 
-    console.clear();
-    console.log(`  ~~ Bienvenid@ al Casino ${this.casino.getNombre()} ~~  `);
+    console.log(`  ~~ Bienvenid@ ${this.jugador.getNombre()} al Casino ${this.casino.getNombre()} ~~  \n`);
     console.log(`→ Tu saldo actual es de: $${this.jugador.getMonedero()}. ¡No olvides hacer tu recarga!\n`);
     this.mostrarMenu();
   }
@@ -52,6 +51,7 @@ export class Aplicacion {
     let nombre: string = rdl.question("Ingresa tu nombre: ");
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");
     let jugador = new Jugador(nombre, edad);
+    console.clear();
     return jugador;
   }
 
@@ -63,6 +63,7 @@ export class Aplicacion {
     this.casino.listarJuegos();
     console.log("----------");
     console.log(`${this.casino.getCantJuegos() + 1} Cargar saldo`);
+    console.log(`${this.casino.getCantJuegos() + 2} Consultar saldo`);
     console.log("0 Salir");
     console.log("----------");
     let opcion: number = this.preguntar("Elija una opcion: ", this.casino.getCantJuegos());
@@ -70,18 +71,25 @@ export class Aplicacion {
     if (opcion == this.casino.getCantJuegos() + 1) {
       let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
       this.jugador.modificarSaldo(saldo);
+      console.clear();
       console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
+      this.mostrarMenu();
+    }
+    if (opcion == this.casino.getCantJuegos() + 2) {
+      console.clear();
+      console.log(`Su saldo actual es de $${this.jugador.getMonedero()}\n`);
       this.mostrarMenu();
     }
     else if (opcion == 0) {
       this.exportarSaldo();
       return;
     } else {
+      console.clear();
       this.casino.getJuego(opcion - 1).jugar(this.jugador);
       this.volverAJugarOIrAlMenu(opcion);
     }
   }
-
+  
   volverAJugarOIrAlMenu(opcion: number): void {
     console.log("¿Deseas volver a jugar, o regresar al menú principal?")
     console.log("1 Volver a jugar");
@@ -91,6 +99,7 @@ export class Aplicacion {
     console.log("--------");
     let op: number = this.preguntar("Elije una opcion: ", 2);
     if (op === 1) {
+      console.clear();
       this.casino.getJuego(opcion - 1).jugar(this.jugador);
       this.volverAJugarOIrAlMenu(opcion);
     } else if (op === 0) {
@@ -103,7 +112,7 @@ export class Aplicacion {
     let opcElegida: number;
     do {
       opcElegida = rdl.questionInt(mensaje);
-    } while (opcElegida < 0 || opcElegida > cantOpciones + 1)
+    } while (opcElegida < 0 || opcElegida > cantOpciones + 2)
     return opcElegida;
   }
 

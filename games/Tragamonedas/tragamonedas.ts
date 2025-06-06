@@ -75,5 +75,11 @@ export abstract class Tragamonedas extends Juego {
     console.log(`${matrizToString}`);
   }
 
+  gaussiana(x: number, mu: number, sigma: number): number {
+    const coef = 1 / (sigma * Math.sqrt(2 * Math.PI));
+    const exponent = -Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2));
+    return coef * Math.exp(exponent);
+  }
+
   abstract pagar(apuesta: number, jugador: Jugador): void
 }
