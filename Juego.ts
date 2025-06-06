@@ -15,6 +15,10 @@ export abstract class Juego implements IJuego {
     return (monedero >= this.apuestaMin && monedero >= apuesta)
   }
 
+  leAlcanzaParaJugar(apuesta: number): boolean {
+    return (apuesta >= this.apuestaMin)
+  }
+
   //Imprime nombre del juego
   toString(): string {
     return this.nombre;
