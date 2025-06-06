@@ -2,7 +2,7 @@ import { Juego } from '../../Juego'
 import { Jugador } from '../../Jugador'
 import { Carta } from './Carta'
 import * as rdl from 'readline-sync';
-import { generadorNumeroAleatorio } from '../../GeneradorNumeroAleatorio';
+import { GeneradorNumeroAleatorio } from '../../GeneradorNumeroAleatorio';
 
 //Objetivo del juego:
 // El objetivo del Black Jack es que el jugador obtenga una suma de cartas lo más cercana posible a 21 sin pasarse, y ganarle al crupier.
@@ -69,7 +69,7 @@ export class Blackjack extends Juego {
 
     private mezclarMazo(): void {
         for (let i = this.MAZO.length - 1; i > 0; i--) {
-            const j = new generadorNumeroAleatorio(0, i + 1).generarNumeroAleatorio();
+            const j:number = new GeneradorNumeroAleatorio(0, i + 1).generarNumeroAleatorio();
             [this.MAZO[i], this.MAZO[j]] = [this.MAZO[j], this.MAZO[i]];
         }
     }
@@ -82,7 +82,7 @@ export class Blackjack extends Juego {
         this.reiniciarPartida();
         let apuesta: number = rdl.questionInt(`Cuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
         if (super.jugadorApto(jugador.getMonedero(), apuesta)) {
-            if (apuesta >= this.apuestaMin) {
+            if (super.leAlcanzaParaJugar(apuesta)) {
                 jugador.modificarSaldo((-1) * apuesta);
                 console.log(jugador.monederoToString());
                 console.log(`${jugador.getNombre()}, estas jugando Blackjack\n`);

@@ -1,4 +1,4 @@
-export class generadorNumeroAleatorio{
+export class GeneradorNumeroAleatorio{
   private numeroMin: number;
   private numeroMax: number;
 
