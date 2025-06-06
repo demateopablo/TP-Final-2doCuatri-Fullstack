@@ -1,12 +1,12 @@
-import { generadorNumeroAleatorio } from "../../generadorNumeroAleatorio";
+import { GeneradorNumeroAleatorio } from "../../GeneradorNumeroAleatorio";
 
 export class Dado{
   private caras: number;
-  private generadorAleatorio: generadorNumeroAleatorio;
+  private generadorAleatorio: GeneradorNumeroAleatorio;
 
   constructor(pCaras: number){
     this.caras = pCaras;
-    this.generadorAleatorio = new generadorNumeroAleatorio(1,this.caras)
+    this.generadorAleatorio = new GeneradorNumeroAleatorio(1,this.caras)
   }
 
   arrojarDado(): number{

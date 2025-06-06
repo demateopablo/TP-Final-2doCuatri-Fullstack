@@ -1,5 +1,5 @@
 import * as rdl from 'readline-sync';
-import { generadorNumeroAleatorio } from "../../generadorNumeroAleatorio";
+import { GeneradorNumeroAleatorio } from "../../GeneradorNumeroAleatorio";
 import { Juego } from "../../Juego";
 import { Jugador } from "../../Jugador";
 
@@ -8,18 +8,19 @@ export abstract class Tragamonedas extends Juego {
   protected matrizRodillos: string[][] = [];
   protected cantRodillos: number;
   protected cantLineas: number;
-  protected nrosAleatorios: generadorNumeroAleatorio;
+  protected nrosAleatorios: GeneradorNumeroAleatorio;
+  protected jugador!: Jugador; //se inicializa vacio y se asigna valor al jugar
 
   constructor(cantRodillos: number, cantLineas: number, rodillo: string[]) {
-    super(`Tragamonedas ${cantRodillos}`, 50)
+    super(`Tragamonedas ${cantRodillos}`, 50);
     this.rodillo = rodillo;
-    this.crearMatriz(cantRodillos,cantLineas);
+    this.crearMatriz(cantRodillos, cantLineas);
     this.cantRodillos = cantRodillos;
     this.cantLineas = cantLineas;
-    this.nrosAleatorios = new generadorNumeroAleatorio(0, rodillo.length - 1)
+    this.nrosAleatorios = new GeneradorNumeroAleatorio(0, rodillo.length - 1);
   }
 
-  crearMatriz(rod:number, lin:number){
+  crearMatriz(rod: number, lin: number) {
     for (let i = 0; i < lin; i++) {
       this.matrizRodillos[i] = [];
       for (let j = 0; j < rod; j++) {
@@ -28,29 +29,30 @@ export abstract class Tragamonedas extends Juego {
     }
   }
 
-  jugar(jugador: Jugador):void{
+  jugar(jugador:Jugador): void {
     this.girarRodillos();
     this.mostrarEnConsola();
   }
 
-  pedirApuesta(jugador: Jugador): number{
+  pedirApuesta(): number {
     let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
-    if(super.jugadorApto(jugador.getMonedero(),apuesta)){
-      if(apuesta >= this.apuestaMin){
-        jugador.modificarSaldo((-1)*apuesta);
+    if (super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
+      if (this.leAlcanzaParaJugar(apuesta)) {
+        this.jugador.modificarSaldo((-1) * apuesta);
         // this.jugar(jugador);
         return apuesta
-      }else{
+      } else {
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
-        this.pedirApuesta(jugador);
+        this.pedirApuesta();
       }
-    }else{
-      console.log("No posee dinero suficiente");
+    } else {
+      console.log("No posee dinero suficiente.");
     }
-    return jugador.getMonedero();
+    return this.jugador.getMonedero();
   }
 
-  girarRodillos(): void{
+  // Gira los rodillos de la tragamonedas y llena la matriz con los valores aleatorios
+  girarRodillos(): void {
     let indice: number;
     for (let i = 0; i < this.cantLineas; i++) {
       for (let j = 0; j < this.cantRodillos; j++) {
@@ -60,14 +62,15 @@ export abstract class Tragamonedas extends Juego {
     }
   }
 
-  mostrarEnConsola():void{
+  // Muestra la matriz de rodillos en la consola
+  mostrarEnConsola(): void {
     let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {
-      matrizToString += `Linea ${i+1}: |`;
+      matrizToString += `Linea ${i + 1}: |`;
       for (let j = 0; j < this.cantRodillos; j++) {
         matrizToString += ` ${this.matrizRodillos[i][j]} |`;
       }
-      matrizToString +="\n";
+      matrizToString += "\n";
     }
     console.log(`${matrizToString}`);
   }

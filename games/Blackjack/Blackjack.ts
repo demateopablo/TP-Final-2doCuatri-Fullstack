@@ -2,7 +2,7 @@ import { Juego } from '../../Juego'
 import { Jugador } from '../../Jugador'
 import { Carta } from './Carta'
 import * as rdl from 'readline-sync';
-import { generadorNumeroAleatorio } from '../../generadorNumeroAleatorio';
+import { GeneradorNumeroAleatorio } from '../../GeneradorNumeroAleatorio';
 
 //Objetivo del juego:
 // El objetivo del Black Jack es que el jugador obtenga una suma de cartas lo más cercana posible a 21 sin pasarse, y ganarle al crupier.
@@ -69,7 +69,7 @@ export class Blackjack extends Juego {
 
     private mezclarMazo(): void {
         for (let i = this.MAZO.length - 1; i > 0; i--) {
-            const j = new generadorNumeroAleatorio(0, i + 1).generarNumeroAleatorio();
+            const j:number = new GeneradorNumeroAleatorio(0, i + 1).generarNumeroAleatorio();
             [this.MAZO[i], this.MAZO[j]] = [this.MAZO[j], this.MAZO[i]];
         }
     }
@@ -82,7 +82,7 @@ export class Blackjack extends Juego {
         this.reiniciarPartida();
         let apuesta: number = rdl.questionInt(`Cuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
         if (super.jugadorApto(jugador.getMonedero(), apuesta)) {
-            if (apuesta >= this.apuestaMin) {
+            if (super.leAlcanzaParaJugar(apuesta)) {
                 jugador.modificarSaldo((-1) * apuesta);
                 console.log(jugador.monederoToString());
                 console.log(`${jugador.getNombre()}, estas jugando Blackjack\n`);
@@ -167,11 +167,9 @@ export class Blackjack extends Juego {
 
     private pedirORetirarse(): number {
         console.log(`Tenes ${this.puntajeJugador} puntos. ¿Pedis otra carta o te plantas? `);
-        console.log(`1 Pedir otra`);
-        console.log(`2 Plantarme`);
         let opcElegida: number;
         do {
-            opcElegida = rdl.questionInt(`Elegi la opcion: `);
+            opcElegida = rdl.questionInt(`\t1 Pedir otra\n\t2 Plantarme\nElija la opcion: `);
         } while (opcElegida < 1 || opcElegida > 2)
         return opcElegida;
     }
@@ -183,6 +181,9 @@ export class Blackjack extends Juego {
     }
 
     private validarResultado(): boolean {
+        const gana:string = 'Ganaste!';
+        const pierde:string = 'Perdiste!';
+        const empata:string = 'Empataste!';
         this.reducirAses(true); //con true es para crupier
         this.reducirAses(false); //false para jugador
         this.mostrarCartas(this.cartasCrupier, 0, this.cartasCrupier.length, true, false);
@@ -196,19 +197,19 @@ export class Blackjack extends Juego {
         let resultado: string = '';
 
         if (jugadorSePasa) {
-            resultado = 'Perdiste!';
+            resultado = pierde
         } else if (crupierSePasa) {
-            resultado = 'Ganaste!';
+            resultado = gana;
         } else if (this.puntajeJugador > this.puntajeCrupier) {
-            resultado = 'Ganaste!';
+            resultado = gana;
         } else if (this.puntajeJugador < this.puntajeCrupier) {
-            resultado = 'Perdiste!';
+            resultado = pierde;
         } else {
-            resultado = 'Empataste!';
+            resultado = empata;
         }
         let puntajes: string = `\n→ Crupier ${this.puntajeCrupier}\n→ Vos: ${this.puntajeJugador}`
         console.log(`\x1b[31m${resultado} \x1b[33m ${puntajes} \x1b[0m`);
-        if (resultado === 'Ganaste!') return true
+        if (resultado === gana) return true
         else return false
     }
 
