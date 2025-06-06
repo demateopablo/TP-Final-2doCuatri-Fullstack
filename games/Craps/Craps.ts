@@ -37,17 +37,19 @@ export class Craps extends Juego{
 
   jugar(jugador:Jugador): void {
     this.jugador = jugador; //Inicializamos el jugador en el atributo Jugador de la clase
+    console.clear();
     let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
     if(super.jugadorApto(jugador.getMonedero(),apuesta)){
       if(super.leAlcanzaParaJugar(apuesta)){
         jugador.modificarSaldo((-1)*apuesta);
+        console.clear();
         this.logicaScraps(apuesta)
       }else{
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
         this.jugar(jugador);
       }
     }else{
-      console.log("No posee dinero suficiente");
+      console.log("\n\tNo posee dinero suficiente\n");
     }
   }
 
@@ -57,24 +59,28 @@ export class Craps extends Juego{
     let sumaDados: number = this.tirarDosDados();
     if (opcApuestaInicial === 1){ //-------------------------------------------- modo pass line
       if(this.verSiEsWin(sumaDados)){
-        console.log(`La tirada inicial es ${sumaDados}.  GANA!!!`);
+        console.log(`\n-------------------------------------------------------\n\t\tLa tirada inicial es ${sumaDados}.  GANA!!!\n-------------------------------------------------------`);
         this.pagar(apuesta);
-        console.log(`${this.jugador.toString()}\n`);
+        // console.log(`${this.jugador.toString()}\n`);
+        console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
       } else if(this.verSiEsCrap(sumaDados)){
-        console.log(`La tirada inicial es ${sumaDados}.  PIERDE!!!`);
-        console.log(`${this.jugador.toString()}\n`);
+        console.log(`\n-------------------------------------------------------\n\t\tLa tirada inicial es ${sumaDados}.  PIERDE!!!\n-------------------------------------------------------`);
+        // console.log(`${this.jugador.toString()}\n`);
+        console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
       } else {
         this.seguirTirando(opcApuestaInicial, sumaDados, apuesta)
       }
     }
     if (opcApuestaInicial === 2){ //-------------------------------------------- modo dont pass bar
       if(this.verSiEsCrap(sumaDados)){
-        console.log(`La tirada inicial es ${sumaDados}.  GANA!!!`);
+        console.log(`\n-------------------------------------------------------\n\t\tLa tirada inicial es ${sumaDados}.  GANA!!!\n-------------------------------------------------------`);
         this.pagar(apuesta);
-        console.log(`${this.jugador.toString()}\n`);
+        // console.log(`${this.jugador.toString()}\n`);
+        console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
       } else if(this.verSiEsWin(sumaDados)){
-        console.log(`La tirada inicial es ${sumaDados}.  PIERDE!!!`);
-        console.log(`${this.jugador.toString()}\n`);
+        console.log(`\n-------------------------------------------------------\n\t\tLa tirada inicial es ${sumaDados}.  PIERDE!!!\n-------------------------------------------------------`);
+        // console.log(`${this.jugador.toString()}\n`);
+        console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
       } else {
         this.seguirTirando(opcApuestaInicial, sumaDados, apuesta)
       }
@@ -91,28 +97,32 @@ export class Craps extends Juego{
       console.log(`Tirada ${contador} sale ${sumaDados}\t→ Recuerde, el punto es ${punto}`);
       if (opcApuestaInicial === 1) {
         if (sumaDados === punto) {
-          console.log(`\n-----------------\nEl punto ${punto} sale. Gana!!!\n-----------------`);
+          console.log(`\n-------------------------------------------------------\n\t\tEl punto ${punto} sale. GANA!!!\n-------------------------------------------------------`);
           this.pagar(apuesta);
-          console.log(`${this.jugador.toString()}\n`);
+          // console.log(`${this.jugador.toString()}\n`);
+          console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
           break;
         } else {
           if (sumaDados === 7) {
-            console.log(`\n-----------------\nSale un 7. Usted pierde.\n-----------------`);
-            console.log(`${this.jugador.toString()}\n`);
+            console.log(`\n-------------------------------------------------------\n\t\tSale un 7. Usted PIERDE!!!.\n-------------------------------------------------------`);
+            // console.log(`${this.jugador.toString()}\n`);
+            console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
             break;
           }
         }
       }
       if (opcApuestaInicial === 2) {
         if (sumaDados === 7) {
-          console.log(`\n-----------------\nSale un 7. sale. Gana!!!\n-----------------`);
+          console.log(`\n-------------------------------------------------------\n\t\tSale un 7. sale. GANA!!!\n-------------------------------------------------------`);
           this.pagar(apuesta);
-          console.log(`${this.jugador.toString()}\n`);
+          // console.log(`${this.jugador.toString()}\n`);
+          console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
           break;
         } else {
           if (sumaDados === punto) {
-            console.log(`\n-----------------\nEl punto ${punto} sale. Usted pierde.\n-----------------`);
-            console.log(`${this.jugador.toString()}\n`);
+            console.log(`\n-------------------------------------------------------\n\t\tEl punto ${punto} sale. Usted PIERDE!!!.\n-------------------------------------------------------`);
+            // console.log(`${this.jugador.toString()}\n`);
+            console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
             break;
           }
         }

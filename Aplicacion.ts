@@ -105,7 +105,10 @@ export class Aplicacion {
     } else if (op === 0) {
       this.exportarSaldo(); return;
     }
-    else this.mostrarMenu();
+    else {
+      console.clear();
+      this.mostrarMenu();
+      }
   }
 
   preguntar(mensaje: string, cantOpciones: number): number {

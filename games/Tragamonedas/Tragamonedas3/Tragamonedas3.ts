@@ -3,14 +3,17 @@ import { Jugador } from "../../../Jugador";
 import { Tragamonedas } from "../Tragamonedas";
 
 export class Tragamonedas3 extends Tragamonedas {
-  private mu: number = (this.cantLineas+1)/2;
-  private sigma: number = 0.7;
+  private mu: number;
+  private sigma: number;
+  private atenuador: number;
 
   constructor() {
     // super(3, 3, [" GUS", " TA ", " VO ", " A  ", "RIAS"]);
-    // super(3, 5, ["🛩️ ", "♦️ ", "♥️ ", "👍", "🤩"]);
-    super(3, 5, ["🛩️ ", "♦️ ", "♥️ ", "🤩"]);
-
+    super(3, 3, ["🛩️ ", "♦️ ", "♥️ ", "👍", "🤩"]);
+    // super(3, 5, ["🛩️ ", "♦️ ", "♥️ ", "🤩"]);
+    this.mu = (this.cantLineas+1)/2;
+    this.sigma = (this.cantLineas+3-Math.ceil(this.cantRodillos/this.cantLineas))/10;
+    this.atenuador = (this.cantLineas*2/this.cantRodillos)
   }
 
   jugar(jugador: Jugador): void {
@@ -50,7 +53,6 @@ export class Tragamonedas3 extends Tragamonedas {
         for (let i = 0; i < cantTiradasPosibles; i++) {
           super.jugar(this.jugador);
           multiplicadorGanancia += this.verSiGana();
-          console.log(multiplicadorGanancia);
         }
         console.log(multiplicadorGanancia);
         this.pagar(this.apuestaMin * multiplicadorGanancia);
@@ -79,7 +81,7 @@ export class Tragamonedas3 extends Tragamonedas {
     for (let i = 0; i < this.cantLineas; i++) {
       if (this.verificarFila(i)) {
         console.log(`Coincidencia en linea ${i + 1}`);
-        gauss = Math.ceil(((super.gaussiana(i+1,this.mu,this.sigma)*100)/2)+1);
+        gauss = Math.ceil(((super.gaussiana(i+1,this.mu,this.sigma)*100)/this.atenuador));
         console.log(gauss);
         multiplicadorGanancia += gauss
         console.log(multiplicadorGanancia);
