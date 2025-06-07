@@ -3,63 +3,14 @@ import { Juego } from "../../Juego";
 import { Jugador } from "../../Jugador";
 import { Dado } from "./Dado";
 
-type ApuestaAdicional = {
-  tipoApuesta: string | number;
-  monto: number;
-  multiplicador:number;
-};
-
 export class Craps extends Juego{
   private pagoGanador: number = 1; // paga 1:1
   private dado: Dado;
   private jugador!: Jugador; //se inicializa vacio y se asigna valor al jugar
-  private arrayApuestas: ApuestaAdicional[] = []
 
   constructor(){
     super("Craps",1000);
     this.dado = new Dado(6);
-    this.arrayApuestas = [
-      {
-        tipoApuesta: "Come",
-        monto: 0,
-        multiplicador:1.25,
-      },
-      {
-        tipoApuesta: "Field",
-        monto: 0,
-        multiplicador:1,
-      },
-      {
-        tipoApuesta: "4",
-        monto: 0,
-        multiplicador:1.5,
-      },
-      {
-        tipoApuesta: "5",
-        monto: 0,
-        multiplicador:1.5,
-      },
-      {
-        tipoApuesta: "6",
-        monto: 0,
-        multiplicador:1.5,
-      },
-      {
-        tipoApuesta: "8",
-        monto: 0,
-        multiplicador:1.5,
-      },
-      {
-        tipoApuesta: "9",
-        monto: 0,
-        multiplicador:1.5,
-      },
-      {
-        tipoApuesta: "10",
-        monto: 0,
-        multiplicador:1.5,
-      }
-    ]
   }
 
   tirarDosDados(): number{
@@ -141,14 +92,10 @@ export class Craps extends Juego{
     let sumaDados: number;
     console.log(`\t→ El punto es ${punto}`);
     while (true) {
-      this.pedirApuestasAdicionales();
       contador++;
       sumaDados = this.tirarDosDados();
       console.log(`Tirada ${contador} sale ${sumaDados}\t→ Recuerde, el punto es ${punto}`);
       if (opcApuestaInicial === 1) {
-        if (sumaDados !== punto && sumaDados !== 7) {
-          this.comprobarApuestasAdicionales(sumaDados);
-        }
         if (sumaDados === punto) {
           console.log(`\n-------------------------------------------------------\n\t\tEl punto ${punto} sale. GANA!!!\n-------------------------------------------------------`);
           this.pagar(apuesta);
@@ -158,16 +105,13 @@ export class Craps extends Juego{
         } else {
           if (sumaDados === 7) {
             console.log(`\n-------------------------------------------------------\n\t\tSale un 7. Usted PIERDE!!!.\n-------------------------------------------------------`);
-            this.juntarApuestasDeLaMesa();
+            // console.log(`${this.jugador.toString()}\n`);
             console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
             break;
           }
         }
       }
       if (opcApuestaInicial === 2) {
-        if (sumaDados !== punto && sumaDados !== 7) {
-          this.comprobarApuestasAdicionales(sumaDados);
-        }
         if (sumaDados === 7) {
           console.log(`\n-------------------------------------------------------\n\t\tSale un 7. sale. GANA!!!\n-------------------------------------------------------`);
           this.pagar(apuesta);
@@ -177,58 +121,12 @@ export class Craps extends Juego{
         } else {
           if (sumaDados === punto) {
             console.log(`\n-------------------------------------------------------\n\t\tEl punto ${punto} sale. Usted PIERDE!!!.\n-------------------------------------------------------`);
-            this.juntarApuestasDeLaMesa();
+            // console.log(`${this.jugador.toString()}\n`);
             console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
             break;
           }
         }
       }
-    }
-  }
-
-
-  pedirApuestasAdicionales(){
-    let opcApuestaAdicional: number;
-    let montoApuestaAdicional: number;
-    let confirmacion: string;
-    do{
-      confirmacion = rdl.question("\nDesea efectuar una nueva apuesta? (y) Si, (n) No\n");
-      if (confirmacion === "y") {
-        console.clear();
-        this.listarOpcionesApuestas();
-        opcApuestaAdicional = rdl.questionInt("\nQue apuesta desea hacer?\n");
-        montoApuestaAdicional = rdl.questionInt("\nCuanto desea apostar?\n");
-        this.crearApuestaAdicional(opcApuestaAdicional,montoApuestaAdicional);
-      }
-      break
-    }while(confirmacion !== "n")
-  }
-
-  listarOpcionesApuestas(): void{
-    for (let i = 0; i < this.arrayApuestas.length; i++) {
-      console.log(`${i+1}: ${this.arrayApuestas[i].tipoApuesta}`);
-    }
-  }
-  crearApuestaAdicional(indice: number, apuesta: number){
-    this.arrayApuestas[indice].monto = apuesta;
-  }
-
-  comprobarApuestasAdicionales(sumaDados:number){
-    console.log(`Estoy comprobando apuesta`);
-    let indice: number = this.arrayApuestas.findIndex(apuesta => apuesta.tipoApuesta === sumaDados);
-    console.log(`Indice: ${indice}`);
-    if (indice !== -1) {
-      if (this.arrayApuestas[indice].monto !== 0) {
-        let pago: number = this.arrayApuestas[indice].monto * this.arrayApuestas[indice].multiplicador;
-        this.jugador.modificarSaldo(pago)
-        console.log(`Felicidades!!! Salió el ${sumaDados}, usted gana $${pago}`);
-      }
-    }
-  }
-
-  juntarApuestasDeLaMesa(): void{
-    for (let i = 0; i < this.arrayApuestas.length; i++) {
-      this.arrayApuestas[i].monto = 0;
     }
   }
 
