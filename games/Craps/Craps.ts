@@ -4,7 +4,7 @@ import { Jugador } from "../../Jugador";
 import { Dado } from "./Dado";
 
 type ApuestaAdicional = {
-  tipoApuesta: string | number;
+  tipoApuesta: string;
   monto: number;
   multiplicador:number;
 };
@@ -152,7 +152,7 @@ export class Craps extends Juego{
         if (sumaDados === punto) {
           console.log(`\n-------------------------------------------------------\n\t\tEl punto ${punto} sale. GANA!!!\n-------------------------------------------------------`);
           this.pagar(apuesta);
-          // console.log(`${this.jugador.toString()}\n`);
+          this.devolverApuestasDeLaMesa();
           console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
           break;
         } else {
@@ -171,7 +171,7 @@ export class Craps extends Juego{
         if (sumaDados === 7) {
           console.log(`\n-------------------------------------------------------\n\t\tSale un 7. sale. GANA!!!\n-------------------------------------------------------`);
           this.pagar(apuesta);
-          // console.log(`${this.jugador.toString()}\n`);
+          this.devolverApuestasDeLaMesa();
           console.log(`\n\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
           break;
         } else {
@@ -198,9 +198,9 @@ export class Craps extends Juego{
         this.listarOpcionesApuestas();
         opcApuestaAdicional = rdl.questionInt("\nQue apuesta desea hacer?\n");
         montoApuestaAdicional = rdl.questionInt("\nCuanto desea apostar?\n");
-        this.crearApuestaAdicional(opcApuestaAdicional,montoApuestaAdicional);
+        this.jugador.modificarSaldo((-1)*montoApuestaAdicional);
+        this.crearApuestaAdicional(opcApuestaAdicional-1,montoApuestaAdicional);
       }
-      break
     }while(confirmacion !== "n")
   }
 
@@ -210,17 +210,20 @@ export class Craps extends Juego{
     }
   }
   crearApuestaAdicional(indice: number, apuesta: number){
-    this.arrayApuestas[indice].monto = apuesta;
+    this.arrayApuestas[indice].monto += apuesta;
   }
 
   comprobarApuestasAdicionales(sumaDados:number){
+    let pago: number;
     console.log(`Estoy comprobando apuesta`);
-    let indice: number = this.arrayApuestas.findIndex(apuesta => apuesta.tipoApuesta === sumaDados);
+    let indice: number = this.arrayApuestas.findIndex(apuesta => apuesta.tipoApuesta === sumaDados.toString());
+    console.log(this.arrayApuestas);
     console.log(`Indice: ${indice}`);
     if (indice !== -1) {
       if (this.arrayApuestas[indice].monto !== 0) {
-        let pago: number = this.arrayApuestas[indice].monto * this.arrayApuestas[indice].multiplicador;
-        this.jugador.modificarSaldo(pago)
+        pago = this.arrayApuestas[indice].monto * this.arrayApuestas[indice].multiplicador;
+        this.jugador.modificarSaldo(pago);
+        this.arrayApuestas[indice].monto = 0;
         console.log(`Felicidades!!! Salió el ${sumaDados}, usted gana $${pago}`);
       }
     }
@@ -229,6 +232,12 @@ export class Craps extends Juego{
   juntarApuestasDeLaMesa(): void{
     for (let i = 0; i < this.arrayApuestas.length; i++) {
       this.arrayApuestas[i].monto = 0;
+    }
+  }
+
+  devolverApuestasDeLaMesa(): void{
+    for (let i = 0; i < this.arrayApuestas.length; i++) {
+      this.jugador.modificarSaldo(this.arrayApuestas[i].monto);
     }
   }
 
