@@ -20,7 +20,7 @@ export abstract class Tragamonedas extends Juego {
     this.nrosAleatorios = new GeneradorNumeroAleatorio(0, rodillo.length - 1);
   }
 
-  crearMatriz(rod: number, lin: number) {
+  private crearMatriz(rod: number, lin: number) {
     for (let i = 0; i < lin; i++) {
       this.matrizRodillos[i] = [];
       for (let j = 0; j < rod; j++) {
@@ -34,7 +34,7 @@ export abstract class Tragamonedas extends Juego {
     this.mostrarEnConsola();
   }
 
-  pedirApuesta(): number {
+  protected pedirApuesta(): number {
     let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
     if (super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
       if (this.leAlcanzaParaJugar(apuesta)) {
@@ -52,7 +52,7 @@ export abstract class Tragamonedas extends Juego {
   }
 
   // Gira los rodillos de la tragamonedas y llena la matriz con los valores aleatorios
-  girarRodillos(): void {
+  private girarRodillos(): void {
     let indice: number;
     for (let i = 0; i < this.cantLineas; i++) {
       for (let j = 0; j < this.cantRodillos; j++) {
@@ -63,7 +63,7 @@ export abstract class Tragamonedas extends Juego {
   }
 
   // Muestra la matriz de rodillos en la consola
-  mostrarEnConsola(): void {
+  private mostrarEnConsola(): void {
     let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {
       matrizToString += `Linea ${i + 1}: |`;
@@ -75,11 +75,11 @@ export abstract class Tragamonedas extends Juego {
     console.log(`${matrizToString}`);
   }
 
-  gaussiana(x: number, mu: number, sigma: number): number {
+  protected gaussiana(x: number, mu: number, sigma: number): number {
     const coef = 1 / (sigma * Math.sqrt(2 * Math.PI));
     const exponent = -Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2));
     return coef * Math.exp(exponent);
   }
 
-  abstract pagar(apuesta: number, jugador: Jugador): void
+  abstract pagar(apuesta: number): void
 }
