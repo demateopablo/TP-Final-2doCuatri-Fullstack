@@ -66,30 +66,36 @@ export class Aplicacion {
     console.log(`${this.casino.getCantJuegos() + 2} Consultar saldo`);
     console.log("0 Salir");
     console.log("----------");
-    let opcion: number = this.preguntar("Elija una opcion: ", this.casino.getCantJuegos());
+    let opcion: number = this.preguntar("Elija una opcion: ", this.casino.getCantJuegos() + 2);
     console.log("");
-    if (opcion == this.casino.getCantJuegos() + 1) {
-      let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
-      this.jugador.modificarSaldo(saldo);
-      console.clear();
-      console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
-      this.mostrarMenu();
-    }
-    if (opcion == this.casino.getCantJuegos() + 2) {
-      console.clear();
-      console.log(`Su saldo actual es de $${this.jugador.getMonedero()}\n`);
-      this.mostrarMenu();
-    }
-    else if (opcion == 0) {
-      this.exportarSaldo();
-      return;
-    } else {
-      console.clear();
-      this.casino.getJuego(opcion - 1).jugar(this.jugador);
-      this.volverAJugarOIrAlMenu(opcion);
+    switch (opcion) {
+      case 0: {
+        this.exportarSaldo();
+        return;
+      };
+      case this.casino.getCantJuegos() + 1: {
+        let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
+        this.jugador.modificarSaldo(saldo);
+        console.clear();
+        console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
+        this.mostrarMenu();
+        break;
+      };
+      case this.casino.getCantJuegos() + 2: {
+        console.clear();
+        console.log(`Su saldo actual es de $${this.jugador.getMonedero()}\n`);
+        this.mostrarMenu();
+        break;
+      };
+      default: {
+        console.clear();
+        this.casino.getJuego(opcion - 1).jugar(this.jugador);
+        this.volverAJugarOIrAlMenu(opcion);
+        break;
+      }
     }
   }
-  
+
   volverAJugarOIrAlMenu(opcion: number): void {
     console.log("¿Deseas volver a jugar, o regresar al menú principal?")
     console.log("1 Volver a jugar");
@@ -108,14 +114,14 @@ export class Aplicacion {
     else {
       console.clear();
       this.mostrarMenu();
-      }
+    }
   }
 
   preguntar(mensaje: string, cantOpciones: number): number {
     let opcElegida: number;
     do {
       opcElegida = rdl.questionInt(mensaje);
-    } while (opcElegida < 0 || opcElegida > cantOpciones + 2)
+    } while (opcElegida < 0 || opcElegida > cantOpciones)
     return opcElegida;
   }
 
