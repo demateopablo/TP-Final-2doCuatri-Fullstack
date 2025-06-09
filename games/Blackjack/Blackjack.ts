@@ -22,6 +22,7 @@ export class Blackjack extends Juego {
     private cantAsesCrupier: number;
     private puedePedir: boolean;
     private pagoGanador: number = 1.5;
+    private jugador!:Jugador;
 
     constructor() {
         super(`Blackjack`, 1500);
