@@ -9,10 +9,9 @@ export abstract class Tragamonedas extends Juego {
   protected cantRodillos: number;
   protected cantLineas: number;
   protected nrosAleatorios: GeneradorNumeroAleatorio;
-  protected jugador!: Jugador; //se inicializa vacio y se asigna valor al jugar
 
-  constructor(cantRodillos: number, cantLineas: number, rodillo: string[]) {
-    super(`Tragamonedas ${cantRodillos}`, 50);
+  constructor(cantRodillos: number, cantLineas: number, rodillo: string[], apuestaMinima:number) {
+    super(`Tragamonedas ${cantRodillos}`, apuestaMinima);
     this.rodillo = rodillo;
     this.crearMatriz(cantRodillos, cantLineas);
     this.cantRodillos = cantRodillos;

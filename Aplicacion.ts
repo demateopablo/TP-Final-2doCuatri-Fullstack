@@ -147,7 +147,7 @@ export class Aplicacion {
 
   private exportarSaldo() {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
-    fs.writeFileSync(`./saldos/${fecha}_saldo.txt`, this.jugador.toString());
+    fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
     console.log('\nSaldo guardado correctamente.');
   }
 }

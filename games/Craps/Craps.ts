@@ -6,7 +6,6 @@ import { Dado } from "./Dado";
 export class Craps extends Juego{
   private pagoGanador: number = 1; // paga 1:1
   private dado: Dado;
-  private jugador!: Jugador; //se inicializa vacio y se asigna valor al jugar
 
   constructor(){
     super("Craps",1000);
