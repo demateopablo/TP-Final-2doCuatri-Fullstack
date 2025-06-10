@@ -1,7 +1,7 @@
 import * as rdl from 'readline-sync';
 import * as fs from 'fs';
 import { Casino } from "./Casino";
-import { Jugador } from "./Jugador";
+import { Jugador } from "../entidades/Jugador";
 import { FabricaDeJuegos } from './FabricaDeJuegos';
 
 export class Aplicacion {
@@ -147,7 +147,7 @@ export class Aplicacion {
 
   private exportarSaldo() {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
-    fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
+    fs.appendFileSync(`./src/saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
     console.log('\nSaldo guardado correctamente.');
   }
 }

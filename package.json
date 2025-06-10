@@ -13,10 +13,10 @@
   "license": "ISC",
   "author": "Arias,Demateo,Seguel",
   "type": "commonjs",
-  "main": "main.js",
+  "main": "./src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc main.ts && node main.js"
+    "start": "tsc ./src/main.ts && node ./src/main.js"
   },
   "dependencies": {
     "fs": "0.0.1-security",

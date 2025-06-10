@@ -1,7 +1,7 @@
 import * as rdl from 'readline-sync';
-import { GeneradorNumeroAleatorio } from "../../GeneradorNumeroAleatorio";
-import { Juego } from "../../Juego";
-import { Jugador } from "../../Jugador";
+import { GeneradorNumeroAleatorio } from "../../servicios/GeneradorNumeroAleatorio";
+import { Juego } from "../../entidades/Juego";
+import { Jugador } from "../../entidades/Jugador";
 
 export abstract class Tragamonedas extends Juego {
   protected rodillo: string[];

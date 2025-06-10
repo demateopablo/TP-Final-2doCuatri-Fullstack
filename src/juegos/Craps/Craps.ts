@@ -1,6 +1,6 @@
 import * as rdl from 'readline-sync';
-import { Juego } from "../../Juego";
-import { Jugador } from "../../Jugador";
+import { Juego } from "../../entidades/Juego";
+import { Jugador } from "../../entidades/Jugador";
 import { Dado } from "./Dado";
 
 export class Craps extends Juego{

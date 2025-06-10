@@ -1,5 +1,5 @@
 import * as rdl from 'readline-sync';
-import { Jugador } from "../../../Jugador";
+import { Jugador } from "../../../entidades/Jugador";
 import { Tragamonedas } from "../Tragamonedas";
 
 export class Tragamonedas3 extends Tragamonedas {
