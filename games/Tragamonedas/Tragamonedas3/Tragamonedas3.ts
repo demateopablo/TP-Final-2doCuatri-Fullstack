@@ -6,7 +6,7 @@ export class Tragamonedas3 extends Tragamonedas {
   private mu: number;
   private sigma: number;
   private atenuador: number;
-  private static figuras:string[] = ["♠️ ", "♦️ ", "♥️ ", "♣️", "🎲", "⭐"];
+  private static figuras: string[] = ["♠️ ", "♦️ ", "♥️ ", "♣️ ", "🎲", "⭐"];
 
   constructor() {
     super(3, 3, Tragamonedas3.figuras);
@@ -18,6 +18,7 @@ export class Tragamonedas3 extends Tragamonedas {
   jugar(jugador: Jugador): void {
     this.jugador = jugador; //Inicializamos el jugador en el atributo Jugador de la clase
     const PESOS: number = super.pedirApuesta();
+    if (PESOS < this.apuestaMin) return; //no tiene saldo
     let cantTiradasPosibles: number = Math.floor(PESOS / this.apuestaMin);
     jugador.modificarSaldo(PESOS % this.apuestaMin); //devuelve el resto
     console.log(`Usted dispone de ${cantTiradasPosibles} giros`);
@@ -53,7 +54,7 @@ export class Tragamonedas3 extends Tragamonedas {
           super.jugar(this.jugador);
           multiplicadorGanancia += this.verSiGana();
         }
-        if(multiplicadorGanancia>0) this.pagar(this.apuestaMin * multiplicadorGanancia);
+        if (multiplicadorGanancia > 0) this.pagar(this.apuestaMin * multiplicadorGanancia);
         break;
       default: // 0
         this.jugador.modificarSaldo(cantTiradasPosibles * this.apuestaMin);

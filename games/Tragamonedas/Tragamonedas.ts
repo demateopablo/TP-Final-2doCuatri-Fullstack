@@ -35,11 +35,10 @@ export abstract class Tragamonedas extends Juego {
   }
 
   protected pedirApuesta(): number {
-    let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
+    let apuesta: number = rdl.questionInt(`\nCuantas tiradas deseas jugar? (cada giro cuesta $${this.apuestaMin}): `) * this.apuestaMin;
     if (super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
       if (this.leAlcanzaParaJugar(apuesta)) {
         this.jugador.modificarSaldo((-1) * apuesta);
-        // this.jugar(jugador);
         return apuesta
       } else {
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
@@ -47,6 +46,7 @@ export abstract class Tragamonedas extends Juego {
       }
     } else {
       console.log("No posee dinero suficiente.");
+      return 0;
     }
     return this.jugador.getMonedero();
   }

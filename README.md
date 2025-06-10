@@ -27,8 +27,8 @@ Generar un programa en el cual se puedan realizar apuestas dentro de un casino.
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repo>
-cd <carpeta-del-proyecto>
+git clone https://github.com/demateopablo/TP-Final-2doCuatri-Fullstack.git
+cd TP-Final-2doCuatri-Fullstack
 ```
 
 ### 2. Instalar dependencias
