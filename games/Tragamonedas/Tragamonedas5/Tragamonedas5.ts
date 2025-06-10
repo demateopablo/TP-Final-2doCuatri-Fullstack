@@ -2,12 +2,13 @@ import { Jugador } from "../../../Jugador";
 import { Tragamonedas } from "../Tragamonedas";
 
 export class Tragamonedas5 extends Tragamonedas {
+  private static figuras: string[] = ["🍇", "🍉", "🍒", "🍎", "🍑", "🍋", "🍓", "🥝", "🍌"];
 
   constructor() {
-    super(5, 5, ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]);
+    super(5, 5, Tragamonedas5.figuras, 50);
   }
 
-  pagar(apuesta: number, jugador: Jugador): void {
+  pagar(apuesta: number): void {
     throw new Error("Method not implemented.");
   }
 }

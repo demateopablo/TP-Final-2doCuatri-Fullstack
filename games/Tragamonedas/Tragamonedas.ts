@@ -9,10 +9,9 @@ export abstract class Tragamonedas extends Juego {
   protected cantRodillos: number;
   protected cantLineas: number;
   protected nrosAleatorios: GeneradorNumeroAleatorio;
-  protected jugador!: Jugador; //se inicializa vacio y se asigna valor al jugar
 
-  constructor(cantRodillos: number, cantLineas: number, rodillo: string[]) {
-    super(`Tragamonedas ${cantRodillos}`, 50);
+  constructor(cantRodillos: number, cantLineas: number, rodillo: string[], apuestaMinima:number) {
+    super(`Tragamonedas ${cantRodillos}`, apuestaMinima);
     this.rodillo = rodillo;
     this.crearMatriz(cantRodillos, cantLineas);
     this.cantRodillos = cantRodillos;
@@ -20,7 +19,7 @@ export abstract class Tragamonedas extends Juego {
     this.nrosAleatorios = new GeneradorNumeroAleatorio(0, rodillo.length - 1);
   }
 
-  crearMatriz(rod: number, lin: number) {
+  private crearMatriz(rod: number, lin: number) {
     for (let i = 0; i < lin; i++) {
       this.matrizRodillos[i] = [];
       for (let j = 0; j < rod; j++) {
@@ -34,12 +33,11 @@ export abstract class Tragamonedas extends Juego {
     this.mostrarEnConsola();
   }
 
-  pedirApuesta(): number {
-    let apuesta: number = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
+  protected pedirApuesta(): number {
+    let apuesta: number = rdl.questionInt(`\nCuantas tiradas deseas jugar? (cada giro cuesta $${this.apuestaMin}): `) * this.apuestaMin;
     if (super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
       if (this.leAlcanzaParaJugar(apuesta)) {
         this.jugador.modificarSaldo((-1) * apuesta);
-        // this.jugar(jugador);
         return apuesta
       } else {
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
@@ -47,12 +45,13 @@ export abstract class Tragamonedas extends Juego {
       }
     } else {
       console.log("No posee dinero suficiente.");
+      return 0;
     }
     return this.jugador.getMonedero();
   }
 
   // Gira los rodillos de la tragamonedas y llena la matriz con los valores aleatorios
-  girarRodillos(): void {
+  private girarRodillos(): void {
     let indice: number;
     for (let i = 0; i < this.cantLineas; i++) {
       for (let j = 0; j < this.cantRodillos; j++) {
@@ -63,7 +62,7 @@ export abstract class Tragamonedas extends Juego {
   }
 
   // Muestra la matriz de rodillos en la consola
-  mostrarEnConsola(): void {
+  private mostrarEnConsola(): void {
     let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {
       matrizToString += `Linea ${i + 1}: |`;
@@ -75,11 +74,11 @@ export abstract class Tragamonedas extends Juego {
     console.log(`${matrizToString}`);
   }
 
-  gaussiana(x: number, mu: number, sigma: number): number {
+  protected gaussiana(x: number, mu: number, sigma: number): number {
     const coef = 1 / (sigma * Math.sqrt(2 * Math.PI));
     const exponent = -Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2));
     return coef * Math.exp(exponent);
   }
 
-  abstract pagar(apuesta: number, jugador: Jugador): void
+  abstract pagar(apuesta: number): void
 }

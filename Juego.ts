@@ -4,6 +4,7 @@ import { Jugador } from "./Jugador";
 export abstract class Juego implements IJuego {
   protected nombre: string;
   protected apuestaMin: number;
+  protected jugador!:Jugador; //se inicializa vacio y se asigna valor al jugar
 
   constructor(nombre: string, apuestaMin: number) {
     this.nombre = nombre;

@@ -36,7 +36,7 @@ export class Jugador {
   }
 
   toString(): string {
-    return `Nombre:\t${this.nombre}\nEdad:\t${this.edad}\nSaldo:\t${this.monedero}`;
+    return `Nombre: ${this.nombre}\nEdad: ${this.edad}\nSaldo: $${this.monedero}`;
   }
 
 
