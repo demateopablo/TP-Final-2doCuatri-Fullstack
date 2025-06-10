@@ -1,4 +1,4 @@
-import { Jugador } from "../../../Jugador";
+import { Jugador } from "../../../entidades/Jugador";
 import { Tragamonedas } from "../Tragamonedas";
 
 export class Tragamonedas5 extends Tragamonedas {

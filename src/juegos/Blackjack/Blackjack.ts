@@ -1,8 +1,8 @@
-import { Juego } from '../../Juego'
-import { Jugador } from '../../Jugador'
+import { Juego } from '../../entidades/Juego'
+import { Jugador } from '../../entidades/Jugador'
 import { Carta } from './Carta'
 import * as rdl from 'readline-sync';
-import { GeneradorNumeroAleatorio } from '../../GeneradorNumeroAleatorio';
+import { GeneradorNumeroAleatorio } from '../../servicios/GeneradorNumeroAleatorio';
 
 //Objetivo del juego:
 // El objetivo del Black Jack es que el jugador obtenga una suma de cartas lo más cercana posible a 21 sin pasarse, y ganarle al crupier.

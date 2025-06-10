@@ -1,5 +1,4 @@
-import { FabricaDeJuegos } from "./FabricaDeJuegos";
-import { Juego } from "./Juego";
+import { Juego } from "../entidades/Juego";
 
 export class Casino {
   private nombre:string;
