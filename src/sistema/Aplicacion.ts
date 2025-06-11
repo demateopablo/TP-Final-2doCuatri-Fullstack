@@ -93,7 +93,7 @@ export class Aplicacion {
     let juego = this.casino.getJuego(idJuego - 1);
     if (juego.leAlcanzaParaJugar(this.jugador.getMonedero())) {
       juego.jugar(this.jugador);
-      this.volverAJugarOIrAlMenu(idJuego);
+      this.volverAJugarOIrAlMenu(idJuego -1);
     } else {
       console.log("No tenes saldo suficiente para jugar a este juego.\n");
       this.mostrarMenu();
