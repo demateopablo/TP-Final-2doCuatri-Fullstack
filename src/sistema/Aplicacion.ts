@@ -95,7 +95,7 @@ export class Aplicacion {
       juego.jugar(this.jugador);
       this.volverAJugarOIrAlMenu(idJuego);
     } else {
-      console.log("No tenes un mango ratón. Cargá saldo y volvé\n");
+      console.log("No tenes saldo suficiente para jugar a este juego.\n");
       this.mostrarMenu();
     }
   }
@@ -147,7 +147,7 @@ export class Aplicacion {
 
   private exportarSaldo() {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
-    fs.appendFileSync(`./src/saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
+    fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
     console.log('\nSaldo guardado correctamente.');
   }
 }
