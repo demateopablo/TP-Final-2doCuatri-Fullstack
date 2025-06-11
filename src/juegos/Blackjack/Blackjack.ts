@@ -108,7 +108,7 @@ export class Blackjack extends Juego {
           else this.plantarse();
         }
         const gano = this.validarResultado();
-        if (gano) this.pagar(apuesta, this.jugador);
+        if (gano) this.pagar(apuesta);
       } else {
         console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
         this.jugar(this.jugador);
@@ -214,11 +214,11 @@ export class Blackjack extends Juego {
     else return false
   }
 
-  pagar(apuesta: number, jugador: Jugador): void {
+  pagar(apuesta: number): void {
     let ganancia: number = (apuesta * this.pagoGanador) + apuesta;
-    jugador.modificarSaldo(ganancia);
+    this.jugador.modificarSaldo(ganancia);
     console.log(`\x1b[35m👑💎Apostaste ${apuesta} y ganaste $${ganancia} 🥳💸\x1b[0m`);
-    console.log(jugador.monederoToString());
+    console.log(this.jugador.monederoToString());
   }
 
 }

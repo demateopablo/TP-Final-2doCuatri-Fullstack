@@ -26,6 +26,6 @@ export abstract class Juego implements IJuego {
   }
 
   abstract jugar(jugador: Jugador): void;
-  abstract pagar(apuesta: number, jugador: Jugador): void;
+  abstract pagar(apuesta: number): void;
 
 }
