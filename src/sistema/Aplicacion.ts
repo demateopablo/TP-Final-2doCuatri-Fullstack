@@ -93,12 +93,13 @@ export class Aplicacion {
     let juego = this.casino.getJuego(idJuego - 1);
     if (juego.leAlcanzaParaJugar(this.jugador.getMonedero())) {
       juego.jugar(this.jugador);
-      this.volverAJugarOIrAlMenu(idJuego -1);
+      this.volverAJugarOIrAlMenu(idJuego);
     } else {
       console.log("No tenes saldo suficiente para jugar a este juego.\n");
       this.mostrarMenu();
     }
   }
+
   private cargarSaldo(): void {
     let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
     this.jugador.modificarSaldo(saldo);
@@ -122,7 +123,7 @@ export class Aplicacion {
     console.log("--------");
     let op: number = this.preguntar(`Elije una opcion: `, 2);
     if (op === 1) {
-      if (!this.casino.getJuego(opcion).leAlcanzaParaJugar(this.jugador.getMonedero())) {
+      if (!this.casino.getJuego(opcion - 1).leAlcanzaParaJugar(this.jugador.getMonedero())) {
         console.clear();
         console.log(`No tenes saldo suficiente para jugar a este juego.\n`);
         this.mostrarMenu();
