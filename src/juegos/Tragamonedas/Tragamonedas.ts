@@ -9,8 +9,14 @@ export abstract class Tragamonedas extends Juego {
   protected cantRodillos: number;
   protected cantLineas: number;
   protected nrosAleatorios: GeneradorNumeroAleatorio;
+  protected mu!: number;
+  protected sigma!: number;
+  protected atenuador!: number;
+  private gananciaDiagonal: number = 100;
+  private gananciaCentral: number = 2;
 
-  constructor(cantRodillos: number, cantLineas: number, rodillo: string[], apuestaMinima:number) {
+
+  constructor(cantRodillos: number, cantLineas: number, rodillo: string[], apuestaMinima: number) {
     super(`Tragamonedas ${cantRodillos}`, apuestaMinima);
     this.rodillo = rodillo;
     this.crearMatriz(cantRodillos, cantLineas);
@@ -28,9 +34,15 @@ export abstract class Tragamonedas extends Juego {
     }
   }
 
-  jugar(jugador:Jugador): void {
-    this.girarRodillos();
-    this.mostrarEnConsola();
+  jugar(jugador: Jugador): void {
+    this.jugador = jugador; //Inicializamos el jugador en el atributo Jugador de la clase
+    const PESOS: number = this.pedirApuesta();
+    if (PESOS < this.apuestaMin) return; //no tiene saldo
+    let cantTiradasPosibles: number = Math.floor(PESOS / this.apuestaMin);
+    jugador.modificarSaldo(PESOS % this.apuestaMin); //devuelve el resto
+    console.log(`Usted dispone de ${cantTiradasPosibles} giros`);
+    this.menuCantGiros(cantTiradasPosibles);
+    console.log(`\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
   }
 
   protected pedirApuesta(): number {
@@ -62,7 +74,7 @@ export abstract class Tragamonedas extends Juego {
   }
 
   // Muestra la matriz de rodillos en la consola
-  private mostrarEnConsola(): void {
+  protected mostrarEnConsola(): void {
     let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {
       matrizToString += `Linea ${i + 1}: |`;
@@ -79,6 +91,119 @@ export abstract class Tragamonedas extends Juego {
     const exponent = -Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2));
     return coef * Math.exp(exponent);
   }
+
+  protected verificarFila(lin: number): boolean {
+    let match: boolean = true;
+    let valor: string = this.matrizRodillos[lin][0];
+    let i: number = 1;
+    while (match && i < this.cantRodillos) {
+      match = (this.matrizRodillos[lin][i] === valor);
+      i++;
+    }
+    return match;
+  }
+
+  protected verSiGana(): number {
+    let multiplicadorGanancia: number = 0;
+    let gauss: number = 0;
+    for (let i = 0; i < this.cantLineas; i++) {
+      if (this.verificarFila(i)) {
+        gauss = this.calcularGananciaPorLinea(i + 1);
+        if ((Math.floor(this.cantRodillos / 2)) === i) { //cantRodillos / 2 es igual a la posicion del medio en el arreglo
+          console.log(`Coincidencia en linea central`);
+          multiplicadorGanancia += gauss * this.gananciaCentral;
+        } else {
+          console.log(`Coincidencia en linea ${i + 1}`);
+          multiplicadorGanancia += gauss
+        }
+      }
+    }
+    if (this.cantLineas === this.cantRodillos) { //es matriz cuadrada
+      if (this.verificarDiagonalPrimaria()) {
+        multiplicadorGanancia += this.gananciaDiagonal;
+      }
+      if (this.verificarDiagonalSecundaria()) {
+        multiplicadorGanancia += this.gananciaDiagonal;
+      }
+
+    }
+    if (multiplicadorGanancia === 0) return 0;
+    return multiplicadorGanancia;
+  }
+
+  private verificarDiagonalPrimaria(): boolean {
+    let match: boolean = true;
+    let valor: string = this.matrizRodillos[0][0];
+    let i: number = 1;
+    while (match && i < this.cantRodillos) {
+      match = (this.matrizRodillos[i][i] === valor);
+      i++;
+    }
+    if (match) console.log(`Coincidencia en diagonal primaria!`)
+    return match;
+  }
+
+  private verificarDiagonalSecundaria(): boolean {
+    let match: boolean = true;
+    let limite: number = this.cantRodillos - 1;
+    let valor: string = this.matrizRodillos[limite][0];
+    let i: number = 1;
+    limite -= 1;
+    while (match && i < this.cantRodillos) {
+      match = (this.matrizRodillos[limite][i] === valor);
+      i++;
+      limite--;
+    }
+    if (match) console.log(`Coincidencia en diagonal secundaria!`)
+    return match;
+  }
+
+
+  protected menuCantGiros(cantTiradasPosibles: number) {
+    let opcGiros: number;
+    do {
+      opcGiros = rdl.questionInt(`Jugadas disponibles:\n\t1 - Girar una vez\n\t2 - Girar ${cantTiradasPosibles} veces\n\t0 - Retirarse\nIngrese la opcion deseada: `);
+    } while (opcGiros < 0 || opcGiros > 2)
+    this.opcCantGiros(opcGiros, cantTiradasPosibles)
+  }
+
+  protected opcCantGiros(opc: number, cantTiradasPosibles: number): void {
+    let multiplicadorGanancia: number = 0;
+    switch (opc) {
+      case 1:
+        this.girarRodillos();
+        this.mostrarEnConsola();
+        multiplicadorGanancia = this.verSiGana();
+        if (multiplicadorGanancia > 0) {
+          this.pagar(this.apuestaMin * multiplicadorGanancia);
+        }
+        cantTiradasPosibles--;
+        console.log(`------- Giros restantes: ${cantTiradasPosibles} -------\n`);
+        if (cantTiradasPosibles > 0) {
+          this.menuCantGiros(cantTiradasPosibles);
+        }
+        break;
+      case 2:
+        for (let i = 0; i < cantTiradasPosibles; i++) {
+          this.girarRodillos();
+          this.mostrarEnConsola();
+          multiplicadorGanancia += this.verSiGana();
+        }
+        if (multiplicadorGanancia > 0) this.pagar(this.apuestaMin * multiplicadorGanancia);
+        break;
+      default: // 0
+        this.jugador.modificarSaldo(cantTiradasPosibles * this.apuestaMin);
+        console.log(`Usted se ha retirado del juego.\n\t→ El dinero restante se ha devuelto a su monedero. Saldo actual: $${this.jugador.getMonedero()}`);
+        return;
+    }
+  }
+
+  private calcularGananciaPorLinea(linea: number): number {
+    const peso = this.gaussiana(linea, this.mu, this.sigma);
+    const escalado = peso * 100;
+    return Math.ceil(escalado / this.atenuador);
+  }
+
 
   abstract pagar(apuesta: number): void
 }
