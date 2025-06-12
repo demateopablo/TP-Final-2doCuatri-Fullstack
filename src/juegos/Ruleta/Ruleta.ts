@@ -79,7 +79,7 @@ export class Ruleta extends Juego{
                     this.descontarSaldoPorFicha(paresImpares);
                     let restoPar: number = 0;
                     if(this.compararParesImpares(numAzar) === restoPar){
-                        this.pagar(this.valorFicha, jugador);
+                        this.pagar(this.valorFicha);
                         this.imprimirGanador(numAzar);
                     }else {
                         this.imprimirPerdedor(numAzar);
@@ -89,7 +89,7 @@ export class Ruleta extends Juego{
                     this.descontarSaldoPorFicha(paresImpares);
                     let restoImpar: number = 1;
                     if(this.compararParesImpares(numAzar) === restoImpar){
-                        this.pagar(this.valorFicha, jugador);
+                        this.pagar(this.valorFicha);
                         this.imprimirGanador(numAzar);
                     }else {
                         this.imprimirPerdedor(numAzar);
@@ -98,7 +98,7 @@ export class Ruleta extends Juego{
                 case 3: numAzar = this.opcion.generarNumeroAleatorio();
                     this.descontarSaldoPorFicha(this.conjuntoRojo.length);
                     if(this.compararNumeros(this.conjuntoRojo,numAzar)){
-                        this.pagar(this.valorFicha, jugador);
+                        this.pagar(this.valorFicha);
                         this.imprimirGanador(numAzar);
                     }else {
                         this.imprimirPerdedor(numAzar);
@@ -108,7 +108,7 @@ export class Ruleta extends Juego{
                     this.descontarSaldoPorFicha(this.conjuntoNegro.length);
                     
                     if(this.compararNumeros(this.conjuntoNegro,numAzar)){
-                        this.pagar(this.valorFicha, jugador);
+                        this.pagar(this.valorFicha);
                         this.imprimirGanador(numAzar);
                     }else {
                         this.imprimirPerdedor(numAzar);
@@ -216,8 +216,8 @@ export class Ruleta extends Juego{
         return arr.includes(numAleatorio);
     }
 
-    pagar(valorFicha: number, jugador: Jugador): void {
-        jugador.modificarSaldo((this.valorFicha * this.pagoColor) + valorFicha);
+    pagar(valorFicha: number): void {
+        this.jugador.modificarSaldo((this.valorFicha * this.pagoColor) + valorFicha);
     }
 
     pagarDocena(valorFicha: number): void{
