@@ -16,6 +16,5 @@ export class FabricaDeJuegos{
             case "Ruleta": return new Ruleta();
             default: throw new Error("La opción no es valida");
         }
-
     }
 }

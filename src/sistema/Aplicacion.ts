@@ -9,21 +9,27 @@ export class Aplicacion {
   public static instancia: Aplicacion; // patron de diseño Singleton
   private casino: Casino;
   private jugador: Jugador;
+  private edadMinima: number;
 
   constructor() {
+    this.edadMinima = 18;
     this.casino = new Casino("Money.for(nothing)");
     this.jugador = this.crearJugador();
   }
 
   // patron de diseño Singleton
   public static getInstancia(): Aplicacion {
-    if (!this.instancia) {
-      this.instancia = new Aplicacion();
-    } else {
-      console.log("La instancia ya existe");
+    try {
+      if (!this.instancia) {
+        this.instancia = new Aplicacion();
+      }
+      else throw new Error("La instancia ya existe");
+    } catch (error) {
+      console.error(`Error: ${(error as Error).message}`)
     }
     return this.instancia;
   }
+
 
   inicializar() {
     let todosLosJuegos: string[] = [
@@ -47,12 +53,25 @@ export class Aplicacion {
   }
 
   private crearJugador(): Jugador {
-    console.clear();
     let nombre: string = rdl.question("Ingresa tu nombre: ");
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");
+    if (!this.validarEdad(edad)) {
+      this.crearJugador();
+    }
     let jugador = new Jugador(nombre, edad);
     console.clear();
     return jugador;
+
+  }
+
+  private validarEdad(edad: number): boolean {
+    try {
+      if (edad >= this.edadMinima) return true
+      else throw new Error(`La edad minima para ingresar al casino es ${this.edadMinima} años.`);
+    } catch (error) {
+      console.error(`Error: ${(error as Error).message}`)
+      return false;
+    }
   }
 
   private getJugador(): void {

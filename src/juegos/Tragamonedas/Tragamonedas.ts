@@ -2,6 +2,7 @@ import * as rdl from 'readline-sync';
 import { GeneradorNumeroAleatorio } from "../../servicios/GeneradorNumeroAleatorio";
 import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
+import { SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
 
 export abstract class Tragamonedas extends Juego {
   protected rodillo: string[];
@@ -46,20 +47,24 @@ export abstract class Tragamonedas extends Juego {
   }
 
   protected pedirApuesta(): number {
-    let apuesta: number = rdl.questionInt(`\nCuantas tiradas deseas jugar? (cada giro cuesta $${this.apuestaMin}): `) * this.apuestaMin;
-    if (super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
-      if (this.leAlcanzaParaJugar(apuesta)) {
+    try {
+      if (super.jugadorApto(this.jugador.getMonedero(), this.apuestaMin)) {
+        const maxCantGiros: number = Math.floor(this.jugador.getMonedero() / this.apuestaMin);
+        let apuesta: number;
+        do {
+          apuesta = rdl.questionInt(`\nCuantas tiradas deseas jugar? (cada giro cuesta $${this.apuestaMin} y tiene saldo para ${maxCantGiros} giros como maximo): `);
+        }
+        while (apuesta < 1 || apuesta > maxCantGiros)
+        apuesta *= this.apuestaMin; //convertimos la cantidad de tiradas en el consumo total que hara en la jugada
         this.jugador.modificarSaldo((-1) * apuesta);
         return apuesta
       } else {
-        console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
-        this.pedirApuesta();
+        throw new SaldoInsuficienteError();
       }
-    } else {
-      console.log("No posee dinero suficiente.");
+    } catch (error) {
+      console.error((error as SaldoInsuficienteError).message);
       return 0;
     }
-    return this.jugador.getMonedero();
   }
 
   // Gira los rodillos de la tragamonedas y llena la matriz con los valores aleatorios
@@ -77,13 +82,13 @@ export abstract class Tragamonedas extends Juego {
   protected mostrarEnConsola(): void {
     let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {
-      matrizToString += `Linea ${i + 1}: |`;
+      matrizToString += `Linea ${i + 1}: | `;
       for (let j = 0; j < this.cantRodillos; j++) {
-        matrizToString += ` ${this.matrizRodillos[i][j]} |`;
+        matrizToString += ` ${this.matrizRodillos[i][j]} | `;
       }
       matrizToString += "\n";
     }
-    console.log(`${matrizToString}`);
+    console.log(`${matrizToString} `);
   }
 
   protected gaussiana(x: number, mu: number, sigma: number): number {
@@ -113,7 +118,7 @@ export abstract class Tragamonedas extends Juego {
           console.log(`Coincidencia en linea central`);
           multiplicadorGanancia += gauss * this.gananciaCentral;
         } else {
-          console.log(`Coincidencia en linea ${i + 1}`);
+          console.log(`Coincidencia en linea ${i + 1} `);
           multiplicadorGanancia += gauss
         }
       }
@@ -162,7 +167,7 @@ export abstract class Tragamonedas extends Juego {
   protected menuCantGiros(cantTiradasPosibles: number) {
     let opcGiros: number;
     do {
-      opcGiros = rdl.questionInt(`Jugadas disponibles:\n\t1 - Girar una vez\n\t2 - Girar ${cantTiradasPosibles} veces\n\t0 - Retirarse\nIngrese la opcion deseada: `);
+      opcGiros = rdl.questionInt(`Jugadas disponibles: \n\t1 - Girar una vez\n\t2 - Girar ${cantTiradasPosibles} veces\n\t0 - Retirarse\nIngrese la opcion deseada: `);
     } while (opcGiros < 0 || opcGiros > 2)
     this.opcCantGiros(opcGiros, cantTiradasPosibles)
   }
@@ -193,7 +198,7 @@ export abstract class Tragamonedas extends Juego {
         break;
       default: // 0
         this.jugador.modificarSaldo(cantTiradasPosibles * this.apuestaMin);
-        console.log(`Usted se ha retirado del juego.\n\t→ El dinero restante se ha devuelto a su monedero. Saldo actual: $${this.jugador.getMonedero()}`);
+        console.log(`Usted se ha retirado del juego.\n\t→ El dinero restante se ha devuelto a su monedero.Saldo actual: $${this.jugador.getMonedero()} `);
         return;
     }
   }
