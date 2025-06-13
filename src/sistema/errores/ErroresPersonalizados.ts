@@ -12,6 +12,13 @@ export class ApuestaInferiorError extends Error {
   }
 }
 
+export class ApuestaExcesivaError extends Error {
+  constructor() {
+    super(`La apuesta es excede al monto disponible.`);
+    this.name = "ApuestaExcesiva";
+  }
+}
+
 export class OpcionInvalida extends Error {
   constructor() {
     super(`La opción ingresada es inválida.`);

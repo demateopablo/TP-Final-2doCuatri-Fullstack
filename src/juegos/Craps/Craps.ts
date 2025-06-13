@@ -2,7 +2,7 @@ import * as rdl from 'readline-sync';
 import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
 import { Dado } from "./Dado";
-import { OpcionInvalida, SaldoInsuficienteError, ApuestaInferiorError } from '../../sistema/errores/ErroresPersonalizados';
+import { OpcionInvalida, SaldoInsuficienteError, ApuestaInferiorError, ApuestaExcesivaError } from '../../sistema/errores/ErroresPersonalizados';
 
 export class Craps extends Juego {
   private pagoGanador: number = 1; // paga 1:1
@@ -36,14 +36,14 @@ export class Craps extends Juego {
                   this.jugador.modificarSaldo((-1) * apuesta);
                   return apuesta;
                 } else {
-                  throw new SaldoInsuficienteError();
+                  throw new ApuestaExcesivaError();
                 }
               } catch (error) {
-                console.error((error as ApuestaInferiorError).message);
+                console.error((error as ApuestaExcesivaError).message);
                 return 0
               }
             } else {
-              throw new SaldoInsuficienteError();
+              throw new ApuestaInferiorError();
             }
           } catch (error) {
             console.error((error as ApuestaInferiorError).message);
