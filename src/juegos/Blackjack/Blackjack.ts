@@ -3,6 +3,7 @@ import { Jugador } from '../../entidades/Jugador'
 import { Carta } from './Carta'
 import * as rdl from 'readline-sync';
 import { GeneradorNumeroAleatorio } from '../../servicios/GeneradorNumeroAleatorio';
+import { ApuestaInferiorError, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
 
 //Objetivo del juego:
 // El objetivo del Black Jack es que el jugador obtenga una suma de cartas lo más cercana posible a 21 sin pasarse, y ganarle al crupier.
@@ -79,44 +80,69 @@ export class Blackjack extends Juego {
   }
 
   jugar(jugador: Jugador): void {
-    this.jugador = jugador; //Inicializamos el jugador en el atributo Jugador de la clase
+    this.jugador = jugador;
     this.reiniciarPartida();
-    let apuesta: number = rdl.questionInt(`Cuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`)
-    if (super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
-      if (super.leAlcanzaParaJugar(apuesta)) {
-        this.jugador.modificarSaldo((-1) * apuesta);
-        console.log(this.jugador.monederoToString());
-        console.log(`${this.jugador.getNombre()}, estas jugando Blackjack\n`);
-        //reparto cartas al crupier hasta llegar a 17 puntos o más
-        while (this.puntajeCrupier < 17) {
-          this.repartir(true)
-        }
-        this.mostrarCartas(this.cartasCrupier, 1, this.cartasCrupier.length, true, true);
-        //reparto dos cartas al jugador
-        this.repartir(false);
-        this.repartir(false);
-        while (this.puedePedir) {
-          this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
-          if (this.pedirORetirarse() === 1) {
-            if (this.puedePedir) {
-              this.repartir(false);
-              if (this.puntajeJugador > this.MAX_PUNTOS) {
-                this.puedePedir = false;
-              }
+    try {
+      const apuesta: number = rdl.questionInt(`Cuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`);
+      if (!super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
+        throw new SaldoInsuficienteError();
+      }
+      if (!super.leAlcanzaParaJugar(apuesta)) {
+        throw new ApuestaInferiorError();
+      }
+      this.jugador.modificarSaldo(-apuesta);
+      console.log(this.jugador.monederoToString());
+      console.log(`${this.jugador.getNombre()}, estás jugando Blackjack\n`);
+
+      while (this.puntajeCrupier < 17) {
+        this.repartir(true);
+      }
+
+      this.mostrarCartas(this.cartasCrupier, 1, this.cartasCrupier.length, true, true);
+
+      // reparto inicial jugador
+      this.repartir(false);
+      this.repartir(false);
+
+      while (this.puedePedir) {
+        this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
+
+        if (this.pedirORetirarse() === 1) {
+          if (this.puedePedir) {
+            this.repartir(false);
+            if (this.puntajeJugador > this.MAX_PUNTOS) {
+              this.puedePedir = false;
             }
           }
-          else this.plantarse();
+        } else {
+          this.plantarse();
         }
-        const gano = this.validarResultado();
-        if (gano) this.pagar(apuesta);
-      } else {
-        console.log(`La apuesta que deseas hacer no supera la apuesta minima para este juego, la apuesta minima es de $${this.apuestaMin}\n`);
-        this.jugar(this.jugador);
       }
-    } else {
-      console.log("No posees dinero suficiente");
+
+      const gano = this.validarResultado();
+      if (gano) this.pagar(apuesta);
+
+    } catch (error) {
+      // extraigo el nombre del error porque con instanceof se rompe!!!! 
+      
+      //Cuando Typescript (o Babel) transpila clases extends Error a ES5, no siempre preserva bien la cadena de prototipos, así que una instancia de tu ApuestaInferiorError deja de “verse” como tal a la hora de hacer instanceof.
+      
+      const nombreError = error && (error as any).name;
+
+      if (nombreError === 'ApuestaInferiorError') {
+        console.log(`${(error as Error).message}\n`);
+        // volvemos a pedir la apuesta
+        this.jugar(this.jugador);
+      } else if (nombreError === 'SaldoInsuficienteError') {
+        console.log(`${(error as Error).message}\n`);
+        // no reintenta porque no alcanza el saldo
+      } else {
+        console.log("Se produjo un error inesperado al jugar.");
+        console.error(error);
+      }
     }
   }
+
 
   private repartir(alCrupier: boolean): void {
     const carta: Carta = this.obtenerCartaAleatoria(); //carta oculta
