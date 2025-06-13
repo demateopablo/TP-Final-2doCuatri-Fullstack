@@ -13,28 +13,6 @@ export class Craps extends Juego {
     this.dado = new Dado(6);
   }
 
-  private tirarDosDados(): number {
-    let dado1: number = this.dado.arrojarDado();
-    let dado2: number = this.dado.arrojarDado();
-    console.log(`\n${String.fromCodePoint(this.dado.imprimirCaraDado(dado1))} ${String.fromCodePoint(this.dado.imprimirCaraDado(dado2))}`);
-    console.log(`${(dado1)} ${(dado2)}\n`);
-    return dado1 + dado2;
-  }
-
-  private verSiEsWin(sumaDados: number): boolean {
-    if (sumaDados === 7 || sumaDados === 11) {
-      return true;
-    }
-    return false;
-  }
-
-  private verSiEsCrap(sumaDados: number): boolean {
-    if (sumaDados === 2 || sumaDados === 3 || sumaDados === 12) {
-      return true;
-    }
-    return false;
-  }
-
   jugar(jugador: Jugador): void {
     this.jugador = jugador; //Inicializamos el jugador en el atributo Jugador de la clase
     console.clear();
@@ -91,28 +69,10 @@ export class Craps extends Juego {
         let sumaDados: number = this.tirarDosDados();
         switch (opcApuestaInicial) {
           case 1:
-            if (this.verSiEsWin(sumaDados)) {
-              console.log(`\n-------------------------------------------------------\n\t🍀 La tirada inicial es ${sumaDados}.  GANA!!! 🤑\n-------------------------------------------------------`);
-              this.pagar(apuesta);
-              console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
-            } else if (this.verSiEsCrap(sumaDados)) {
-              console.log(`\n-------------------------------------------------------\n\t👎 La tirada inicial es ${sumaDados}.  PIERDE!!! 😞\n-------------------------------------------------------`);
-              console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
-            } else {
-              this.seguirTirando(opcApuestaInicial, sumaDados, apuesta)
-            }
+            this.tiradaInicial(this.verSiEsWin(sumaDados), this.verSiEsCrap(sumaDados), sumaDados, apuesta, opcApuestaInicial)
             break;
           case 2:
-            if (this.verSiEsCrap(sumaDados)) {
-              console.log(`\n-------------------------------------------------------\n\t🍀 La tirada inicial es ${sumaDados}.  GANA!!! 🤑\n-------------------------------------------------------`);
-              this.pagar(apuesta);
-              console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
-            } else if (this.verSiEsWin(sumaDados)) {
-              console.log(`\n-------------------------------------------------------\n\t👎 La tirada inicial es ${sumaDados}.  PIERDE!!! 😞\n-------------------------------------------------------`);
-              console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
-            } else {
-              this.seguirTirando(opcApuestaInicial, sumaDados, apuesta)
-            }
+            this.tiradaInicial(this.verSiEsCrap(sumaDados), this.verSiEsWin(sumaDados), sumaDados, apuesta, opcApuestaInicial, 12)
             break;
           default:
             break;
@@ -126,43 +86,83 @@ export class Craps extends Juego {
     }
   }
 
+  private tiradaInicial(gana: boolean, pierde: boolean, sumaDados: number, apuesta: number, opcApuestaInicial: number, empate?: number) {
+    if (sumaDados == empate) {
+      console.log(`\n-------------------------------------------------\n\t👀 Sale un ${empate}. Usted EMPATA!!! 🤷‍♂️\n-------------------------------------------------`);
+      this.pagar(apuesta / 2);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+      return;
+    }
+    if (gana) {
+      console.log(`\n-------------------------------------------------------\n\t🍀 La tirada inicial es ${sumaDados}.  GANA!!! 🤑\n-------------------------------------------------------`);
+      this.pagar(apuesta);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+    } else if (pierde) {
+      console.log(`\n-------------------------------------------------------\n\t👎 La tirada inicial es ${sumaDados}.  PIERDE!!! 😞\n-------------------------------------------------------`);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+    } else {
+      this.seguirTirando(opcApuestaInicial, sumaDados, apuesta)
+    }
+  }
+
   private seguirTirando(opcApuestaInicial: number, punto: number, apuesta: number) {
+    let fin: boolean = false;
     let contador: number = 0;
     let sumaDados: number;
     console.log(`\t→ El punto es ${punto}`);
-    while (true) {
+    while (!fin) {
       contador++;
       sumaDados = this.tirarDosDados();
       console.log(`Tirada ${contador} sale ${sumaDados}\t→ Recuerde, el punto es ${punto}`);
-      if (opcApuestaInicial === 1) {
-        if (sumaDados === punto) {
-          console.log(`\n-------------------------------------------------\n\t🍀 El punto ${punto} sale. GANA!!! 🤑\n-------------------------------------------------`);
-          this.pagar(apuesta);
-          console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+      switch (opcApuestaInicial) {
+        case 1:
+          fin = this.tirarHastaFin(punto, 7, sumaDados, apuesta);
           break;
-        } else {
-          if (sumaDados === 7) {
-            console.log(`\n-------------------------------------------------\n\t👎 Sale un 7. Usted PIERDE!!! 😞\n-------------------------------------------------`);
-            console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
-            break;
-          }
-        }
-      }
-      if (opcApuestaInicial === 2) {
-        if (sumaDados === 7) {
-          console.log(`\n-------------------------------------------------\n\t\t🍀 Sale un 7. sale. GANA!!! 🤑\n-------------------------------------------------`);
-          this.pagar(apuesta);
-          console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+        case 2:
+          fin = this.tirarHastaFin(7, punto, sumaDados, apuesta);
           break;
-        } else {
-          if (sumaDados === punto) {
-            console.log(`\n-------------------------------------------------\n\t\t👎 El punto ${punto} sale. Usted PIERDE!!! 😞\n-------------------------------------------------`);
-            console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
-            break;
-          }
-        }
+        default:
+          break;
       }
     }
+  }
+
+  private tirarHastaFin(gana: number, pierde: number, sumaDados: number, apuesta: number): boolean {
+    if (sumaDados === gana) {
+      console.log(`\n-------------------------------------------------\n\t🍀 El punto ${gana} sale. GANA!!! 🤑\n-------------------------------------------------`);
+      this.pagar(apuesta);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+      return true;
+    } else {
+      if (sumaDados === pierde) {
+        console.log(`\n-------------------------------------------------\n\t👎 Sale un ${pierde}. Usted PIERDE!!! 😞\n-------------------------------------------------`);
+        console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+        return true;
+      }
+      return false
+    }
+  }
+
+  private tirarDosDados(): number {
+    let dado1: number = this.dado.arrojarDado();
+    let dado2: number = this.dado.arrojarDado();
+    console.log(`\n${String.fromCodePoint(this.dado.imprimirCaraDado(dado1))} ${String.fromCodePoint(this.dado.imprimirCaraDado(dado2))}`);
+    console.log(`${(dado1)} ${(dado2)}\n`);
+    return dado1 + dado2;
+  }
+
+  private verSiEsWin(sumaDados: number): boolean {
+    if (sumaDados === 7 || sumaDados === 11) {
+      return true;
+    }
+    return false;
+  }
+
+  private verSiEsCrap(sumaDados: number): boolean {
+    if (sumaDados === 2 || sumaDados === 3 || sumaDados === 12) {
+      return true;
+    }
+    return false;
   }
 
   pagar(apuesta: number): void {
