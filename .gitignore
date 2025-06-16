@@ -1,3 +1,4 @@
 *.js
-*.txt
+saldos/*.txt
 node_modules/
+!saldos/
