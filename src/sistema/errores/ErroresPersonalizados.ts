@@ -28,7 +28,7 @@ export class OpcionInvalida extends Error {
 
 export class SaldoNegativoError extends Error {
   constructor() {
-    super(`No se puede cargar saldo negativo.`);
+    super(`El saldo a cargar debe ser mayor a cero.`);
     this.name = "SaldoNegativoError";
   }
 }
