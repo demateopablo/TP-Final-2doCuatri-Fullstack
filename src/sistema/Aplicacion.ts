@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { Casino } from "./Casino";
 import { Jugador } from "../entidades/Jugador";
 import { FabricaDeJuegos } from './FabricaDeJuegos';
+import { SaldoNegativoError } from './errores/ErroresPersonalizados';
 
 export class Aplicacion {
 
@@ -25,7 +26,7 @@ export class Aplicacion {
       }
       else throw new Error("La instancia ya existe");
     } catch (error) {
-      console.error(`Error: ${(error as Error).message}`)
+      console.error(`\nError: ${(error as Error).message}`)
     }
     return this.instancia;
   }
@@ -69,7 +70,7 @@ export class Aplicacion {
       if (edad >= this.edadMinima) return true
       else throw new Error(`La edad minima para ingresar al casino es ${this.edadMinima} años.`);
     } catch (error) {
-      console.error(`Error: ${(error as Error).message}`)
+      console.error(`\nError: ${(error as Error).message}`)
       return false;
     }
   }
@@ -120,10 +121,17 @@ export class Aplicacion {
   }
 
   private cargarSaldo(): void {
-    let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
-    this.jugador.modificarSaldo(saldo);
-    console.clear();
-    console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
+    try {
+      let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
+      if(saldo<=0) {
+        throw new SaldoNegativoError();
+      }
+      this.jugador.modificarSaldo(saldo);
+      console.clear();
+      console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
+    } catch (error) {
+      console.error(`\nError: ${(error as SaldoNegativoError).message}`)
+    }
     this.mostrarMenu();
   }
 
