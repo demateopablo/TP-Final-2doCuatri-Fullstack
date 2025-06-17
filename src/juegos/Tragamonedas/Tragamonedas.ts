@@ -164,7 +164,7 @@ export abstract class Tragamonedas extends Juego {
   }
 
 
-  protected menuCantGiros(cantTiradasPosibles: number) {
+  protected menuCantGiros(cantTiradasPosibles: number): void {
     let opcGiros: number;
     do {
       opcGiros = rdl.questionInt(`Jugadas disponibles: \n\t1 - Girar una vez\n\t2 - Girar ${cantTiradasPosibles} veces\n\t0 - Retirarse\nIngrese la opcion deseada: `);

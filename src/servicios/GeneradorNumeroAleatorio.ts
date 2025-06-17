@@ -7,7 +7,7 @@ export class GeneradorNumeroAleatorio{
     this.numeroMax = Math.max(min, max);
   }
 
-  generarNumeroAleatorio(){
+  generarNumeroAleatorio(): number{
     return Math.floor(Math.random() * (this.numeroMax - this.numeroMin + 1)) + this.numeroMin;
   }
 }
