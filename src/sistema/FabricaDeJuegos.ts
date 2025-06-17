@@ -6,7 +6,7 @@ import { Tragamonedas5 } from "../juegos/Tragamonedas/Tragamonedas5/Tragamonedas
 import { Juego } from "../entidades/Juego";
 
 export class FabricaDeJuegos{
-    public crear(opcion:string):Juego{
+    public fabricarJuego(opcion:string):Juego{
 
         switch(opcion){
             case "Craps": return new Craps();

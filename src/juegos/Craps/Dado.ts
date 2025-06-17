@@ -9,11 +9,11 @@ export class Dado{
     this.generadorAleatorio = new GeneradorNumeroAleatorio(1,this.caras)
   }
 
-  arrojarDado(): number{
+  public arrojarDado(): number{
     return this.generadorAleatorio.generarNumeroAleatorio()
   }
 
-  imprimirCaraDado(valor: number): number{
+  public imprimirCaraDado(valor: number): number{
     return 9856+(valor-1);
   }
 }

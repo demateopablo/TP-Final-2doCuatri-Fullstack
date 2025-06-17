@@ -43,7 +43,7 @@ export class Aplicacion {
     let fabrica = new FabricaDeJuegos();
 
     for (let juego of todosLosJuegos) {
-      let nuevoJuego = fabrica.crear(juego);
+      let nuevoJuego = fabrica.fabricarJuego(juego);
       this.casino.agregarJuego(nuevoJuego);
     }
 
@@ -72,10 +72,6 @@ export class Aplicacion {
       console.error(`Error: ${(error as Error).message}`)
       return false;
     }
-  }
-
-  private getJugador(): void {
-    console.log(`\n${this.jugador.toString()}`);
   }
 
   private mostrarMenu(): void {
@@ -107,7 +103,7 @@ export class Aplicacion {
     }
   }
 
-  private ejecutarJuego(idJuego: number) {
+  private ejecutarJuego(idJuego: number): void {
     console.clear();
     let juego = this.casino.getJuego(idJuego - 1);
     if (juego.leAlcanzaParaJugar(this.jugador.getMonedero())) {
@@ -165,7 +161,7 @@ export class Aplicacion {
     return opcElegida;
   }
 
-  private exportarSaldo() {
+  private exportarSaldo(): void {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
     fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
     console.log('\nSaldo guardado correctamente.');

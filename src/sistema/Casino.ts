@@ -3,7 +3,6 @@ import { Juego } from "../entidades/Juego";
 export class Casino {
   private nombre:string;
   private juegos: Juego[];
-  private edadMin: number = 18;
 
   constructor(nombre: string) {
     this.nombre = nombre;
@@ -12,10 +11,6 @@ export class Casino {
 
   getNombre(): string{
     return this.nombre;
-  }
-
-  getEdadMin(): number{
-    return this.edadMin;
   }
 
   getJuego(index: number): Juego{

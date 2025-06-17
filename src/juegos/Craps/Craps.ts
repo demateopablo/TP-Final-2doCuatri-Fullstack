@@ -29,7 +29,7 @@ export class Craps extends Juego {
       try {
         if (super.jugadorApto(this.jugador.getMonedero(), this.apuestaMin)) {
           try {
-            apuesta = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`);
+            apuesta = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}, dispones de $${this.jugador.getMonedero()} para jugar): $`);
             if (super.leAlcanzaParaJugar(apuesta)) {
               try {
                 if (apuesta <= this.jugador.getMonedero()) {
@@ -60,7 +60,7 @@ export class Craps extends Juego {
   }
 
 
-  private logicaScraps(apuesta: number) {
+  private logicaScraps(apuesta: number): void {
     let opcApuestaInicial: number
     try {
       opcApuestaInicial = rdl.questionInt("\nSeleccion con que modo de juego quiere iniciar la partida\n\t1 - Pass Line\n\t2 - Don't Pass Bar\n");
@@ -86,7 +86,7 @@ export class Craps extends Juego {
     }
   }
 
-  private tiradaInicial(gana: boolean, pierde: boolean, sumaDados: number, apuesta: number, opcApuestaInicial: number, empate?: number) {
+  private tiradaInicial(gana: boolean, pierde: boolean, sumaDados: number, apuesta: number, opcApuestaInicial: number, empate?: number): void {
     if (sumaDados == empate) {
       console.log(`\n-------------------------------------------------\n\t👀 Sale un ${empate}. Usted EMPATA!!! 🤷‍♂️\n-------------------------------------------------`);
       this.pagar(apuesta / 2);
@@ -105,7 +105,7 @@ export class Craps extends Juego {
     }
   }
 
-  private seguirTirando(opcApuestaInicial: number, punto: number, apuesta: number) {
+  private seguirTirando(opcApuestaInicial: number, punto: number, apuesta: number): void {
     let fin: boolean = false;
     let contador: number = 0;
     let sumaDados: number;
@@ -165,7 +165,7 @@ export class Craps extends Juego {
     return false;
   }
 
-  pagar(apuesta: number): void {
+  public pagar(apuesta: number): void {
     this.jugador.modificarSaldo((apuesta * this.pagoGanador) + apuesta);
   }
 }
