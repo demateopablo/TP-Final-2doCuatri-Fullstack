@@ -79,7 +79,7 @@ export class Blackjack extends Juego {
     //el ! al final es para asegurarle a typescript que nunca va a ser undefined. (Con un solo jugador en el blackjack no pasaria nunca)
   }
 
-  jugar(jugador: Jugador): void {
+  public jugar(jugador: Jugador): void {
     this.jugador = jugador;
     this.reiniciarPartida();
 
@@ -259,7 +259,7 @@ export class Blackjack extends Juego {
     else return false
   }
 
-  pagar(apuesta: number): void {
+  public pagar(apuesta: number): void {
     let ganancia: number = (apuesta * this.pagoGanador) + apuesta;
     this.jugador.modificarSaldo(ganancia);
     console.log(`\x1b[35m👑💎Apostaste ${apuesta} y ganaste $${ganancia} 🥳💸\x1b[0m`);

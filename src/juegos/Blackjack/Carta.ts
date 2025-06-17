@@ -1,5 +1,4 @@
 export class Carta {
-    
     private valor: string;
     private palo: string;
 
@@ -8,19 +7,19 @@ export class Carta {
         this.palo = palo;
     }
 
-    getValor(): string {
+    public getValor(): string {
         return this.valor;
     }
 
-    getPalo(): string {
+    public getPalo(): string {
         return this.palo;
     }
 
-    toString(): string {
+    public toString(): string {
         return `${this.valor} de ${this.palo}`;
     }
 
-    getValorNumerico(): number {
+    public getValorNumerico(): number {
         if (this.valor === 'J' || this.valor === 'Q' || this.valor === 'K') {
             return 10; // J, Q y K valen 10
         }
