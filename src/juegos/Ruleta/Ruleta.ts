@@ -2,6 +2,7 @@ import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
 import { GeneradorNumeroAleatorio } from "../../servicios/GeneradorNumeroAleatorio";
 import * as rdl from 'readline-sync';
+import { OpcionInvalida, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
 
 export class Ruleta extends Juego {
   private static MIN: number = 0;
@@ -47,34 +48,50 @@ export class Ruleta extends Juego {
   }
 
   mostrarPaño(): void {
-    console.log(`${this.ruleta.sort((a, b) => a - b)}`);//observar
+    console.log(`${this.ruleta.sort((a, b) => a - b)}`);
     console.log(`Rojo: ${this.rojo} ${this.conjuntoRojo}`);
     console.log(`Negro: ${this.negro} ${this.conjuntoNegro}`);
+  }
+
+  private jugadorValido(apuesta: number): boolean {
+    try {
+      if (super.jugadorApto(this.jugador.getMonedero(), apuesta)) return true;
+      else throw new SaldoInsuficienteError();
+
+    } catch (error) {
+      console.error(`\n${(error as SaldoInsuficienteError).message}`);
+      return false;
+    }
   }
 
   jugar(jugador: Jugador): void {
     this.jugador = jugador;
     let apuesta: number = rdl.questionInt(`Cuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`);
-    if (super.jugadorApto(jugador.getMonedero(), this.apuestaMin)) {
+    if (this.jugadorValido(apuesta) && this.leAlcanzaParaJugar(apuesta)) {
       let opcion: number;
       do {
         this.mostrarFichas();
         opcion = rdl.questionInt(`Elija una ficha: `);
-        if (apuesta >= this.ficha[opcion - 1]) {
-          this.valorFicha = this.ficha[opcion - 1];
-        } else {
-          console.log(`\nEl número no es válido o el valor de la apuesta no alcanza para la ficha seleccionada.\n`);
-          return;
+        try {
+          if (apuesta >= this.ficha[opcion - 1]) this.valorFicha = this.ficha[opcion - 1];
+          else  throw new SaldoInsuficienteError(); 
+        } catch (error) {
+          console.error(`\n${(error as SaldoInsuficienteError).message}`);
+        }
+        try{
+          if(opcion < 1 || opcion > 4) throw new OpcionInvalida();
+        }catch (error){
+          console.error(`\n${(error as OpcionInvalida).message}`);
         }
       } while (opcion < 1 || opcion > 4)
-      this.DevolverResto(apuesta);
+      this.devolverResto(apuesta);
       this.calcularFichas(apuesta);
       while (this.cantFichas > 0) {
         this.mostrarPaño();
         let numApuesta: number;
         do {
           this.opcionesDeApuesta();
-          numApuesta = rdl.questionInt(`A que desea apostar?`);
+          numApuesta = rdl.questionInt(`A que desea apostar? `);
         } while (numApuesta < 1 || numApuesta > 8)
         let numAzar: number;
         let fichaUnica: number = 1;
@@ -152,8 +169,7 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          default: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          default: numAzar = this.opcion.generarNumeroAleatorio();
             this.elegirNumeroDePlenos(this.conjuntoDePlenos);
             this.descontarSaldoPorFicha(this.conjuntoDePlenos.length);
             const repeticiones = this.controlDeRepeticiones(this.conjuntoDePlenos, numAzar);
@@ -176,7 +192,7 @@ export class Ruleta extends Juego {
     return this.cantFichas;
   }
 
-  private DevolverResto(apuesta: number): void {
+  private devolverResto(apuesta: number): void {
     let sobrante: number = apuesta % this.valorFicha;
     this.jugador.modificarSaldo(this.jugador.getMonedero() + sobrante);
   }
@@ -188,12 +204,12 @@ export class Ruleta extends Juego {
 
   private imprimirGanador(numAzar: number): void {
     console.log(`\nGanaste con el numero ${numAzar}\n`);
-    console.log(this.cantFichas);
+    console.log(`\nQuedan ${this.cantFichas} fichas para usar.`);
   }
 
   private imprimirPerdedor(numAzar: number): void {
     console.log(`\nPerdiste, el número es: ${numAzar}\n`);
-    console.log(this.cantFichas);
+    console.log(`\nQuedan ${this.cantFichas} fichas para usar.`);
   }
 
   private opcionesDeApuesta(): void {
