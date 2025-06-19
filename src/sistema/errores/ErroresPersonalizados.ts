@@ -1,3 +1,5 @@
+import { error } from "console";
+
 export class SaldoInsuficienteError extends Error {
   constructor() {
     super(`El saldo es insuficiente.`);
@@ -30,5 +32,12 @@ export class SaldoNegativoError extends Error {
   constructor() {
     super(`El saldo a cargar debe ser mayor a cero.`);
     this.name = "SaldoNegativoError";
+  }
+}
+
+export class EdadInsuficienteError extends Error{
+  constructor() {
+    super(`Debe ser mayor de edad.`);
+    this.name = "EdadInsuficiente";
   }
 }
