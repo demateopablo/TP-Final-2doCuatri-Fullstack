@@ -1,6 +1,6 @@
 import { IJuego } from "./IJuego";
 import { Jugador } from "./Jugador";
-import { SaldoInsuficienteError, ApuestaInferiorError, OpcionInvalida, SaldoNegativoError } from "../sistema/errores/ErroresPersonalizados"
+import { SaldoInsuficienteError, ApuestaInferiorError, OpcionInvalidaError, SaldoNegativoError } from "../sistema/errores/ErroresPersonalizados"
 
 export abstract class Juego implements IJuego {
   protected nombre: string;

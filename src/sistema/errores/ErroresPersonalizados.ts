@@ -21,7 +21,7 @@ export class ApuestaExcesivaError extends Error {
   }
 }
 
-export class OpcionInvalida extends Error {
+export class OpcionInvalidaError extends Error {
   constructor() {
     super(`La opción ingresada es inválida.`);
     this.name = "OpcionInvalidaError";

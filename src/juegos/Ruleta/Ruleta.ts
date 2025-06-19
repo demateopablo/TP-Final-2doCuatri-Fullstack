@@ -2,7 +2,7 @@ import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
 import { GeneradorNumeroAleatorio } from "../../servicios/GeneradorNumeroAleatorio";
 import * as rdl from 'readline-sync';
-import { OpcionInvalida, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
+import { OpcionInvalidaError, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
 
 export class Ruleta extends Juego {
   private static MIN: number = 0;
@@ -79,9 +79,9 @@ export class Ruleta extends Juego {
           console.error(`${(error as SaldoInsuficienteError).message}\n`);
         }
         try {
-          if (opcion < 1 || opcion > 4) throw new OpcionInvalida();
+          if (opcion < 1 || opcion > 4) throw new OpcionInvalidaError();
         } catch (error) {
-          console.error(`${(error as OpcionInvalida).message}\n`);
+          console.error(`${(error as OpcionInvalidaError).message}\n`);
         }
       } while (opcion < 1 || opcion > 4 || apuesta < this.ficha[opcion - 1])
       this.devolverResto(apuesta);
