@@ -64,7 +64,7 @@ export class Ruleta extends Juego {
           this.valorFicha = this.ficha[opcion - 1];
         } else {
           console.log(`\nEl número no es válido o el valor de la apuesta no alcanza para la ficha seleccionada.\n`);
-          this.jugar(jugador);
+          return;
         }
       } while (opcion < 1 || opcion > 4)
       this.DevolverResto(apuesta);
