@@ -6,6 +6,7 @@ import { FabricaDeJuegos } from './FabricaDeJuegos';
 import { SaldoNegativoError } from './errores/ErroresPersonalizados';
 import { SaldoInsuficienteError } from './errores/ErroresPersonalizados';
 import { EdadInsuficienteError } from './errores/ErroresPersonalizados';
+import { colores } from '../sistema/configColores'
 
 export class Aplicacion {
 
@@ -28,7 +29,7 @@ export class Aplicacion {
       }
       else throw new Error("La instancia ya existe");
     } catch (error) {
-      console.error(`\n${(error as Error).message}`)
+      console.error(`\n${colores.error}${(error as Error).message}${colores.neutro}`)
     }
     return this.instancia;
   }
@@ -72,18 +73,18 @@ export class Aplicacion {
       if (edad >= this.edadMinima) return true
       else throw new EdadInsuficienteError();
     } catch (error) {
-      console.error(`\n${(error as EdadInsuficienteError).message}`)
+      console.error(`\n${colores.error}${(error as EdadInsuficienteError).message}${colores.neutro}\n`)
       return false;
     }
   }
 
   private mostrarMenu(): void {
     this.casino.listarJuegos();
-    console.log("----------");
+    console.log("---------------");
     console.log(`${this.casino.getCantJuegos() + 1} Cargar saldo`);
     console.log(`${this.casino.getCantJuegos() + 2} Consultar saldo`);
     console.log("0 Salir");
-    console.log("----------");
+    console.log("---------------");
     let opcion: number = this.preguntar("Elija una opcion: ", this.casino.getCantJuegos() + 2);
     console.log("");
     switch (opcion) {
@@ -119,7 +120,7 @@ export class Aplicacion {
 
     } catch (error) {
       console.clear();
-      console.error(`\n${(error as SaldoInsuficienteError).message}`);
+      console.error(`\n${colores.error}${(error as SaldoInsuficienteError).message}${colores.neutro}`);
       this.mostrarMenu();
     }
   }
@@ -132,16 +133,16 @@ export class Aplicacion {
       }
       this.jugador.modificarSaldo(saldo);
       console.clear();
-      console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
+      console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero}→ Tu nuevo saldo es $${this.jugador.getMonedero()}${colores.neutro}\n`);
     } catch (error) {
-      console.error(`\n${(error as SaldoNegativoError).message}`)
+      console.error(`\n${colores.error}${(error as SaldoNegativoError).message}${colores.neutro}`)
     }
     this.mostrarMenu();
   }
 
   private mostrarSaldo(): void {
     console.clear();
-    console.log(`Su saldo actual es de $${this.jugador.getMonedero()}\n`);
+    console.log(`\n\x1b[46mSu saldo actual es de $${this.jugador.getMonedero()}\x1b[0m\n`);
     this.mostrarMenu();
   }
 
@@ -149,9 +150,9 @@ export class Aplicacion {
     console.log("¿Deseas volver a jugar, o regresar al menú principal?")
     console.log("1 Volver a jugar");
     console.log("2 Ir al menú principal");
-    console.log("--------");
+    console.log("---------------");
     console.log("0 Salir");
-    console.log("--------");
+    console.log("---------------");
     let op: number = this.preguntar(`Elije una opcion: `, 2);
     if (op === 1) {
       try {
@@ -160,7 +161,7 @@ export class Aplicacion {
         }
       } catch (error) {
         console.clear();
-        console.error(`\n${(error as SaldoInsuficienteError).message}`);
+        console.error(`\n${colores.error}${(error as SaldoInsuficienteError).message}${colores.neutro}`);
         this.mostrarMenu();
       }
       this.ejecutarJuego(opcion);
