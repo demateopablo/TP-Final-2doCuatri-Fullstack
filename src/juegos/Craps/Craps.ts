@@ -2,7 +2,7 @@ import * as rdl from 'readline-sync';
 import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
 import { Dado } from "./Dado";
-import { OpcionInvalida, SaldoInsuficienteError, ApuestaInferiorError, ApuestaExcesivaError } from '../../sistema/errores/ErroresPersonalizados';
+import { OpcionInvalidaError, SaldoInsuficienteError, ApuestaInferiorError, ApuestaExcesivaError } from '../../sistema/errores/ErroresPersonalizados';
 
 export class Craps extends Juego {
   private pagoGanador: number = 1; // paga 1:1
@@ -78,10 +78,10 @@ export class Craps extends Juego {
             break;
         }
       } else {
-        throw new OpcionInvalida();
+        throw new OpcionInvalidaError();
       }
     } catch (error) {
-      console.error((error as OpcionInvalida).message);
+      console.error((error as OpcionInvalidaError).message);
       this.logicaScraps(apuesta);
     }
   }

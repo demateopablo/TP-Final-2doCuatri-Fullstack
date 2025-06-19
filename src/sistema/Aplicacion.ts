@@ -28,7 +28,7 @@ export class Aplicacion {
       }
       else throw new Error("La instancia ya existe");
     } catch (error) {
-      console.error(`\n${(error as Error).message}`)
+      console.error(`${(error as Error).message}\n`)
     }
     return this.instancia;
   }
@@ -72,7 +72,7 @@ export class Aplicacion {
       if (edad >= this.edadMinima) return true
       else throw new EdadInsuficienteError();
     } catch (error) {
-      console.error(`\n${(error as EdadInsuficienteError).message}`)
+      console.error(`${(error as EdadInsuficienteError).message}\n`)
       return false;
     }
   }
@@ -119,7 +119,7 @@ export class Aplicacion {
 
     } catch (error) {
       console.clear();
-      console.error(`\n${(error as SaldoInsuficienteError).message}`);
+      console.error(`${(error as SaldoInsuficienteError).message}\n`);
       this.mostrarMenu();
     }
   }
@@ -134,7 +134,7 @@ export class Aplicacion {
       console.clear();
       console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
     } catch (error) {
-      console.error(`\n${(error as SaldoNegativoError).message}`)
+      console.error(`${(error as SaldoNegativoError).message}\n`)
     }
     this.mostrarMenu();
   }
@@ -160,7 +160,7 @@ export class Aplicacion {
         }
       } catch (error) {
         console.clear();
-        console.error(`\n${(error as SaldoInsuficienteError).message}`);
+        console.error(`${(error as SaldoInsuficienteError).message}\n`);
         this.mostrarMenu();
       }
       this.ejecutarJuego(opcion);

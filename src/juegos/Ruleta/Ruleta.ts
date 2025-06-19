@@ -2,7 +2,7 @@ import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
 import { GeneradorNumeroAleatorio } from "../../servicios/GeneradorNumeroAleatorio";
 import * as rdl from 'readline-sync';
-import { OpcionInvalida, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
+import { OpcionInvalidaError, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
 
 export class Ruleta extends Juego {
   private static MIN: number = 0;
@@ -59,7 +59,7 @@ export class Ruleta extends Juego {
       else throw new SaldoInsuficienteError();
 
     } catch (error) {
-      console.error(`\n${(error as SaldoInsuficienteError).message}`);
+      console.error(`${(error as SaldoInsuficienteError).message}\n`);
       return false;
     }
   }
@@ -74,16 +74,16 @@ export class Ruleta extends Juego {
         opcion = rdl.questionInt(`Elija una ficha: `);
         try {
           if (apuesta >= this.ficha[opcion - 1]) this.valorFicha = this.ficha[opcion - 1];
-          else  throw new SaldoInsuficienteError(); 
+          else throw new SaldoInsuficienteError();
         } catch (error) {
-          console.error(`\n${(error as SaldoInsuficienteError).message}`);
+          console.error(`${(error as SaldoInsuficienteError).message}\n`);
         }
-        try{
-          if(opcion < 1 || opcion > 4) throw new OpcionInvalida();
-        }catch (error){
-          console.error(`\n${(error as OpcionInvalida).message}`);
+        try {
+          if (opcion < 1 || opcion > 4) throw new OpcionInvalidaError();
+        } catch (error) {
+          console.error(`${(error as OpcionInvalidaError).message}\n`);
         }
-      } while (opcion < 1 || opcion > 4)
+      } while (opcion < 1 || opcion > 4 || apuesta < this.ficha[opcion - 1])
       this.devolverResto(apuesta);
       this.calcularFichas(apuesta);
       while (this.cantFichas > 0) {
@@ -95,12 +95,11 @@ export class Ruleta extends Juego {
         } while (numApuesta < 1 || numApuesta > 8)
         let numAzar: number;
         let fichaUnica: number = 1;
+        this.descontarSaldoPorFicha(fichaUnica);
         switch (numApuesta) {
           case 1: this.cantFichas -= fichaUnica;
             numAzar = this.opcion.generarNumeroAleatorio();
-            this.descontarSaldoPorFicha(fichaUnica);
-            let restoPar: number = 0;
-            if (this.compararParesImpares(numAzar) === restoPar) {
+            if (this.esPar(numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
             } else {
@@ -109,9 +108,7 @@ export class Ruleta extends Juego {
             break;
           case 2: this.cantFichas -= fichaUnica;
             numAzar = this.opcion.generarNumeroAleatorio();
-            this.descontarSaldoPorFicha(fichaUnica);
-            let restoImpar: number = 1;
-            if (this.compararParesImpares(numAzar) === restoImpar) {
+            if (this.esPar(numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
             } else {
@@ -120,7 +117,6 @@ export class Ruleta extends Juego {
             break;
           case 3: this.cantFichas -= fichaUnica;
             numAzar = this.opcion.generarNumeroAleatorio();
-            this.descontarSaldoPorFicha(fichaUnica);
             if (this.compararNumeros(this.conjuntoRojo, numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -130,8 +126,6 @@ export class Ruleta extends Juego {
             break;
           case 4: this.cantFichas -= fichaUnica;
             numAzar = this.opcion.generarNumeroAleatorio();
-            this.descontarSaldoPorFicha(fichaUnica);
-
             if (this.compararNumeros(this.conjuntoNegro, numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -141,7 +135,6 @@ export class Ruleta extends Juego {
             break;
           case 5: this.cantFichas -= fichaUnica;
             numAzar = this.opcion.generarNumeroAleatorio();
-            this.descontarSaldoPorFicha(fichaUnica);
             if (numAzar > 0 && numAzar < 13) {
               this.pagarDocena(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -151,7 +144,6 @@ export class Ruleta extends Juego {
             break;
           case 6: this.cantFichas -= fichaUnica;
             numAzar = this.opcion.generarNumeroAleatorio();
-            this.descontarSaldoPorFicha(fichaUnica);
             if (numAzar > 12 && numAzar < 25) {
               this.pagarDocena(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -161,7 +153,6 @@ export class Ruleta extends Juego {
             break;
           case 7: this.cantFichas -= fichaUnica;
             numAzar = this.opcion.generarNumeroAleatorio();
-            this.descontarSaldoPorFicha(fichaUnica);
             if (numAzar > 24 && numAzar < 36) {
               this.pagarDocena(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -194,7 +185,7 @@ export class Ruleta extends Juego {
 
   private devolverResto(apuesta: number): void {
     let sobrante: number = apuesta % this.valorFicha;
-    this.jugador.modificarSaldo(this.jugador.getMonedero() + sobrante);
+    this.jugador.modificarSaldo(sobrante);
   }
 
   private descontarSaldoPorFicha(cantNums: number): void {
@@ -204,12 +195,14 @@ export class Ruleta extends Juego {
 
   private imprimirGanador(numAzar: number): void {
     console.log(`\nGanaste con el numero ${numAzar}\n`);
+    console.log(`\nTu saldo ahora es: ${this.jugador.getMonedero()}`);
     console.log(`\nQuedan ${this.cantFichas} fichas para usar.`);
   }
 
   private imprimirPerdedor(numAzar: number): void {
     console.log(`\nPerdiste, el número es: ${numAzar}\n`);
     console.log(`\nQuedan ${this.cantFichas} fichas para usar.`);
+    console.log(`\nTu saldo ahora es: ${this.jugador.getMonedero()}`);
   }
 
   private opcionesDeApuesta(): void {
@@ -235,21 +228,24 @@ export class Ruleta extends Juego {
 
   private elegirNumeroDePlenos(conjuntoDePlenos: number[]): void {
     let cantNumeros: number = rdl.questionInt(`\nA cuantos numeros desea apostar?\n`);
-    if (((this.valorFicha * cantNumeros) <= this.jugador.getMonedero())) {
-      let numElegido: number;
-      do {
-        numElegido = rdl.questionInt(`\nElija el siguiente numero a apostar\n`);
-        conjuntoDePlenos.push(numElegido);
-      } while (conjuntoDePlenos.length != cantNumeros)
-    } else {
-      console.log(`\nNo posee el dinero suficiente para apostar a esa cantidad de numeros\n`);
+    try {
+      if (((this.valorFicha * cantNumeros) <= this.jugador.getMonedero())) {
+        let numElegido: number;
+        do {
+          numElegido = rdl.questionInt(`\nElija el siguiente numero a apostar\n`);
+          conjuntoDePlenos.push(numElegido);
+        } while (conjuntoDePlenos.length != cantNumeros)
+      } else {
+        throw new SaldoInsuficienteError();
+      }
+    } catch (error) {
+      console.error(`${(error as SaldoInsuficienteError).message}\n`);
       this.elegirNumeroDePlenos(conjuntoDePlenos);
     }
   }
 
-  private compararParesImpares(numAzar: number): number {
-    let resto = numAzar % 2;
-    return resto;
+  private esPar(numAzar: number): boolean {
+    return numAzar % 2 === 0;
   }
 
   private compararNumeros(arr: number[], numAleatorio: number): boolean {
