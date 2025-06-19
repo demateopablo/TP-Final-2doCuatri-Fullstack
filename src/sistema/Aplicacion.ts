@@ -4,6 +4,8 @@ import { Casino } from "./Casino";
 import { Jugador } from "../entidades/Jugador";
 import { FabricaDeJuegos } from './FabricaDeJuegos';
 import { SaldoNegativoError } from './errores/ErroresPersonalizados';
+import { SaldoInsuficienteError } from './errores/ErroresPersonalizados';
+import { EdadInsuficienteError } from './errores/ErroresPersonalizados';
 
 export class Aplicacion {
 
@@ -26,7 +28,7 @@ export class Aplicacion {
       }
       else throw new Error("La instancia ya existe");
     } catch (error) {
-      console.error(`\nError: ${(error as Error).message}`)
+      console.error(`\n${(error as Error).message}`)
     }
     return this.instancia;
   }
@@ -68,9 +70,9 @@ export class Aplicacion {
   private validarEdad(edad: number): boolean {
     try {
       if (edad >= this.edadMinima) return true
-      else throw new Error(`La edad minima para ingresar al casino es ${this.edadMinima} años.`);
+      else throw new EdadInsuficienteError();
     } catch (error) {
-      console.error(`\nError: ${(error as Error).message}`)
+      console.error(`\n${(error as EdadInsuficienteError).message}`)
       return false;
     }
   }
@@ -107,11 +109,17 @@ export class Aplicacion {
   private ejecutarJuego(idJuego: number): void {
     console.clear();
     let juego = this.casino.getJuego(idJuego - 1);
-    if (juego.leAlcanzaParaJugar(this.jugador.getMonedero())) {
-      juego.jugar(this.jugador);
-      this.volverAJugarOIrAlMenu(idJuego);
-    } else {
-      console.log("No tenes saldo suficiente para jugar a este juego.\n");
+    try {
+      if (juego.leAlcanzaParaJugar(this.jugador.getMonedero())) {
+        juego.jugar(this.jugador);
+        this.volverAJugarOIrAlMenu(idJuego);
+      } else {
+        throw new SaldoInsuficienteError();
+      }
+
+    } catch (error) {
+      console.clear();
+      console.error(`\n${(error as SaldoInsuficienteError).message}`);
       this.mostrarMenu();
     }
   }
@@ -119,14 +127,14 @@ export class Aplicacion {
   private cargarSaldo(): void {
     try {
       let saldo: number = rdl.questionInt("Ingrese el saldo a cargar: $");
-      if(saldo<=0) {
+      if (saldo <= 0) {
         throw new SaldoNegativoError();
       }
       this.jugador.modificarSaldo(saldo);
       console.clear();
       console.log(`→ Tu nuevo saldo es $${this.jugador.getMonedero()}\n`);
     } catch (error) {
-      console.error(`\nError: ${(error as SaldoNegativoError).message}`)
+      console.error(`\n${(error as SaldoNegativoError).message}`)
     }
     this.mostrarMenu();
   }
@@ -146,9 +154,13 @@ export class Aplicacion {
     console.log("--------");
     let op: number = this.preguntar(`Elije una opcion: `, 2);
     if (op === 1) {
-      if (!this.casino.getJuego(opcion - 1).leAlcanzaParaJugar(this.jugador.getMonedero())) {
+      try {
+        if (!this.casino.getJuego(opcion - 1).leAlcanzaParaJugar(this.jugador.getMonedero())) {
+          throw new SaldoInsuficienteError();
+        }
+      } catch (error) {
         console.clear();
-        console.log(`No tenes saldo suficiente para jugar a este juego.\n`);
+        console.error(`\n${(error as SaldoInsuficienteError).message}`);
         this.mostrarMenu();
       }
       this.ejecutarJuego(opcion);
@@ -159,6 +171,7 @@ export class Aplicacion {
       console.clear();
       this.mostrarMenu();
     }
+
   }
 
   private preguntar(mensaje: string, cantOpciones: number): number {
