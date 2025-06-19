@@ -55,7 +55,7 @@ export class Ruleta extends Juego {
   jugar(jugador: Jugador): void {
     this.jugador = jugador;
     let apuesta: number = rdl.questionInt(`Cuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`);
-    if (super.leAlcanzaParaJugar(this.jugador.getMonedero())) {
+    if (super.jugadorApto(jugador.getMonedero(), this.apuestaMin)) {
       let opcion: number;
       do {
         this.mostrarFichas();
