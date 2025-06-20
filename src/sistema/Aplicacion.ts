@@ -29,11 +29,10 @@ export class Aplicacion {
       }
       else throw new Error("La instancia ya existe");
     } catch (error) {
-      console.error(`\n${colores.error}${(error as Error).message}${colores.neutro}`)
+      console.error(`\n${(error as Error).message}`)
     }
     return this.instancia;
   }
-
 
   inicializar() {
     let todosLosJuegos: string[] = [
@@ -51,13 +50,13 @@ export class Aplicacion {
       this.casino.agregarJuego(nuevoJuego);
     }
 
-    console.log(`  ~~ Bienvenid@ ${this.jugador.getNombre()} al Casino ${this.casino.getNombre()} ~~  \n`);
-    console.log(`→ Tu saldo actual es de: $${this.jugador.getMonedero()}. ¡No olvides hacer tu recarga!\n`);
+    console.log(`${colores.saludo}  ~~ Bienvenid@ ${this.jugador.getNombre()} al Casino ${this.casino.getNombre()} ~~  ${colores.neutro}\n`);
+    console.log(`→ Su saldo actual es de: ${colores.saldoCero}$${this.jugador.getMonedero()}${colores.neutro}. ¡No olvides hacer tu recarga!\n`);
     this.mostrarMenu();
   }
 
   private crearJugador(): Jugador {
-    let nombre: string = rdl.question("Ingresa tu nombre: ");
+    let nombre: string = rdl.question("Ingresa tu nombre: "); //TODO: Si es menor, no resetea el nombre
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");
     if (!this.validarEdad(edad)) {
       this.crearJugador();
@@ -65,7 +64,6 @@ export class Aplicacion {
     let jugador = new Jugador(nombre, edad);
     console.clear();
     return jugador;
-
   }
 
   private validarEdad(edad: number): boolean {
@@ -73,7 +71,7 @@ export class Aplicacion {
       if (edad >= this.edadMinima) return true
       else throw new EdadInsuficienteError();
     } catch (error) {
-      console.error(`\n${colores.error}${(error as EdadInsuficienteError).message}${colores.neutro}\n`)
+      console.error(`\n${(error as EdadInsuficienteError).message}\n`)
       return false;
     }
   }
@@ -120,7 +118,7 @@ export class Aplicacion {
 
     } catch (error) {
       console.clear();
-      console.error(`\n${colores.error}${(error as SaldoInsuficienteError).message}${colores.neutro}`);
+      console.error(`\n${(error as SaldoInsuficienteError).message}`);
       this.mostrarMenu();
     }
   }
@@ -135,14 +133,14 @@ export class Aplicacion {
       console.clear();
       console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero}→ Tu nuevo saldo es $${this.jugador.getMonedero()}${colores.neutro}\n`);
     } catch (error) {
-      console.error(`\n${colores.error}${(error as SaldoNegativoError).message}${colores.neutro}`)
+      console.error(`\n${(error as SaldoNegativoError).message}`)
     }
     this.mostrarMenu();
   }
 
   private mostrarSaldo(): void {
     console.clear();
-    console.log(`\n\x1b[46mSu saldo actual es de $${this.jugador.getMonedero()}\x1b[0m\n`);
+    console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero}Su saldo actual es de $${this.jugador.getMonedero()}${colores.neutro}\n`);
     this.mostrarMenu();
   }
 
@@ -161,7 +159,7 @@ export class Aplicacion {
         }
       } catch (error) {
         console.clear();
-        console.error(`\n${colores.error}${(error as SaldoInsuficienteError).message}${colores.neutro}`);
+        console.error(`\n${(error as SaldoInsuficienteError).message}`);
         this.mostrarMenu();
       }
       this.ejecutarJuego(opcion);
@@ -172,7 +170,6 @@ export class Aplicacion {
       console.clear();
       this.mostrarMenu();
     }
-
   }
 
   private preguntar(mensaje: string, cantOpciones: number): number {
@@ -186,6 +183,6 @@ export class Aplicacion {
   private exportarSaldo(): void {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
     fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
-    console.log('\nSaldo guardado correctamente.');
+    console.log(`${colores.saludo}Saldo guardado correctamente.${colores.neutro}`);
   }
 }

@@ -1,43 +1,43 @@
-import { error } from "console";
+import { colores } from '../configColores'
 
 export class SaldoInsuficienteError extends Error {
   constructor() {
-    super(`El saldo es insuficiente.`);
+    super(`${colores.error}El saldo es insuficiente.`);
     this.name = "SaldoInsuficienteError";
   }
 }
 
 export class ApuestaInferiorError extends Error {
   constructor() {
-    super(`La apuesta es inferior al minimo aceptado por este juego.`);
+    super(`${colores.error}La apuesta es inferior al minimo aceptado por este juego.${colores.neutro}`);
     this.name = "ApuestaInferiorError";
   }
 }
 
 export class ApuestaExcesivaError extends Error {
   constructor() {
-    super(`La apuesta excede el monto disponible.`);
+    super(`${colores.error}La apuesta excede el monto disponible.${colores.neutro}`);
     this.name = "ApuestaExcesiva";
   }
 }
 
 export class OpcionInvalidaError extends Error {
   constructor() {
-    super(`La opción ingresada es inválida.`);
+    super(`${colores.error}La opción ingresada es inválida.${colores.neutro}`);
     this.name = "OpcionInvalidaError";
   }
 }
 
 export class SaldoNegativoError extends Error {
   constructor() {
-    super(`El saldo a cargar debe ser mayor a cero.`);
+    super(`${colores.error}El saldo a cargar debe ser mayor a cero.${colores.neutro}`);
     this.name = "SaldoNegativoError";
   }
 }
 
-export class EdadInsuficienteError extends Error{
+export class EdadInsuficienteError extends Error {
   constructor() {
-    super(`Debe ser mayor de edad.`);
+    super(`${colores.error}Debe ser mayor de edad.${colores.neutro}`);
     this.name = "EdadInsuficiente";
   }
 }
