@@ -56,14 +56,13 @@ export class Aplicacion {
   }
 
   private crearJugador(): Jugador {
-    let nombre: string = rdl.question("Ingresa tu nombre: "); //TODO: Si es menor, no resetea el nombre
+    let nombre: string = rdl.question("Ingresa tu nombre: ");
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");
     if (!this.validarEdad(edad)) {
-      this.crearJugador();
+      return this.crearJugador();
     }
-    let jugador = new Jugador(nombre, edad);
     console.clear();
-    return jugador;
+    return new Jugador(nombre, edad);
   }
 
   private validarEdad(edad: number): boolean {
@@ -79,9 +78,9 @@ export class Aplicacion {
   private mostrarMenu(): void {
     this.casino.listarJuegos();
     console.log("---------------");
-    console.log(`${this.casino.getCantJuegos() + 1} Cargar saldo`);
-    console.log(`${this.casino.getCantJuegos() + 2} Consultar saldo`);
-    console.log("0 Salir");
+    console.log(`${colores.opcionesMenu}${this.casino.getCantJuegos() + 1} Cargar saldo${colores.neutro}`);
+    console.log(`${colores.opcionesMenu}${this.casino.getCantJuegos() + 2} Consultar saldo${colores.neutro}`);
+    console.log(`${colores.salir}0 Salir${colores.neutro}`);
     console.log("---------------");
     let opcion: number = this.preguntar("Elija una opcion: ", this.casino.getCantJuegos() + 2);
     console.log("");
