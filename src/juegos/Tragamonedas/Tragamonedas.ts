@@ -2,7 +2,8 @@ import * as rdl from 'readline-sync';
 import { GeneradorNumeroAleatorio } from "../../servicios/GeneradorNumeroAleatorio";
 import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
-import { SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
+import { OpcionInvalidaError, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
+import { colores } from "../../sistema/configColores";
 
 export abstract class Tragamonedas extends Juego {
   protected rodillo: string[];
@@ -165,9 +166,16 @@ export abstract class Tragamonedas extends Juego {
 
 
   protected menuCantGiros(cantTiradasPosibles: number): void {
-    let opcGiros: number;
+    let opcGiros: number=-1;
     do {
-      opcGiros = rdl.questionInt(`Jugadas disponibles: \n\t1 - Girar una vez\n\t2 - Girar ${cantTiradasPosibles} veces\n\t0 - Retirarse\nIngrese la opcion deseada: `);
+      try {
+        opcGiros = rdl.questionInt(`Jugadas disponibles: \n\t1 - Girar una vez\n\t2 - Girar ${cantTiradasPosibles} veces\n\t0 - Retirarse\nIngrese la opcion deseada: `);
+        if (opcGiros < 0 || opcGiros > 2) {
+          throw new OpcionInvalidaError;
+        }
+      } catch (error) {
+        console.error((error as OpcionInvalidaError).message);
+      }
     } while (opcGiros < 0 || opcGiros > 2)
     this.opcCantGiros(opcGiros, cantTiradasPosibles)
   }
@@ -198,7 +206,7 @@ export abstract class Tragamonedas extends Juego {
         break;
       default: // 0
         this.jugador.modificarSaldo(cantTiradasPosibles * this.apuestaMin);
-        console.log(`Usted se ha retirado del juego.\n\t→ El dinero restante se ha devuelto a su monedero.Saldo actual: $${this.jugador.getMonedero()} `);
+        console.log(`${colores.salir}Usted se ha retirado del juego.\n\t→ El dinero restante se ha devuelto a su monedero. Saldo actual: ${colores.saldoPositivoSinFondo} $${this.jugador.getMonedero()} ${colores.neutro}`);
         return;
     }
   }
