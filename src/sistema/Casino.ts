@@ -1,4 +1,5 @@
 import { Juego } from "../entidades/Juego";
+import { colores } from '../sistema/configColores'
 
 export class Casino {
   private nombre:string;
@@ -29,7 +30,7 @@ export class Casino {
 
   listarJuegos(): void{
     for (let i = 0; i < this.juegos.length; i++) {
-      console.log(`${i+1} ${this.juegos[i].toString()}`);
+      console.log(`${colores.juegos}${i+1} ${this.juegos[i].toString()}${colores.neutro}`);
     }
   }
 
