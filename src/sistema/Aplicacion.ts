@@ -56,14 +56,13 @@ export class Aplicacion {
   }
 
   private crearJugador(): Jugador {
-    let nombre: string = rdl.question("Ingresa tu nombre: "); //TODO: Si es menor, no resetea el nombre
+    let nombre: string = rdl.question("Ingresa tu nombre: ");
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");
     if (!this.validarEdad(edad)) {
-      this.crearJugador();
+      return this.crearJugador();
     }
-    let jugador = new Jugador(nombre, edad);
     console.clear();
-    return jugador;
+    return new Jugador(nombre, edad);
   }
 
   private validarEdad(edad: number): boolean {
