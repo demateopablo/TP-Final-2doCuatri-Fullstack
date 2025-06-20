@@ -51,7 +51,7 @@ export class Aplicacion {
     }
 
     console.log(`${colores.saludo}  ~~ Bienvenid@ ${this.jugador.getNombre()} al Casino ${this.casino.getNombre()} ~~  ${colores.neutro}\n`);
-    console.log(`→ Su saldo actual es de: ${colores.saldoCero}$${this.jugador.getMonedero()}${colores.neutro}. ¡No olvides hacer tu recarga!\n`);
+    console.log(`→ Su saldo actual es de: ${colores.saldoCero} $${this.jugador.getMonedero()} ${colores.neutro}. ¡No olvides hacer tu recarga!\n`);
     this.mostrarMenu();
   }
 
@@ -117,7 +117,7 @@ export class Aplicacion {
 
     } catch (error) {
       console.clear();
-      console.error(`\n${(error as SaldoInsuficienteError).message}`);
+      console.error(`${(error as SaldoInsuficienteError).message}\n`);
       this.mostrarMenu();
     }
   }
@@ -130,16 +130,16 @@ export class Aplicacion {
       }
       this.jugador.modificarSaldo(saldo);
       console.clear();
-      console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero}→ Tu nuevo saldo es $${this.jugador.getMonedero()}${colores.neutro}\n`);
+      console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero} → Tu nuevo saldo es $${this.jugador.getMonedero()} ${colores.neutro}\n`);
     } catch (error) {
-      console.error(`\n${(error as SaldoNegativoError).message}`)
+      console.error(`\n${(error as SaldoNegativoError).message}\n`)
     }
     this.mostrarMenu();
   }
 
   private mostrarSaldo(): void {
     console.clear();
-    console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero}Su saldo actual es de $${this.jugador.getMonedero()}${colores.neutro}\n`);
+    console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero} Su saldo actual es de $${this.jugador.getMonedero()} ${colores.neutro}\n`);
     this.mostrarMenu();
   }
 
@@ -158,7 +158,7 @@ export class Aplicacion {
         }
       } catch (error) {
         console.clear();
-        console.error(`\n${(error as SaldoInsuficienteError).message}`);
+        console.error(`${(error as SaldoInsuficienteError).message}\n`);
         this.mostrarMenu();
       }
       this.ejecutarJuego(opcion);
@@ -182,6 +182,6 @@ export class Aplicacion {
   private exportarSaldo(): void {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
     fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
-    console.log(`${colores.saludo}Saldo guardado correctamente.${colores.neutro}`);
+    console.log(`${colores.saludo} Saldo guardado correctamente.${colores.neutro} `);
   }
 }

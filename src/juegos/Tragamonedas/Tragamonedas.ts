@@ -114,7 +114,7 @@ export abstract class Tragamonedas extends Juego {
     for (let i = 0; i < this.cantLineas; i++) {
       if (this.verificarFila(i)) {
         gauss = this.calcularGananciaPorLinea(i + 1);
-        if ((Math.floor(this.cantRodillos / 2)) === i) { //cantRodillos / 2 es igual a la posicion del medio en el arreglo
+        if ((Math.floor((this.cantLineas + 1) / 2)) === (i+1)) { //cantLineas / 2 es igual a la posicion del medio en el arreglo
           console.log(`Coincidencia en linea central`);
           multiplicadorGanancia += gauss * this.gananciaCentral;
         } else {
