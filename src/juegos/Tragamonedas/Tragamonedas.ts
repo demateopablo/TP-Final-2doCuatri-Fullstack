@@ -42,9 +42,9 @@ export abstract class Tragamonedas extends Juego {
     if (PESOS < this.apuestaMin) return; //no tiene saldo
     let cantTiradasPosibles: number = Math.floor(PESOS / this.apuestaMin);
     jugador.modificarSaldo(PESOS % this.apuestaMin); //devuelve el resto
-    console.log(`Usted dispone de ${cantTiradasPosibles} giros`);
+    console.log(`Usted dispone de ${colores.saldoPositivoSinFondo}${cantTiradasPosibles}${colores.neutro} giros`);
     this.menuCantGiros(cantTiradasPosibles);
-    console.log(`\n--------------------------------------\nSu saldo actual es de ${this.jugador.getMonedero()}\n--------------------------------------\n`);
+    console.log(`\n--------------------------------------\nSu saldo actual es de ${colores.saldoPositivoSinFondo} $${this.jugador.getMonedero()} ${colores.neutro}\n--------------------------------------\n`);
   }
 
   protected pedirApuesta(): number {
@@ -116,10 +116,10 @@ export abstract class Tragamonedas extends Juego {
       if (this.verificarFila(i)) {
         gauss = this.calcularGananciaPorLinea(i + 1);
         if ((Math.floor((this.cantLineas + 1) / 2)) === (i+1)) { //cantLineas / 2 es igual a la posicion del medio en el arreglo
-          console.log(`Coincidencia en linea central`);
+          console.log(`${colores.juegos}Coincidencia en linea central!!!${colores.neutro}`);
           multiplicadorGanancia += gauss * this.gananciaCentral;
         } else {
-          console.log(`Coincidencia en linea ${i + 1} `);
+          console.log(`${colores.juegos}Coincidencia en linea ${i + 1}${colores.neutro}`);
           multiplicadorGanancia += gauss
         }
       }
@@ -145,7 +145,7 @@ export abstract class Tragamonedas extends Juego {
       match = (this.matrizRodillos[i][i] === valor);
       i++;
     }
-    if (match) console.log(`Coincidencia en diagonal primaria!`)
+    if (match) console.log(`${colores.juegos}Coincidencia en diagonal primaria!${colores.neutro}`)
     return match;
   }
 
@@ -160,7 +160,7 @@ export abstract class Tragamonedas extends Juego {
       i++;
       limite--;
     }
-    if (match) console.log(`Coincidencia en diagonal secundaria!`)
+    if (match) console.log(`${colores.juegos}Coincidencia en diagonal secundaria!${colores.neutro}`)
     return match;
   }
 
@@ -191,7 +191,7 @@ export abstract class Tragamonedas extends Juego {
           this.pagar(this.apuestaMin * multiplicadorGanancia);
         }
         cantTiradasPosibles--;
-        console.log(`------- Giros restantes: ${cantTiradasPosibles} -------\n`);
+        console.log(`------- Giros restantes: ${cantTiradasPosibles > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${cantTiradasPosibles}${colores.neutro} -------\n`);
         if (cantTiradasPosibles > 0) {
           this.menuCantGiros(cantTiradasPosibles);
         }

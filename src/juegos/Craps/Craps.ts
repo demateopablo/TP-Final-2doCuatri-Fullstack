@@ -3,6 +3,7 @@ import { Juego } from "../../entidades/Juego";
 import { Jugador } from "../../entidades/Jugador";
 import { Dado } from "./Dado";
 import { OpcionInvalidaError, SaldoInsuficienteError, ApuestaInferiorError, ApuestaExcesivaError } from '../../sistema/errores/ErroresPersonalizados';
+import { colores } from "../../sistema/configColores";
 
 export class Craps extends Juego {
   private pagoGanador: number = 1; // paga 1:1
@@ -65,7 +66,7 @@ export class Craps extends Juego {
     try {
       opcApuestaInicial = rdl.questionInt("\nSeleccion con que modo de juego quiere iniciar la partida\n\t1 - Pass Line\n\t2 - Don't Pass Bar\n");
       if (opcApuestaInicial > 0 && opcApuestaInicial < 3) {
-        console.log("-------------🎲🎲🎲------------ Que comience el juego -------------🎲🎲🎲------------");
+        console.log(`-------------🎲🎲🎲------------ ${colores.juegos}Que comience el juego${colores.neutro} -------------🎲🎲🎲------------`);
         let sumaDados: number = this.tirarDosDados();
         switch (opcApuestaInicial) {
           case 1:
@@ -90,16 +91,16 @@ export class Craps extends Juego {
     if (sumaDados == empate) {
       console.log(`\n-------------------------------------------------\n\t👀 Sale un ${empate}. Usted EMPATA!!! 🤷‍♂️\n-------------------------------------------------`);
       this.pagar(apuesta / 2);
-      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.jugador.getMonedero()}${colores.neutro}\n--------------------------------------\n`);
       return;
     }
     if (gana) {
-      console.log(`\n-------------------------------------------------------\n\t🍀 La tirada inicial es ${sumaDados}.  GANA!!! 🤑\n-------------------------------------------------------`);
+      console.log(`\n-------------------------------------------------------\n\t🍀 La tirada inicial es ${sumaDados}.  ${colores.saldoPositivoSinFondo}GANA!!!${colores.neutro} 🤑\n-------------------------------------------------------`);
       this.pagar(apuesta);
-      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.jugador.getMonedero()}${colores.neutro}\n--------------------------------------\n`);
     } else if (pierde) {
-      console.log(`\n-------------------------------------------------------\n\t👎 La tirada inicial es ${sumaDados}.  PIERDE!!! 😞\n-------------------------------------------------------`);
-      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+      console.log(`\n-------------------------------------------------------\n\t👎 La tirada inicial es ${sumaDados}.  ${colores.saldoCeroSinFondo}PIERDE!!!${colores.neutro} 😞\n-------------------------------------------------------`);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.jugador.getMonedero()}${colores.neutro}\n--------------------------------------\n`);
     } else {
       this.seguirTirando(opcApuestaInicial, sumaDados, apuesta)
     }
@@ -129,14 +130,14 @@ export class Craps extends Juego {
 
   private tirarHastaFin(gana: number, pierde: number, sumaDados: number, apuesta: number): boolean {
     if (sumaDados === gana) {
-      console.log(`\n-------------------------------------------------\n\t🍀 El punto ${gana} sale. GANA!!! 🤑\n-------------------------------------------------`);
+      console.log(`\n-------------------------------------------------\n\t🍀 El punto ${gana} sale. ${colores.saldoPositivoSinFondo}GANA!!!${colores.neutro} 🤑\n-------------------------------------------------`);
       this.pagar(apuesta);
-      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+      console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.jugador.getMonedero()}${colores.neutro}\n--------------------------------------\n`);
       return true;
     } else {
       if (sumaDados === pierde) {
-        console.log(`\n-------------------------------------------------\n\t👎 Sale un ${pierde}. Usted PIERDE!!! 😞\n-------------------------------------------------`);
-        console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero()}\n--------------------------------------\n`);
+        console.log(`\n-------------------------------------------------\n\t👎 Sale un ${pierde}. Usted ${colores.saldoCeroSinFondo}PIERDE!!!${colores.neutro} 😞\n-------------------------------------------------`);
+        console.log(`\n\n--------------------------------------\nSu saldo actual es de 💲${this.jugador.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.jugador.getMonedero()}${colores.neutro}\n--------------------------------------\n`);
         return true;
       }
       return false
