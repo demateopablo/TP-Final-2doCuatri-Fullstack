@@ -39,7 +39,7 @@ export class Ruleta extends Juego {
 
   }
 
-  mostrarFichas(): void {
+  private mostrarFichas(): void {
     for (let i = 0; i < this.ficha.length; i++) {
       console.log(`Ficha ${i + 1}: ${this.ficha[i]}`);
     }
