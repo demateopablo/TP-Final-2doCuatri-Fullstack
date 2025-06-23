@@ -50,8 +50,8 @@ export class Aplicacion {
       this.casino.agregarJuego(nuevoJuego);
     }
 
-    console.log(`${colores.saludo}  ~~ Bienvenid@ ${this.jugador.getNombre()} al Casino ${this.casino.getNombre()} ~~  ${colores.neutro}\n`);
-    console.log(`→ Su saldo actual es de: ${colores.saldoCero}$${this.jugador.getMonedero()}${colores.neutro}. ¡No olvides hacer tu recarga!\n`);
+    console.log(`${colores.saludo}  ~~ Bienvenid@ ${colores.saludo+'\x1b[1m'}${this.jugador.getNombre()}${colores.neutro}${colores.saludo} al Casino ${this.casino.getNombre()} ~~  ${colores.neutro}\n`);
+    console.log(`→ Su saldo actual es de: ${colores.saldoCero} $${this.jugador.getMonedero()} ${colores.neutro}. ¡No olvides hacer tu recarga!\n`);
     this.mostrarMenu();
   }
 
@@ -117,7 +117,7 @@ export class Aplicacion {
 
     } catch (error) {
       console.clear();
-      console.error(`\n${(error as SaldoInsuficienteError).message}`);
+      console.error(`${(error as SaldoInsuficienteError).message}\n`);
       this.mostrarMenu();
     }
   }
@@ -130,16 +130,16 @@ export class Aplicacion {
       }
       this.jugador.modificarSaldo(saldo);
       console.clear();
-      console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero}→ Tu nuevo saldo es $${this.jugador.getMonedero()}${colores.neutro}\n`);
+      console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero} → Tu nuevo saldo es $${this.jugador.getMonedero()} ${colores.neutro}\n`);
     } catch (error) {
-      console.error(`\n${(error as SaldoNegativoError).message}`)
+      console.error(`\n${(error as SaldoNegativoError).message}\n`)
     }
     this.mostrarMenu();
   }
 
   private mostrarSaldo(): void {
     console.clear();
-    console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero}Su saldo actual es de $${this.jugador.getMonedero()}${colores.neutro}\n`);
+    console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero} Su saldo actual es de $${this.jugador.getMonedero()} ${colores.neutro}\n`);
     this.mostrarMenu();
   }
 
@@ -148,7 +148,7 @@ export class Aplicacion {
     console.log("1 Volver a jugar");
     console.log("2 Ir al menú principal");
     console.log("---------------");
-    console.log("0 Salir");
+    console.log(`${colores.salir}0 Salir${colores.neutro}`);
     console.log("---------------");
     let op: number = this.preguntar(`Elije una opcion: `, 2);
     if (op === 1) {
@@ -158,7 +158,7 @@ export class Aplicacion {
         }
       } catch (error) {
         console.clear();
-        console.error(`\n${(error as SaldoInsuficienteError).message}`);
+        console.error(`${(error as SaldoInsuficienteError).message}\n`);
         this.mostrarMenu();
       }
       this.ejecutarJuego(opcion);
@@ -182,6 +182,6 @@ export class Aplicacion {
   private exportarSaldo(): void {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
     fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
-    console.log(`${colores.saludo}Saldo guardado correctamente.${colores.neutro}`);
+    console.log(`${colores.saludo} Saldo guardado correctamente.${colores.neutro} `);
   }
 }
