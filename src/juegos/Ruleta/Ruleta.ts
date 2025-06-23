@@ -19,6 +19,7 @@ export class Ruleta extends Juego {
   private opcion: GeneradorNumeroAleatorio;
   private conjuntoDePlenos: number[];
   private cantFichas: number;
+  private fichaUnica: number;
 
   constructor() {
 
@@ -28,12 +29,13 @@ export class Ruleta extends Juego {
     this.conjuntoRojo = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
     this.conjuntoNegro = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
     this.rojo = '🔴';
-    this.negro = `⚫`;    this.pagoPleno = 35;
+    this.negro = `⚫`; this.pagoPleno = 35;
     this.pagoColor = 1;
     this.pagoDosAUno = 2;
     this.opcion = new GeneradorNumeroAleatorio(Ruleta.MIN, Ruleta.MAX);
     this.conjuntoDePlenos = new Array();
     this.cantFichas = 0;
+    this.fichaUnica = 1;
 
   }
 
@@ -103,7 +105,7 @@ export class Ruleta extends Juego {
             console.error(`${(error as SaldoInsuficienteError).message}\n`);
           }
         }
-      } while (opcion < 1 || opcion > 4 || apuesta < this.ficha[opcion - 1])
+      } while (opcion < 1 || opcion > 4 || apuesta < this.ficha[opcion - 1])
       this.devolverResto(apuesta);
       this.calcularFichas(apuesta);
       while (this.cantFichas > 0) {
@@ -113,12 +115,10 @@ export class Ruleta extends Juego {
           this.opcionesDeApuesta();
           numApuesta = rdl.questionInt(`A que desea apostar? `);
         } while (numApuesta < 1 || numApuesta > 8)
-        let numAzar: number;
-        let fichaUnica: number = 1;
-        this.descontarSaldoPorFicha(fichaUnica);
+        let numAzar: number = this.opcion.generarNumeroAleatorio();
         switch (numApuesta) {
-          case 1: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          case 1: this.descontarFicha();
+            this.descontarSaldoPorFicha(this.fichaUnica);
             if (this.esPar(numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -126,8 +126,8 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          case 2: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          case 2: this.descontarFicha();
+            this.descontarSaldoPorFicha(this.fichaUnica);
             if (!this.esPar(numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -135,8 +135,8 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          case 3: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          case 3: this.descontarFicha();
+            this.descontarSaldoPorFicha(this.fichaUnica);
             if (this.compararNumeros(this.conjuntoRojo, numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -144,8 +144,8 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          case 4: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          case 4: this.descontarFicha();
+            this.descontarSaldoPorFicha(this.fichaUnica);
             if (this.compararNumeros(this.conjuntoNegro, numAzar)) {
               this.pagar(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -153,8 +153,8 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          case 5: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          case 5: this.descontarFicha();
+            this.descontarSaldoPorFicha(this.fichaUnica);
             if (numAzar > 0 && numAzar < 13) {
               this.pagarDocena(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -162,8 +162,8 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          case 6: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          case 6: this.descontarFicha();
+            this.descontarSaldoPorFicha(this.fichaUnica);
             if (numAzar > 12 && numAzar < 25) {
               this.pagarDocena(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -171,8 +171,8 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          case 7: this.cantFichas -= fichaUnica;
-            numAzar = this.opcion.generarNumeroAleatorio();
+          case 7: this.descontarFicha();
+            this.descontarSaldoPorFicha(this.fichaUnica);
             if (numAzar > 24 && numAzar < 36) {
               this.pagarDocena(this.valorFicha);
               this.imprimirGanador(numAzar);
@@ -180,7 +180,7 @@ export class Ruleta extends Juego {
               this.imprimirPerdedor(numAzar);
             }
             break;
-          default: numAzar = this.opcion.generarNumeroAleatorio();
+          default:
             this.elegirNumeroDePlenos(this.conjuntoDePlenos, this.cantFichas);
             this.descontarSaldoPorFicha(this.conjuntoDePlenos.length);
             const repeticiones = this.controlDeRepeticiones(this.conjuntoDePlenos, numAzar);
@@ -196,6 +196,10 @@ export class Ruleta extends Juego {
       }
 
     }
+  }
+
+  private descontarFicha(): number {
+    return this.cantFichas -= this.fichaUnica;
   }
 
   private calcularFichas(apuesta: number): number {
