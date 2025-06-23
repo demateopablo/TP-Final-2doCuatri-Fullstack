@@ -13,7 +13,6 @@ export class Ruleta extends Juego {
   private conjuntoNegro: number[];
   private rojo: string;
   private negro: string;
-  private ruleta: number[];
   private pagoPleno: number;
   private pagoColor: number;
   private pagoDosAUno: number;
@@ -29,9 +28,7 @@ export class Ruleta extends Juego {
     this.conjuntoRojo = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
     this.conjuntoNegro = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
     this.rojo = '🔴';
-    this.negro = `⚫`;
-    this.ruleta = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
-    this.pagoPleno = 35;
+    this.negro = `⚫`;    this.pagoPleno = 35;
     this.pagoColor = 1;
     this.pagoDosAUno = 2;
     this.opcion = new GeneradorNumeroAleatorio(Ruleta.MIN, Ruleta.MAX);
@@ -61,7 +58,6 @@ export class Ruleta extends Juego {
   }
 
   private obtenerColor(numero: number): string {
-    if (numero === 0) return '🟢';
     if (this.conjuntoRojo.includes(numero)) return this.rojo;
     if (this.conjuntoNegro.includes(numero)) return this.negro;
     return '';
@@ -69,7 +65,7 @@ export class Ruleta extends Juego {
 
   private mostrarPaño(): void {
     console.log(`\n======= PAÑO DE RULETA (ESTILO MESA CASINO) =======\n`);
-    console.log(`        [🟢0]`);
+    console.log(`[        🟢0        ]`);
     for (let fila = 0; fila < 12; fila++) {
       this.generarFila(fila);
     }
@@ -96,17 +92,18 @@ export class Ruleta extends Juego {
         this.mostrarFichas();
         opcion = rdl.questionInt(`Elija una ficha: `);
         try {
-          if (apuesta >= this.ficha[opcion - 1]) this.valorFicha = this.ficha[opcion - 1];
-          else throw new SaldoInsuficienteError();
+          if (opcion < 1 || opcion > 4) throw new OpcionInvalidaError()
+          else if (apuesta < this.ficha[opcion - 1]) throw new SaldoInsuficienteError();
+          this.valorFicha = this.ficha[opcion - 1];
         } catch (error) {
-          console.error(`${(error as SaldoInsuficienteError).message}\n`);
+          if (error instanceof OpcionInvalidaError) {
+            console.error(`${(error as OpcionInvalidaError).message}\n`);
+          }
+          else {
+            console.error(`${(error as SaldoInsuficienteError).message}\n`);
+          }
         }
-        try {
-          if (opcion < 1 || opcion > 4) throw new OpcionInvalidaError();
-        } catch (error) {
-          console.error(`${(error as OpcionInvalidaError).message}\n`);
-        }
-      } while (opcion < 1 || opcion > 4 || apuesta < this.ficha[opcion - 1])
+      } while (opcion < 1 || opcion > 4 || apuesta < this.ficha[opcion - 1])
       this.devolverResto(apuesta);
       this.calcularFichas(apuesta);
       while (this.cantFichas > 0) {
