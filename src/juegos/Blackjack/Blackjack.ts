@@ -4,6 +4,7 @@ import { Carta } from './Carta'
 import * as rdl from 'readline-sync';
 import { GeneradorNumeroAleatorio } from '../../servicios/GeneradorNumeroAleatorio';
 import { ApuestaInferiorError, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
+import { colores } from '../../sistema/configColores'
 
 //Objetivo del juego:
 // El objetivo del Black Jack es que el jugador obtenga una suma de cartas lo más cercana posible a 21 sin pasarse, y ganarle al crupier.
@@ -101,7 +102,7 @@ export class Blackjack extends Juego {
   }
 
   private solicitarApuesta(): number {
-    return rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}): $`);
+    return rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}, dispones de $${this.jugador.getMonedero()} para jugar): $`);
   }
 
   private validarApuesta(apuesta: number): void {
@@ -119,151 +120,155 @@ export class Blackjack extends Juego {
       this.validarApuesta(apuesta);
       return apuesta;
     } catch (error) {
-      if ((error as Error).name === "ApuestaInferiorError") {
-        console.error(`${(error as Error).message}\n`);
+      if (error instanceof ApuestaInferiorError) {
+        console.error(`${(error as ApuestaInferiorError).message}\n`);
         return this.pedirApuesta();
-      } else if ((error as Error).name === "SaldoInsuficienteError") {
-        console.error(`${(error as Error).message}\n`);
-        return 0;
-      } else {
-        console.log("Error inesperado al pedir la apuesta.");
-        console.error(error);
+      }
+      if (error instanceof SaldoInsuficienteError) {
+        console.error(`${(error as SaldoInsuficienteError).message}\n`);
         return 0;
       }
+      console.log("Error inesperado al pedir la apuesta.");
+      console.error(error);
+      return 0;
     }
   }
 
-
   private jugarCrupier(): void {
-    while (this.puntajeCrupier < 17) {
-      this.repartir(true);
-    }
-    this.mostrarCartas(this.cartasCrupier, 1, this.cartasCrupier.length, true, true);
+  while(this.puntajeCrupier < 17) {
+  this.repartir(true);
+}
+this.mostrarCartas(this.cartasCrupier, 1, this.cartasCrupier.length, true, true);
   }
 
   private repartirJugador(): void {
-    this.repartir(false);
-    this.repartir(false);
-  }
+  this.repartir(false);
+  this.repartir(false);
+}
 
   private turnoJugador(): void {
-    while (this.puedePedir) {
-      this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
+  while(this.puedePedir) {
+  this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
 
-      if (this.pedirORetirarse() === 1) {
-        if (this.puedePedir) {
-          this.repartir(false);
-          if (this.puntajeJugador > this.MAX_PUNTOS) {
-            this.puedePedir = false;
-          }
-        }
-      } else {
-        this.plantarse();
+  if (this.pedirORetirarse() === 1) {
+    if (this.puedePedir) {
+      this.repartir(false);
+      if (this.puntajeJugador > this.MAX_PUNTOS) {
+        this.puedePedir = false;
       }
     }
+  } else {
+    this.plantarse();
+  }
+}
   }
 
   private repartir(alCrupier: boolean): void {
-    const carta: Carta = this.obtenerCartaAleatoria(); //carta oculta
-    if (alCrupier) {
-      this.puntajeCrupier += carta.getValorNumerico();
-      this.cartasCrupier.push(carta);
-      if (this.esAs(carta)) this.cantAsesCrupier++; //si es un as, lo anoto
-      this.reducirAses(true); //con true es para crupier
-    }
-    else {
-      this.puntajeJugador += carta.getValorNumerico();
-      this.cartasJugador.push(carta);
-      if (this.esAs(carta)) this.cantAsesJugador++; //si es un as, lo anoto
-      this.reducirAses(false); //false para jugador        
-    }
+  const carta: Carta = this.obtenerCartaAleatoria(); //carta oculta
+  if(alCrupier) {
+    this.puntajeCrupier += carta.getValorNumerico();
+    this.cartasCrupier.push(carta);
+    if (this.esAs(carta)) this.cantAsesCrupier++; //si es un as, lo anoto
+    this.reducirAses(true); //con true es para crupier
   }
+    else {
+    this.puntajeJugador += carta.getValorNumerico();
+    this.cartasJugador.push(carta);
+    if(this.esAs(carta)) this.cantAsesJugador++; //si es un as, lo anoto
+    this.reducirAses(false); //false para jugador        
+  }
+}
 
   private mostrarCartas(cartas: Carta[], desde: number, hasta: number, esCrupier: boolean, ocultarLaPrimera: boolean): void {
-    this.reducirAses(true); //con true es para crupier
-    this.reducirAses(false); //false para jugador
+  this.reducirAses(true); //con true es para crupier
+  this.reducirAses(false); //false para jugador
 
-    let mano: string;
-    mano = ocultarLaPrimera ? '[ ? ] ' : '';
-    for (let i = desde; i < hasta; i++) {
-      mano += `[${cartas[i].getPalo()}  ${cartas[i].getValor()}] `
-    }
-    let deQuienEsLaMano: string = '';
-    deQuienEsLaMano = esCrupier ? 'Crupier:' : 'Jugador:';
-    console.log(deQuienEsLaMano, mano);
+  let mano: string;
+  mano = ocultarLaPrimera ? '[ ? ] ' : '';
+  for(let i = desde; i <hasta; i++) {
+  mano += `[${cartas[i].getPalo()}  ${cartas[i].getValor()}] `
+}
+let deQuienEsLaMano: string = '';
+deQuienEsLaMano = esCrupier ? 'Crupier:' : 'Jugador:';
+console.log(deQuienEsLaMano, mano);
   }
 
   private esAs(carta: Carta): boolean {
-    return carta.getValor() === `A`;
-  }
+  return carta.getValor() === `A`;
+}
 
   private reducirAses(esCrupier: boolean): void {
-    if (esCrupier) {
-      while (this.puntajeCrupier > 21 && this.cantAsesCrupier > 0) {
-        this.puntajeCrupier -= 10;
-        this.cantAsesCrupier -= 1;
-      }
-    } else {
-      while (this.puntajeJugador > 21 && this.cantAsesJugador > 0) {
-        this.puntajeJugador -= 10;
-        this.cantAsesJugador -= 1;
-      }
+  if(esCrupier) {
+    while (this.puntajeCrupier > 21 && this.cantAsesCrupier > 0) {
+      this.puntajeCrupier -= 10;
+      this.cantAsesCrupier -= 1;
+    }
+  } else {
+    while(this.puntajeJugador > 21 && this.cantAsesJugador > 0) {
+  this.puntajeJugador -= 10;
+  this.cantAsesJugador -= 1;
+}
     }
   }
 
   private pedirORetirarse(): number {
-    console.log(`Tenes ${this.puntajeJugador} puntos. ¿Pedis otra carta o te plantas? `);
-    let opcElegida: number;
-    do {
-      opcElegida = rdl.questionInt(`\t1 Pedir otra\n\t2 Plantarme\nElija la opcion: `);
-    } while (opcElegida < 1 || opcElegida > 2)
-    return opcElegida;
-  }
+  console.log(`Tenes ${this.puntajeJugador} puntos. ¿Pedis otra carta o te plantas? `);
+  let opcElegida: number;
+  do {
+    opcElegida = rdl.questionInt(`\t1 Pedir otra\n\t2 Plantarme\nElija la opcion: `);
+  } while (opcElegida < 1 || opcElegida > 2)
+  return opcElegida;
+}
 
   private plantarse(): void {
-    this.puedePedir = false;
-    console.clear();
-    console.log(`Te retiraste, veamos cómo te fue:`);
-  }
+  this.puedePedir = false;
+  console.clear();
+  console.log(`Te retiraste, veamos cómo te fue:`);
+}
 
   private validarResultado(): boolean {
-    const gana: string = 'Ganaste!';
-    const pierde: string = 'Perdiste!';
-    const empata: string = 'Empataste!';
-    this.reducirAses(true); //con true es para crupier
-    this.reducirAses(false); //false para jugador
-    this.mostrarCartas(this.cartasCrupier, 0, this.cartasCrupier.length, true, false);
-    this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
+  const gana: string = 'Ganaste!';
+  const pierde: string = 'Perdiste!';
+  const empata: string = 'Empataste!';
+  this.reducirAses(true); //con true es para crupier
+  this.reducirAses(false); //false para jugador
+  this.mostrarCartas(this.cartasCrupier, 0, this.cartasCrupier.length, true, false);
+  this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
 
-    //condiciones de victoria
+  //condiciones de victoria
 
-    const jugadorSePasa = this.puntajeJugador > this.MAX_PUNTOS;
-    const crupierSePasa = this.puntajeCrupier > this.MAX_PUNTOS;
+  const jugadorSePasa = this.puntajeJugador > this.MAX_PUNTOS;
+  const crupierSePasa = this.puntajeCrupier > this.MAX_PUNTOS;
 
-    let resultado: string = '';
-
-    if (jugadorSePasa) {
-      resultado = pierde
-    } else if (crupierSePasa) {
-      resultado = gana;
-    } else if (this.puntajeJugador > this.puntajeCrupier) {
-      resultado = gana;
-    } else if (this.puntajeJugador < this.puntajeCrupier) {
-      resultado = pierde;
-    } else {
-      resultado = empata;
-    }
-    let puntajes: string = `\n\t→ Crupier ${this.puntajeCrupier}\n\t→ Vos: ${this.puntajeJugador}\n`
-    console.log(`\x1b[31m\n${resultado} \x1b[33m ${puntajes} \x1b[0m`);
-    if (resultado === gana) return true
-    else return false
+  let resultado: string = '';
+  let color:string = '';
+  if (jugadorSePasa) {
+    resultado = pierde
+    color = colores.saldoCeroSinFondo;
+  } else if (crupierSePasa) {
+    resultado = gana;
+    color = colores.saldoPositivoSinFondo;
+  } else if (this.puntajeJugador > this.puntajeCrupier) {
+    resultado = gana;
+    color = colores.saldoPositivoSinFondo;
+  } else if (this.puntajeJugador < this.puntajeCrupier) {
+    resultado = pierde;
+    color = colores.saldoCeroSinFondo;
+  } else {
+    resultado = empata;
+    color = colores.saldoCeroSinFondo;
   }
+  let puntajes: string = `\n\t→ Crupier ${this.puntajeCrupier}\n\t→ Vos: ${this.puntajeJugador}\n`
+  console.log(`${color}\n${resultado} ${puntajes} ${colores.neutro}`);
+  if (resultado === gana) return true
+  else return false
+}
 
   public pagar(apuesta: number): void {
-    let ganancia: number = (apuesta * this.pagoGanador) + apuesta;
-    this.jugador.modificarSaldo(ganancia);
-    console.log(`\x1b[35m👑💎Apostaste ${apuesta} y ganaste $${ganancia} 🥳💸\x1b[0m`);
-    console.log(this.jugador.monederoToString());
-  }
+  let ganancia: number = (apuesta * this.pagoGanador) + apuesta;
+  this.jugador.modificarSaldo(ganancia);
+  console.log(`${colores.saldoPositivoSinFondo}👑💎Apostaste ${apuesta} y ganaste $${ganancia} 🥳💸${colores.neutro}`);
+  console.log(this.jugador.monederoToString());
+}
 
 }
