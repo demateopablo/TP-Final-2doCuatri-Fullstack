@@ -47,10 +47,33 @@ export class Ruleta extends Juego {
 
   }
 
-  mostrarPaño(): void {
-    console.log(`${this.ruleta.sort((a, b) => a - b)}`);
-    console.log(`Rojo: ${this.rojo} ${this.conjuntoRojo}`);
-    console.log(`Negro: ${this.negro} ${this.conjuntoNegro}`);
+  private generarFila(filaNum: number): void {
+    let fila: string = ``;
+
+    for (let col = 0; col < 3; col++) {
+      // Calcula el número que corresponde mostrar en la tabla de la ruleta
+      const numero = filaNum * 3 + col + 1; // Se suma 1 porque los números de la ruleta comienzan en 1, no en 0.
+      const color = this.obtenerColor(numero);
+      fila += `[${color}${numero}]`;
+    }
+
+    console.log(fila);
+  }
+
+  private obtenerColor(numero: number): string {
+    if (numero === 0) return '🟢';
+    if (this.conjuntoRojo.includes(numero)) return this.rojo;
+    if (this.conjuntoNegro.includes(numero)) return this.negro;
+    return '';
+  }
+
+  private mostrarPaño(): void {
+    console.log(`\n======= PAÑO DE RULETA (ESTILO MESA CASINO) =======\n`);
+    console.log(`        [🟢0]`);
+    for (let fila = 0; fila < 12; fila++) {
+      this.generarFila(fila);
+    }
+    console.log(`\n🔴 = Rojo | ⚫ = Negro | 🟢 = Verde (0)\n`);
   }
 
   private jugadorValido(apuesta: number): boolean {
