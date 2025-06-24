@@ -189,8 +189,11 @@ export class Aplicacion {
 
 
   private exportarSaldo(): void {
-    let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
-    fs.appendFileSync(`./saldos/${this.jugador.getNombre()}_saldo.txt`, `${fecha}\n${this.jugador.getMonedero()}\n\n`);
+    /* let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-"); */
+    const d = new Date();
+    const fechaHora = `${d.toLocaleDateString('es-AR')} ${d.toTimeString().slice(0, 5)}`;
+
+    fs.appendFileSync(`./saldos/${this.jugador.getNombre()}_saldo.txt`, `${fechaHora}\nDinero en cuenta: $${this.jugador.getMonedero()}\n\n`);
     console.log(`${colores.saludo} Saldo guardado correctamente.${colores.neutro} `);
   }
 }
