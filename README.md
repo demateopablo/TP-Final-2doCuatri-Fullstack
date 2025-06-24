@@ -45,7 +45,8 @@ npm run start
 
 >[!note]
 >Asegurate de tener Node.js instalado.
+
+>[!important]
 >Edades permitidas para jugar:
 >- Minima: 18
 >- Máxima: 90
-
