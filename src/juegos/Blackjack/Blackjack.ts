@@ -15,6 +15,7 @@ import { colores } from '../../sistema/configColores'
 
 export class Blackjack extends Juego {
   private MAX_PUNTOS: number = 21;
+  private MIN_PUNTOS_CRUPIER: number = 17;
   private MAZO: Carta[];
   private puntajeJugador: number;
   private puntajeCrupier: number;
@@ -87,7 +88,7 @@ export class Blackjack extends Juego {
     const apuesta = this.pedirApuesta();
     if (apuesta < this.apuestaMin) return; //saldo insuficiente
 
-    console.log(`\n${this.jugador.getNombre()}, estás jugando ${this.nombre}\n`);
+    console.log(`\n${colores.juegos}${this.jugador.getNombre()}, estás jugando ${this.nombre}${colores.neutro}`);
     this.jugador.modificarSaldo(-apuesta);
     console.log(this.jugador.monederoToString());
 
@@ -134,7 +135,7 @@ export class Blackjack extends Juego {
   }
 
   private jugarCrupier(): void {
-    while (this.puntajeCrupier < 17) {
+    while (this.puntajeCrupier < this.MIN_PUNTOS_CRUPIER) {
       this.repartir(true);
     }
     this.mostrarCartas(this.cartasCrupier, 1, this.cartasCrupier.length, true, true);
@@ -187,13 +188,17 @@ export class Blackjack extends Juego {
     this.reducirAses(false); //false para jugador
 
     let mano: string;
-    mano = ocultarLaPrimera ? '[ ? ] ' : '';
+    mano = ocultarLaPrimera ? `${colores.cartaOculta}▒▒▒?▒▒▒${colores.neutro} ` : ``;
     for (let i = desde; i < hasta; i++) {
-      mano += `[${cartas[i].getPalo()}  ${cartas[i].getValor()}] `
+      const carta:Carta = cartas[i];
+      const palo:string = carta.getPalo();
+      const valor:string = carta.getValor().padStart(2,` `);
+      const esRoja:boolean = [`♥️`,`♦️`].includes(palo);
+      mano += `${esRoja?colores.cartaPaloRojo:colores.cartaPaloNegro} ${palo}  ${valor} ${colores.neutro} `
     }
-    let deQuienEsLaMano: string = '';
-    deQuienEsLaMano = esCrupier ? 'Crupier:' : 'Jugador:';
-    console.log(deQuienEsLaMano, mano);
+    let deQuienEsLaMano: string = ``;
+    deQuienEsLaMano = esCrupier ? `Crupier:` : `Jugador:`;
+    console.log(`\n${colores.juegos}${deQuienEsLaMano}${colores.neutro}`, mano);
   }
 
   private esAs(carta: Carta): boolean {
@@ -215,10 +220,10 @@ export class Blackjack extends Juego {
   }
 
   private pedirORetirarse(): number {
-    console.log(`Tenes ${this.puntajeJugador} puntos. ¿Pedis otra carta o te plantas? `);
+    console.log(`\nTenes ${this.puntajeJugador} puntos. ¿Pedis otra carta o te plantas? `);
     let opcElegida: number;
     do {
-      opcElegida = rdl.questionInt(`\t1 Pedir otra\n\t2 Plantarme\nElija la opcion: `);
+      opcElegida = rdl.questionInt(`\t${colores.opcionesMenu}1 Pedir otra\n\t2 Plantarme${colores.neutro}\nElija la opcion: `);
     } while (opcElegida < 1 || opcElegida > 2)
     return opcElegida;
   }
