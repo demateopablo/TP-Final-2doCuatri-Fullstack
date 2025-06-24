@@ -8,7 +8,10 @@ export const colores = {
   juegos: `\x1b[38;5;38m`,
   opcionesMenu: `\x1b[38;5;33m`,
   salir: `\x1b[38;5;238m`,
-  neutro: `\x1b[0m`
+  neutro: `\x1b[0m`,
+  cartaPaloRojo: `\x1b[38;5;9m\x1b[48;5;15m`,
+  cartaPaloNegro: `\x1b[38;5;0m\x1b[48;5;15m`,
+  cartaOculta: `\x1b[1m\x1b[38;5;0m\x1b[48;5;15m`,
 }
 
 //Colores: https://talyian.github.io/ansicolors/
