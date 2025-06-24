@@ -8,6 +8,7 @@ export const colores = {
   juegos: `\x1b[38;5;38m`,
   opcionesMenu: `\x1b[38;5;33m`,
   salir: `\x1b[38;5;238m`,
+  fondoBlanco: `\x1b[1m\x1b[47m`,
   neutro: `\x1b[0m`
 }
 
