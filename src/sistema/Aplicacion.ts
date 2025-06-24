@@ -142,7 +142,7 @@ export class Aplicacion {
 
   private mostrarSaldo(): void {
     console.clear();
-    console.log(`${this.jugador.getMonedero() > 0 ? colores.saldoPositivo : colores.saldoCero} Su saldo actual es de $${this.jugador.getMonedero()} ${colores.neutro}\n`);
+    console.log(`${this.jugador.monederoToString()}`);
     this.mostrarMenu();
   }
 
@@ -189,8 +189,11 @@ export class Aplicacion {
 
 
   private exportarSaldo(): void {
-    let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");
-    fs.appendFileSync(`./saldos/${fecha}_saldo.txt`, `${this.jugador.toString()}\n\n`);
+    /* let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-"); */
+    const d = new Date();
+    const fechaHora = `${d.toLocaleDateString('es-AR')} ${d.toTimeString().slice(0, 5)}`;
+
+    fs.appendFileSync(`./saldos/${this.jugador.getNombre()}_saldo.txt`, `${fechaHora}\nDinero en cuenta: $${this.jugador.getMonedero()}\n\n`);
     console.log(`${colores.saludo} Saldo guardado correctamente.${colores.neutro} `);
   }
 }
