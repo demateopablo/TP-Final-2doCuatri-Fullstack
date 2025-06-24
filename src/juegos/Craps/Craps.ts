@@ -147,8 +147,9 @@ export class Craps extends Juego {
   private tirarDosDados(): number {
     let dado1: number = this.dado.arrojarDado();
     let dado2: number = this.dado.arrojarDado();
-    console.log(`\n${String.fromCodePoint(this.dado.imprimirCaraDado(dado1))} ${String.fromCodePoint(this.dado.imprimirCaraDado(dado2))}`);
-    console.log(`${(dado1)} ${(dado2)}\n`);
+    console.log(`\n${this.dado.imprimirCaraDado2(dado1,dado2)}`);
+    // console.log(`\n${colores.fondoBlanco}${String.fromCodePoint(this.dado.imprimirCaraDado1(dado1))} ${String.fromCodePoint(this.dado.imprimirCaraDado1(dado2))} ${colores.neutro}`);
+    // console.log(`   ${(dado1)}     ${(dado2)}\n`);
     return dado1 + dado2;
   }
 
