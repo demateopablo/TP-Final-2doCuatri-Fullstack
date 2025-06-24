@@ -29,7 +29,7 @@ export class Jugador {
   }
 
   monederoToString(): string {
-    return `\n--------------------------------------\nSu saldo actual es de $${this.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.getMonedero()}${colores.neutro}\n--------------------------------------\n`
+    return `\n--------------------------------------\n → Su saldo actual es de $${this.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.getMonedero()}${colores.neutro}\n--------------------------------------\n`
   }
 
   apostar(juego: Juego): void {

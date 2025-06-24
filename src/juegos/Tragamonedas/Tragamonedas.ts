@@ -44,7 +44,7 @@ export abstract class Tragamonedas extends Juego {
     jugador.modificarSaldo(PESOS % this.apuestaMin); //devuelve el resto
     console.log(`Usted dispone de ${colores.saldoPositivoSinFondo}${cantTiradasPosibles}${colores.neutro} giros`);
     this.menuCantGiros(cantTiradasPosibles);
-    console.log(`\n--------------------------------------\nSu saldo actual es de ${colores.saldoPositivoSinFondo} $${this.jugador.getMonedero()} ${colores.neutro}\n--------------------------------------\n`);
+    console.log(`${this.jugador.monederoToString()}`);
   }
 
   protected pedirApuesta(): number {
@@ -83,9 +83,9 @@ export abstract class Tragamonedas extends Juego {
   protected mostrarEnConsola(): void {
     let matrizToString: string = '\n';
     for (let i = 0; i < this.cantLineas; i++) {
-      matrizToString += `Linea ${i + 1}: | `;
+      matrizToString += `Linea ${i + 1}: |`;
       for (let j = 0; j < this.cantRodillos; j++) {
-        matrizToString += ` ${this.matrizRodillos[i][j]} | `;
+        matrizToString += ` ${this.matrizRodillos[i][j]} |`;
       }
       matrizToString += "\n";
     }
