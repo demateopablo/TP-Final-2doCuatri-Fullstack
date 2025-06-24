@@ -3,7 +3,7 @@ import { Jugador } from '../../entidades/Jugador'
 import { Carta } from './Carta'
 import * as rdl from 'readline-sync';
 import { GeneradorNumeroAleatorio } from '../../servicios/GeneradorNumeroAleatorio';
-import { ApuestaInferiorError, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
+import { ApuestaInferiorError, ApuestaExcesivaError } from '../../sistema/errores/ErroresPersonalizados';
 import { colores } from '../../sistema/configColores'
 
 //Objetivo del juego:
@@ -87,7 +87,7 @@ export class Blackjack extends Juego {
     const apuesta = this.pedirApuesta();
     if (apuesta < this.apuestaMin) return; //saldo insuficiente
 
-    console.log(`${this.jugador.getNombre()}, estás jugando Blackjack\n`);
+    console.log(`\n${this.jugador.getNombre()}, estás jugando ${this.nombre}\n`);
     this.jugador.modificarSaldo(-apuesta);
     console.log(this.jugador.monederoToString());
 
@@ -107,7 +107,7 @@ export class Blackjack extends Juego {
 
   private validarApuesta(apuesta: number): void {
     if (!super.jugadorApto(this.jugador.getMonedero(), apuesta)) {
-      throw new SaldoInsuficienteError();
+      throw new ApuestaExcesivaError();
     }
     if (!super.leAlcanzaParaJugar(apuesta)) {
       throw new ApuestaInferiorError();
@@ -124,12 +124,11 @@ export class Blackjack extends Juego {
         console.error(`${(error as ApuestaInferiorError).message}\n`);
         return this.pedirApuesta();
       }
-      if (error instanceof SaldoInsuficienteError) {
-        console.error(`${(error as SaldoInsuficienteError).message}\n`);
+      if (error instanceof ApuestaExcesivaError) {
+        console.error(`${(error as ApuestaExcesivaError).message}\n`);
         return 0;
       }
-      console.log("Error inesperado al pedir la apuesta.");
-      console.error(error);
+      console.error((error as Error).message);
       return 0;
     }
   }
@@ -175,7 +174,11 @@ export class Blackjack extends Juego {
       this.puntajeJugador += carta.getValorNumerico();
       this.cartasJugador.push(carta);
       if (this.esAs(carta)) this.cantAsesJugador++; //si es un as, lo anoto
-      this.reducirAses(false); //false para jugador        
+      this.reducirAses(false); //false para jugador
+      if (this.puntajeJugador === this.MAX_PUNTOS) {
+        console.log(`Tiene ${this.MAX_PUNTOS} puntos! → Validación de resultado automática...`)
+        this.plantarse(); //BLACKJACK!
+      }
     }
   }
 
@@ -223,13 +226,13 @@ export class Blackjack extends Juego {
   private plantarse(): void {
     this.puedePedir = false;
     console.clear();
-    console.log(`Te retiraste, veamos cómo te fue:`);
+    console.log(`Veamos cómo te fue:`);
   }
 
   private validarResultado(): boolean {
     const gana: string = 'Ganaste!';
     const pierde: string = 'Perdiste!';
-    const empata: string = 'Empataste!';
+    const empata: string = 'Empataste! (La casa gana)';
     this.reducirAses(true); //con true es para crupier
     this.reducirAses(false); //false para jugador
     this.mostrarCartas(this.cartasCrupier, 0, this.cartasCrupier.length, true, false);
@@ -267,7 +270,7 @@ export class Blackjack extends Juego {
   public pagar(apuesta: number): void {
     let ganancia: number = (apuesta * this.pagoGanador) + apuesta;
     this.jugador.modificarSaldo(ganancia);
-    console.log(`${colores.saldoPositivoSinFondo}👑💎Apostaste ${apuesta} y ganaste $${ganancia} 🥳💸${colores.neutro}`);
+    console.log(`${colores.saldoPositivoSinFondo}👑💎Apostaste $${apuesta} y ganaste $${ganancia} 🥳💸${colores.neutro}`);
     console.log(this.jugador.monederoToString());
   }
 
