@@ -1,4 +1,5 @@
 import { Juego } from "./Juego";
+import { colores } from '../sistema/configColores'
 
 export class Jugador {
   private nombre: string;
@@ -28,7 +29,7 @@ export class Jugador {
   }
 
   monederoToString(): string {
-    return `Tu saldo actual es de $${this.monedero}.`
+    return `\n--------------------------------------\nSu saldo actual es de $${this.getMonedero() > 0 ? colores.saldoPositivoSinFondo : colores.saldoCeroSinFondo}${this.getMonedero()}${colores.neutro}\n--------------------------------------\n`
   }
 
   apostar(juego: Juego): void {

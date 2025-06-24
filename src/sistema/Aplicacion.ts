@@ -3,9 +3,7 @@ import * as fs from 'fs';
 import { Casino } from "./Casino";
 import { Jugador } from "../entidades/Jugador";
 import { FabricaDeJuegos } from './FabricaDeJuegos';
-import { SaldoNegativoError } from './errores/ErroresPersonalizados';
-import { SaldoInsuficienteError } from './errores/ErroresPersonalizados';
-import { EdadInsuficienteError } from './errores/ErroresPersonalizados';
+import { SaldoInsuficienteError, EdadInsuficienteError, EdadMayorAlLimiteError, EdadMenorACeroError, InstanciaExistenteError, OpcionInvalidaError, SaldoNegativoError } from './errores/ErroresPersonalizados';
 import { colores } from '../sistema/configColores'
 
 export class Aplicacion {
@@ -14,9 +12,11 @@ export class Aplicacion {
   private casino: Casino;
   private jugador: Jugador;
   private edadMinima: number;
+  private edadMaxima: number;
 
   constructor() {
     this.edadMinima = 18;
+    this.edadMaxima = 90;
     this.casino = new Casino("Money.for(nothing)");
     this.jugador = this.crearJugador();
   }
@@ -27,7 +27,7 @@ export class Aplicacion {
       if (!this.instancia) {
         this.instancia = new Aplicacion();
       }
-      else throw new Error("La instancia ya existe");
+      else throw new InstanciaExistenteError();
     } catch (error) {
       console.error(`\n${(error as Error).message}`)
     }
@@ -40,23 +40,24 @@ export class Aplicacion {
       "Blackjack",
       "Tragamonedas3",
       "Tragamonedas5",
-      "Ruleta",
+      "Ruleta"
     ];
 
     let fabrica = new FabricaDeJuegos();
 
     for (let juego of todosLosJuegos) {
       let nuevoJuego = fabrica.fabricarJuego(juego);
-      this.casino.agregarJuego(nuevoJuego);
+      if (nuevoJuego !== undefined) this.casino.agregarJuego(nuevoJuego);
     }
 
-    console.log(`${colores.saludo}  ~~ Bienvenid@ ${colores.saludo+'\x1b[1m'}${this.jugador.getNombre()}${colores.neutro}${colores.saludo} al Casino ${this.casino.getNombre()} ~~  ${colores.neutro}\n`);
+    console.log(`${colores.saludo}  ~~ Bienvenid@ ${colores.saludo + '\x1b[1m'}${this.jugador.getNombre()}${colores.neutro}${colores.saludo} al Casino ${this.casino.getNombre()} ~~  ${colores.neutro}\n`);
     console.log(`→ Su saldo actual es de: ${colores.saldoCero} $${this.jugador.getMonedero()} ${colores.neutro}. ¡No olvides hacer tu recarga!\n`);
     this.mostrarMenu();
   }
 
   private crearJugador(): Jugador {
     let nombre: string = rdl.question("Ingresa tu nombre: ");
+    nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase(); //capitalizamos la primer letra del nombre
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");
     if (!this.validarEdad(edad)) {
       return this.crearJugador();
@@ -67,8 +68,10 @@ export class Aplicacion {
 
   private validarEdad(edad: number): boolean {
     try {
-      if (edad >= this.edadMinima) return true
-      else throw new EdadInsuficienteError();
+      if (edad < 1) throw new EdadMenorACeroError(); //Como va a tener menos de un año?
+      if (edad > this.edadMaxima) throw new EdadMayorAlLimiteError(); //mas de 80 se pueden morir de un infarto!!!
+      if (edad < this.edadMinima) throw new EdadInsuficienteError(this.edadMinima);
+      return true
     } catch (error) {
       console.error(`\n${(error as EdadInsuficienteError).message}\n`)
       return false;
@@ -173,11 +176,17 @@ export class Aplicacion {
 
   private preguntar(mensaje: string, cantOpciones: number): number {
     let opcElegida: number;
-    do {
+    try {
       opcElegida = rdl.questionInt(mensaje);
-    } while (opcElegida < 0 || opcElegida > cantOpciones)
-    return opcElegida;
+      if (opcElegida < 0 || opcElegida > cantOpciones) throw new OpcionInvalidaError;
+      else return opcElegida;
+    }
+    catch (error) {
+      console.error((error as OpcionInvalidaError).message);
+      return this.preguntar("Elija una opcion: ", this.casino.getCantJuegos() + 2);
+    }
   }
+
 
   private exportarSaldo(): void {
     let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-");

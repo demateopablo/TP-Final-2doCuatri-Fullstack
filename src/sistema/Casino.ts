@@ -15,7 +15,6 @@ export class Casino {
   }
 
   getJuego(index: number): Juego{
-    //Falta control de error, que pasa si el index esta fuera del array?
     return this.juegos[index];
   }
 
@@ -24,7 +23,6 @@ export class Casino {
   }
 
   agregarJuego(juego: Juego): void{
-    //Control de error: Verificar que el juego no exista antes de agregarlo
     this.juegos.push(juego);
   }
 
