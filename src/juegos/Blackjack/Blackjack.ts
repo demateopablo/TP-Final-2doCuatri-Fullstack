@@ -97,7 +97,7 @@ export class Blackjack extends Juego {
 
     this.turnoJugador();
 
-    if (this.validarResultado()) {
+    if (this.procesarResultado()) {
       this.pagar(apuesta);
     }
   }
@@ -148,9 +148,11 @@ export class Blackjack extends Juego {
 
   private turnoJugador(): void {
     while (this.puedePedir) {
+      console.clear();
+      this.mostrarCartas(this.cartasCrupier, 1, this.cartasCrupier.length, true, true);
       this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
 
-      if (this.pedirORetirarse() === 1) {
+      if (this.continuarJugando()) {
         if (this.puedePedir) {
           this.repartir(false);
           if (this.puntajeJugador > this.MAX_PUNTOS) {
@@ -161,6 +163,7 @@ export class Blackjack extends Juego {
         this.plantarse();
       }
     }
+    console.clear();
   }
 
   private repartir(alCrupier: boolean): void {
@@ -190,16 +193,16 @@ export class Blackjack extends Juego {
     let mano: string;
     mano = ocultarLaPrimera ? `${colores.cartaOculta}   ?   ${colores.neutro} ` : ``;
     for (let i = desde; i < hasta; i++) {
-      const carta:Carta = cartas[i];
-      const palo:string = carta.getPalo();
-      const valor:string = carta.getValor().padStart(2,` `);
-      const esRoja:boolean = [`♥️`,`♦️`].includes(palo);
-      mano += `${esRoja?colores.cartaPaloRojo:colores.cartaPaloNegro} ${palo}  ${valor} ${colores.neutro} `
+      const carta: Carta = cartas[i];
+      const palo: string = carta.getPalo();
+      const valor: string = carta.getValor().padStart(2, ` `);
+      const esRoja: boolean = [`♥️`, `♦️`].includes(palo);
+      mano += `${esRoja ? colores.cartaPaloRojo : colores.cartaPaloNegro} ${palo}  ${valor} ${colores.neutro} `
     }
-    const cantCartas:number = cartas.length;
-    let blank:string=``;
-    for (let i=0;i<cantCartas;i++){
-      blank+=`${colores.fondoBlanco}       ${colores.neutro} `;
+    const cantCartas: number = cartas.length;
+    let blank: string = ``;
+    for (let i = 0; i < cantCartas; i++) {
+      blank += `${colores.fondoBlanco}       ${colores.neutro} `;
     }
     let deQuienEsLaMano: string = ``;
     deQuienEsLaMano = esCrupier ? `Crupier:` : `Jugador:`;
@@ -227,58 +230,66 @@ export class Blackjack extends Juego {
     }
   }
 
-  private pedirORetirarse(): number {
-    console.log(`\n${this.puntajeJugador<this.MIN_PUNTOS_CRUPIER?colores.saldoPositivo:colores.saldoCero}Tu puntaje actual es ${this.puntajeJugador} puntos.${colores.neutro} ¿Pedis otra carta o te plantas? `);
+  private continuarJugando(): boolean {
+    console.log(`\n${this.puntajeJugador < this.MIN_PUNTOS_CRUPIER ? colores.saldoPositivo : colores.saldoCero}Tu puntaje actual es ${this.puntajeJugador} puntos.${colores.neutro} ¿Pedis otra carta o te plantas? `);
     let opcElegida: number;
     do {
       opcElegida = rdl.questionInt(`\t${colores.opcionesMenu}1 Pedir otra\n\t2 Plantarme${colores.neutro}\nElija la opcion: `);
     } while (opcElegida < 1 || opcElegida > 2)
-      console.log(``)
-    return opcElegida;
+    console.log(``)
+    if (opcElegida === 1) return true
+    else return false
   }
 
   private plantarse(): void {
     this.puedePedir = false;
-    console.clear();
+    /* console.clear(); */
     console.log(`Veamos cómo te fue:`);
   }
 
-  private validarResultado(): boolean {
-    const gana: string = 'Ganaste!';
-    const pierde: string = 'Perdiste!';
-    const empata: string = 'Empataste! (La casa gana)';
-    this.reducirAses(true); //con true es para crupier
-    this.reducirAses(false); //false para jugador
+  private ganoJugador(): boolean {
+    const jugadorSePasa: boolean = this.puntajeJugador > this.MAX_PUNTOS;
+    const crupierSePasa: boolean = this.puntajeCrupier > this.MAX_PUNTOS;
+
+    if (jugadorSePasa) return false;
+    if (crupierSePasa) return true;
+    if (this.puntajeJugador > this.puntajeCrupier) return true;
+    return false; // pierde o empata
+  }
+
+  private prepararEstadoFinalPartida(): void {
+    this.reducirAses(true); // Crupier
+    this.reducirAses(false); // Jugador
     this.mostrarCartas(this.cartasCrupier, 0, this.cartasCrupier.length, true, false);
     this.mostrarCartas(this.cartasJugador, 0, this.cartasJugador.length, false, false);
+  }
 
-    //condiciones de victoria
-
-    const jugadorSePasa = this.puntajeJugador > this.MAX_PUNTOS;
-    const crupierSePasa = this.puntajeCrupier > this.MAX_PUNTOS;
-
-    let resultado: string = '';
+  private mostrarResultadoFinal(gano: boolean): void {
+    let mensaje: string = '';
     let color: string = '';
-    if (jugadorSePasa) {
-      resultado = pierde
-      color = colores.saldoCeroSinFondo;
-    } else if (crupierSePasa) {
-      resultado = gana;
+
+    const empate: boolean = this.puntajeJugador === this.puntajeCrupier;
+
+    if (gano) {
+      mensaje = 'Ganaste!';
       color = colores.saldoPositivoSinFondo;
-    } else if (this.puntajeJugador > this.puntajeCrupier) {
-      resultado = gana;
-      color = colores.saldoPositivoSinFondo;
-    } else if (this.puntajeJugador < this.puntajeCrupier) {
-      resultado = pierde;
+    } else if (empate) {
+      mensaje = 'Empataste! (La casa gana)';
       color = colores.saldoCeroSinFondo;
     } else {
-      resultado = empata;
+      mensaje = 'Perdiste!';
       color = colores.saldoCeroSinFondo;
     }
-    let puntajes: string = `\n\t→ Crupier ${this.puntajeCrupier}\n\t→ Vos: ${this.puntajeJugador}\n`
-    console.log(`${color}\n${resultado} ${puntajes} ${colores.neutro}`);
-    if (resultado === gana) return true
-    else return false
+
+    const puntajes = `\n\t→ Crupier ${this.puntajeCrupier}\n\t→ Vos: ${this.puntajeJugador}\n`;
+    console.log(`${color}\n${mensaje} ${puntajes} ${colores.neutro}`);
+  }
+
+  private procesarResultado(): boolean {
+    this.prepararEstadoFinalPartida();
+    const gano: boolean = this.ganoJugador();
+    this.mostrarResultadoFinal(gano);
+    return gano;
   }
 
   public pagar(apuesta: number): void {
