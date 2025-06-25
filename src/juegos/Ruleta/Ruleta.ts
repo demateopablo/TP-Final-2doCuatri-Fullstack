@@ -5,8 +5,8 @@ import * as rdl from 'readline-sync';
 import { OpcionInvalidaError, SaldoInsuficienteError } from '../../sistema/errores/ErroresPersonalizados';
 
 export class Ruleta extends Juego {
-  private static MIN: number = 0;
-  private static MAX: number = 36;
+  private MIN: number = 0;
+  private MAX: number = 36;
   private ficha: number[];
   private valorFicha: number;
   private conjuntoRojo: number[];
@@ -32,7 +32,7 @@ export class Ruleta extends Juego {
     this.negro = `⚫`; this.pagoPleno = 35;
     this.pagoColor = 1;
     this.pagoDosAUno = 2;
-    this.opcion = new GeneradorNumeroAleatorio(Ruleta.MIN, Ruleta.MAX);
+    this.opcion = new GeneradorNumeroAleatorio(this.MIN, this.MAX);
     this.conjuntoDePlenos = new Array();
     this.cantFichas = 0;
     this.fichaUnica = 1;
@@ -252,20 +252,27 @@ export class Ruleta extends Juego {
   }
 
   private elegirNumeroDePlenos(conjuntoDePlenos: number[], cantFichas: number): void {
+    conjuntoDePlenos.length = 0;// vacio el arreglo por si quiere volver a jugar
     let cantNumeros: number = rdl.questionInt(`\nA cuantos numeros desea apostar?\n`);
     try {
       if (((this.valorFicha * cantNumeros <= this.jugador.getMonedero() && cantNumeros <= cantFichas))) {
         let numElegido: number;
         do {
           numElegido = rdl.questionInt(`\nElija el siguiente numero a apostar\n`);
-          conjuntoDePlenos.push(numElegido);
+          if (numElegido >= this.MIN && numElegido <= this.MAX) conjuntoDePlenos.push(numElegido);
+          else throw new OpcionInvalidaError
         } while (conjuntoDePlenos.length != cantNumeros)
       } else {
         throw new SaldoInsuficienteError();
       }
     } catch (error) {
-      console.error(`${(error as SaldoInsuficienteError).message}\n`);
-      this.elegirNumeroDePlenos(conjuntoDePlenos, cantFichas);
+      if (error instanceof SaldoInsuficienteError) {
+        console.error(`${(error as SaldoInsuficienteError).message}\n`);
+        this.elegirNumeroDePlenos(conjuntoDePlenos, cantFichas);
+      } else {
+        console.error(`${(error as OpcionInvalidaError).message}\n`);
+        this.elegirNumeroDePlenos(conjuntoDePlenos, cantFichas);
+      }
     }
   }
 
