@@ -198,7 +198,7 @@ export class Blackjack extends Juego {
     for (let i = desde; i < hasta; i++) {
       const carta: Carta = cartas[i];
       const palo: string = carta.getPalo();
-      const valor: string = carta.getValor().padStart(2, ` `);
+      const valor: string = carta.getValor().padEnd(2, ` `);
       const esRoja: boolean = [`♥️`, `♦️`].includes(palo);
       mano += `${esRoja ? colores.cartaPaloRojo : colores.cartaPaloNegro} ${palo}  ${valor} ${colores.neutro} `
     }
