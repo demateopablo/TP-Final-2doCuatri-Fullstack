@@ -29,7 +29,7 @@ export class Aplicacion {
       }
       else throw new InstanciaExistenteError();
     } catch (error) {
-      console.error(`\n${(error as Error).message}`)
+      console.error(`\n${(error as InstanciaExistenteError).message}`)
     }
     return this.instancia;
   }
@@ -187,13 +187,19 @@ export class Aplicacion {
     }
   }
 
-
   private exportarSaldo(): void {
-    /* let fecha: string = new Date().toLocaleDateString().replace("/", "-").replace("/", "-"); */
-    const d = new Date();
-    const fechaHora = `${d.toLocaleDateString('es-AR')} ${d.toTimeString().slice(0, 5)}`;
+    try {
+      const d = new Date();
+      const fechaHora = `${d.toLocaleDateString('es-AR')} ${d.toTimeString().slice(0, 5)}`;
+      const carpeta = './saldos';
+      if (!fs.existsSync(carpeta)) { //si no existe la carpeta...
+        fs.mkdirSync(carpeta); // la creamos con mkdirSync
+      }
 
-    fs.appendFileSync(`./saldos/${this.jugador.getNombre()}_saldo.txt`, `${fechaHora}\nDinero en cuenta: $${this.jugador.getMonedero()}\n\n`);
-    console.log(`${colores.saludo} Saldo guardado correctamente.${colores.neutro} `);
+      fs.appendFileSync(`${carpeta}/${this.jugador.getNombre()}_saldo.txt`, `${fechaHora}\nDinero en cuenta: $${this.jugador.getMonedero()}\n\n`);
+      console.log(`${colores.saludo} Saldo guardado correctamente.${colores.neutro} `);
+    } catch (error) {
+      console.error((error as Error).message);
+    }
   }
 }
