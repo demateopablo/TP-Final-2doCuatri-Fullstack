@@ -81,14 +81,17 @@ export class Blackjack extends Juego {
     //el ! al final es para asegurarle a typescript que nunca va a ser undefined. (Con un solo jugador en el blackjack no pasaria nunca)
   }
 
+  private mostrarInstrucciones(): void {
+    console.log(`~~ ${colores.opcionesMenu}${this.jugador.getNombre()}, bienvenido al 🃏 ${this.nombre} 🃏~~\n\n${colores.saludo }Objetivo: acercarse lo más posible a 21 sin pasarse.\nCada carta tiene un valor. Si se pasa de 21, pierde.\n\nOpciones durante el juego:\n\t👉 'Pedir' para robar una carta\n\t✋ 'Plantarse' para quedarte con tu mano\n\n🏆 Gana quien esté más cerca de 21 sin pasarse.\n🟥 En caso de empate, la casa gana.${colores.neutro}\n─────────────────────────────────────────────
+`);
+  }
+
   public jugar(jugador: Jugador): void {
     this.jugador = jugador;
     this.reiniciarPartida();
-
+    this.mostrarInstrucciones();
     const apuesta = this.pedirApuesta();
     if (apuesta < this.apuestaMin) return; //saldo insuficiente
-
-    console.log(`\n${colores.juegos}${this.jugador.getNombre()}, estás jugando ${this.nombre}${colores.neutro}`);
     this.jugador.modificarSaldo(-apuesta);
     console.log(this.jugador.monederoToString());
 

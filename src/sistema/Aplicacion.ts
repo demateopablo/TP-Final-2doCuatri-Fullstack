@@ -56,6 +56,7 @@ export class Aplicacion {
   }
 
   private crearJugador(): Jugador {
+    console.clear();
     let nombre: string = rdl.question("Ingresa tu nombre: ");
     nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase(); //capitalizamos la primer letra del nombre
     let edad: number = rdl.questionInt("Ingresa tu Edad: ");

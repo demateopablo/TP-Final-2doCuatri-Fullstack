@@ -1,4 +1,3 @@
 *.js
 saldos/*.txt
 node_modules/
-!saldos/
