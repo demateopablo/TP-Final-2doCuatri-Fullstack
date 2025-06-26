@@ -29,7 +29,8 @@ export class Ruleta extends Juego {
     this.conjuntoRojo = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
     this.conjuntoNegro = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
     this.rojo = '🔴';
-    this.negro = `⚫`; this.pagoPleno = 35;
+    this.negro = `⚫`; 
+    this.pagoPleno = 35;
     this.pagoColor = 1;
     this.pagoDosAUno = 2;
     this.opcion = new GeneradorNumeroAleatorio(this.MIN, this.MAX);
@@ -50,8 +51,10 @@ export class Ruleta extends Juego {
     let fila: string = ``;
 
     for (let col = 0; col < 3; col++) {
-      // Calcula el número que corresponde mostrar en la tabla de la ruleta
-      const numero: number = filaNum * 3 + col + 1; // Se suma 1 porque los números de la ruleta comienzan en 1, no en 0.
+      const numero: number = filaNum * 3 + col + 1;
+      // /*filaNum * 3 avanza en bloques de 3 números según la fila.
+      //col suma la posición dentro de esa fila (0 a 2).
+      //+ 1 ajusta para que los números empiecen en 1, no en 0.*/
       const color: string = this.obtenerColor(numero);
       fila += `[${color}${(numero).toString().padStart(2, ` `)}]`;
     }
