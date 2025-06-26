@@ -51,9 +51,9 @@ export class Ruleta extends Juego {
 
     for (let col = 0; col < 3; col++) {
       // Calcula el número que corresponde mostrar en la tabla de la ruleta
-      const numero = filaNum * 3 + col + 1; // Se suma 1 porque los números de la ruleta comienzan en 1, no en 0.
-      const color = this.obtenerColor(numero);
-      fila += `[${color}${numero}]`;
+      const numero: number = filaNum * 3 + col + 1; // Se suma 1 porque los números de la ruleta comienzan en 1, no en 0.
+      const color: string = this.obtenerColor(numero);
+      fila += `[${color}${(numero).toString().padStart(2, ` `)}]`;
     }
 
     console.log(fila);
@@ -67,11 +67,10 @@ export class Ruleta extends Juego {
 
   private mostrarPaño(): void {
     console.log(`\n======= PAÑO DE RULETA (ESTILO MESA CASINO) =======\n`);
-    console.log(`[        🟢0        ]`);
+    console.log(`[       🟢0      ]`);
     for (let fila = 0; fila < 12; fila++) {
       this.generarFila(fila);
     }
-    console.log(`\n🔴 = Rojo | ⚫ = Negro | 🟢 = Verde (0)\n`);
   }
 
   private jugadorValido(apuesta: number): boolean {
@@ -219,22 +218,22 @@ export class Ruleta extends Juego {
   }
 
   private imprimirGanador(numAzar: number): void {
-    console.log(`\nGanaste con el numero ${numAzar}\n`);
-    console.log(`\nTu saldo ahora es: ${this.jugador.getMonedero()}`);
+    console.log(`\nGanaste con el numero ${numAzar}`);
+    console.log(this.jugador.monederoToString());
     console.log(`\nQuedan ${this.cantFichas} fichas para usar.`);
   }
 
   private imprimirPerdedor(numAzar: number): void {
-    console.log(`\nPerdiste, el número es: ${numAzar}\n`);
+    console.log(`\nPerdiste, el número es: ${numAzar}`);
+    console.log(this.jugador.monederoToString());
     console.log(`\nQuedan ${this.cantFichas} fichas para usar.`);
-    console.log(`\nTu saldo ahora es: ${this.jugador.getMonedero()}`);
   }
 
   private opcionesDeApuesta(): void {
-    console.log(`1. Pares`);
+    console.log(`\n1. Pares`);
     console.log(`2. Impares`);
-    console.log(`3. Rojos`);
-    console.log(`4. Negros`);
+    console.log(`3. 🔴 Rojo`);
+    console.log(`4. ⚫ Negro`);
     console.log(`5. 1° Docena`);
     console.log(`6. 2° Docena`);
     console.log(`7. 3° Docena`);
@@ -295,5 +294,4 @@ export class Ruleta extends Juego {
   private pagarPleno(valorFicha: number): void {
     this.jugador.modificarSaldo((valorFicha * this.pagoPleno));
   }
-
 }
