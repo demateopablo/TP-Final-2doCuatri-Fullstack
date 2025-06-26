@@ -194,7 +194,7 @@ export class Blackjack extends Juego {
     this.reducirAses(false); //false para jugador
 
     let mano: string;
-    mano = ocultarLaPrimera ? `${colores.cartaOculta}   ?   ${colores.neutro} ` : ``;
+    mano = ocultarLaPrimera ? `${colores.fondoBlanco}   ?   ${colores.neutro} ` : ``;
     for (let i = desde; i < hasta; i++) {
       const carta: Carta = cartas[i];
       const palo: string = carta.getPalo();

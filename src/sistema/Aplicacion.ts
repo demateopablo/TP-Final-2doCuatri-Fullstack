@@ -197,7 +197,7 @@ export class Aplicacion {
       }
 
       fs.appendFileSync(`${carpeta}/${this.jugador.getNombre()}_saldo.txt`, `${fechaHora}\nDinero en cuenta: $${this.jugador.getMonedero()}\n\n`);
-      console.log(`${colores.saludo} Saldo guardado correctamente.${colores.neutro} `);
+      console.log(`${colores.saludo}Saldo guardado correctamente.${colores.neutro} `);
     } catch (error) {
       console.error((error as Error).message);
     }
