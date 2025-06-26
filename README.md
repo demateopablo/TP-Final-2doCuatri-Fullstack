@@ -125,7 +125,7 @@ npm run start
 
 ![image](https://github.com/user-attachments/assets/995919f5-f92c-41d9-879d-c3a91e7acfe5)
 
-![image](https://github.com/user-attachments/assets/4fdae832-2e19-48ea-8abb-41dee13a6058)
+![image](https://github.com/user-attachments/assets/42b7f2ed-80aa-464e-816e-d7f29e8dc69a)
 
 ![image](https://github.com/user-attachments/assets/2a0b5469-fb6a-4551-8eaf-e92b04c5ca73)
 
