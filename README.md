@@ -7,8 +7,9 @@
 - [Requisitos previos](#requisitos-previos)
 - [Instrucciones para ejecutar](#instrucciones-para-ejecutar-el-proyecto-localmente)
 - [Consideraciones](#consideraciones)
+- [Capturas de pantalla]()
 
-## 🎰 Casino Money.for{Nothing}
+## 🎰 Casino Money.for{nothing}
 Este proyecto simula un casino virtual llamado Money.for{Nothing}, en el que se puede jugar y apostar dinero ficticio en distintos juegos de azar. Incluye los siguientes juegos:
 
 - 🎲 `Craps`
@@ -18,7 +19,7 @@ Este proyecto simula un casino virtual llamado Money.for{Nothing}, en el que se 
 
 El objetivo del casino es brindar una experiencia de entretenimiento, sin involucrar dinero real. Todas las apuestas se hacen con saldo virtual, almacenado localmente.
 
-[Ir arriba ⬆️](#Indice)
+[Ir arriba ⬆️](#%C3%ADndice)
 
 --------------
 
@@ -100,10 +101,32 @@ npm install
 npm run start
 ```
 
+--------------
+
 ## Consideraciones
 
 >[!important]
 >- Edad mínima para jugar: **18 años**
 >- Edad máxima permitida: **90 años**
+
+[Ir arriba ⬆️](#%C3%ADndice)
+
+--------------
+
+## Capturas de pantalla
+
+![image](https://github.com/user-attachments/assets/2decd020-8b99-4240-a2a2-b0aca10214d8)
+
+![image](https://github.com/user-attachments/assets/943bfef6-0ca0-44e2-b40a-c92480bd454c)
+
+![image](https://github.com/user-attachments/assets/bc2f8ba8-833a-42f0-b00d-e7ed73d79b35)
+
+![image](https://github.com/user-attachments/assets/a12904ff-1797-4d18-b444-ce81a83fc948)
+
+![image](https://github.com/user-attachments/assets/995919f5-f92c-41d9-879d-c3a91e7acfe5)
+
+![image](https://github.com/user-attachments/assets/42b7f2ed-80aa-464e-816e-d7f29e8dc69a)
+
+![image](https://github.com/user-attachments/assets/2a0b5469-fb6a-4551-8eaf-e92b04c5ca73)
 
 [Ir arriba ⬆️](#%C3%ADndice)
