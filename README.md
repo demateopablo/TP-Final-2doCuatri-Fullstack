@@ -25,9 +25,14 @@ El objetivo del casino es brindar una experiencia de entretenimiento, sin involu
 
 ## Autores
 
-- [<img width='25px' src='https://avatars.githubusercontent.com/u/126516827?v=4'> Arias Gustavo](https://github.com/elgusty3a)
-- [<img width='25px' src='https://avatars.githubusercontent.com/u/63564990?v=4'> Demateo Pablo](https://github.com/demateopablo)
-- [<img width='25px' src='https://avatars.githubusercontent.com/u/131464509?v=4'> Seguel Nahuel](https://github.com/nahuelseguel)
+- [<img width='25px' src='https://avatars.githubusercontent.com/u/126516827?v=4'> Arias Gustavo](https://github.com/elgusty3a)  
+  ↳ Desarrolló el juego 🎲 **Craps** y colaboró en 🎰 **Tragamonedas**
+
+- [<img width='25px' src='https://avatars.githubusercontent.com/u/63564990?v=4'> Demateo Pablo](https://github.com/demateopablo)  
+  ↳ Desarrolló el juego ♠️ **Blackjack** y colaboró en 🎰 **Tragamonedas**
+
+- [<img width='25px' src='https://avatars.githubusercontent.com/u/131464509?v=4'> Seguel Nahuel](https://github.com/nahuelseguel)  
+  ↳ Desarrolló el juego 🎡 **Ruleta** y colaboró en 🎰 **Tragamonedas**
 
 --------------
 
