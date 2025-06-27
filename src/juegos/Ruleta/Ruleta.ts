@@ -183,6 +183,7 @@ export class Ruleta extends Juego {
             }
             break;
           default:
+            this.conjuntoDePlenos = [];
             this.elegirNumeroDePlenos(this.conjuntoDePlenos, this.cantFichas);
             this.descontarSaldoPorFicha(this.conjuntoDePlenos.length);
             this.descontarFicha(this.conjuntoDePlenos.length)
@@ -253,27 +254,26 @@ export class Ruleta extends Juego {
     return contador;
   }
 
-  private elegirNumeroDePlenos(conjuntoDePlenos: number[], cantFichas: number): void {
-    conjuntoDePlenos.length = 0;// vacio el arreglo por si quiere volver a jugar
-    let cantNumeros: number = rdl.questionInt(`\nA cuantos numeros desea apostar?\n`);
+  private elegirNumeroDePlenos(conjuntoDePlenos: number[], cantFichas: number, cantNumeros: number = 0): void {
+    cantNumeros <= 0 || cantNumeros > cantFichas ? cantNumeros = rdl.questionInt(`\nA cuantos numeros desea apostar?\n`):"";
     try {
-      if (((this.valorFicha * cantNumeros <= this.jugador.getMonedero() && cantNumeros <= cantFichas))) {
+      if (((cantNumeros > 0 && this.valorFicha * cantNumeros <= this.jugador.getMonedero() && cantNumeros <= cantFichas))) {
         let numElegido: number;
         do {
           numElegido = rdl.questionInt(`\nElija el siguiente numero a apostar\n`);
           if (numElegido >= this.MIN && numElegido <= this.MAX) conjuntoDePlenos.push(numElegido);
-          else throw new OpcionInvalidaError
-        } while (conjuntoDePlenos.length != cantNumeros)
+          else throw new OpcionInvalidaError();
+        } while (conjuntoDePlenos.length < cantNumeros)
       } else {
         throw new SaldoInsuficienteError();
       }
     } catch (error) {
       if (error instanceof SaldoInsuficienteError) {
         console.error(`${(error as SaldoInsuficienteError).message}\n`);
-        this.elegirNumeroDePlenos(conjuntoDePlenos, cantFichas);
+        this.elegirNumeroDePlenos(conjuntoDePlenos, cantFichas, 0);
       } else {
         console.error(`${(error as OpcionInvalidaError).message}\n`);
-        this.elegirNumeroDePlenos(conjuntoDePlenos, cantFichas);
+        this.elegirNumeroDePlenos(conjuntoDePlenos, cantFichas, cantNumeros);
       }
     }
   }
