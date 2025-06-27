@@ -14,9 +14,14 @@ export class Craps extends Juego {
     this.dado = new Dado(6);
   }
 
+  private mostrarInstruccionesCraps(): void {
+  console.log(`~~ ${colores.opcionesMenu}${this.jugador.getNombre()}, bienvenido a 🎲 Craps 🎲 ~~\n\n${colores.saludo}Objetivo: predecir el resultado del lanzamiento de dos dados.\nLas apuestas principales son 'Pass Line' y 'Don't Pass Bar'.\n\nPass Line:\n\t🎯 En el primer lanzamiento (Come Out):\n\t\t- Gana si sale 7 u 11.\n\t\t- Pierde si sale 2, 3 o 12 (craps).\n\t\t- Cualquier otro número establece el 'Punto'.\n\t🎯 Luego:\n\t\t- Gana si se repite el Punto antes de que salga un 7.\n\t\t- Pierde si sale 7 antes del Punto.\n\nDon't Pass Bar:\n\t🛑 En el Come Out:\n\t\t- Gana si sale 2 o 3.\n\t\t- Empata (no gana ni pierde) si sale 12.\n\t\t- Pierde si sale 7 u 11.\n\t🛑 Luego:\n\t\t- Gana si sale 7 antes del Punto.\n\t\t- Pierde si se repite el Punto antes de que salga 7.\n\n${colores.neutro}─────────────────────────────────────────────`);
+}
+
   jugar(jugador: Jugador): void {
     this.jugador = jugador; //Inicializamos el jugador en el atributo Jugador de la clase
     console.clear();
+    this.mostrarInstruccionesCraps();
     let apuesta: number
     apuesta = this.pedirApuesta();
     if (apuesta < this.apuestaMin) return;
@@ -27,8 +32,6 @@ export class Craps extends Juego {
   private pedirApuesta(): number {
     let apuesta: number
     do {
-      try {
-        if (super.jugadorApto(this.jugador.getMonedero(), this.apuestaMin)) {
           try {
             apuesta = rdl.questionInt(`\nCuanto dinero deseas apostar? (apuesta minima $${this.apuestaMin}, dispones de $${this.jugador.getMonedero()} para jugar): $`);
             if (super.leAlcanzaParaJugar(apuesta)) {
@@ -50,13 +53,6 @@ export class Craps extends Juego {
             console.error((error as ApuestaInferiorError).message);
             return 0
           }
-        } else {
-          throw new SaldoInsuficienteError();
-        }
-      } catch (error) {
-        console.error((error as SaldoInsuficienteError).message);
-        return 0;
-      }
     } while (apuesta < this.apuestaMin || apuesta > this.jugador.getMonedero())
   }
 
@@ -147,7 +143,7 @@ export class Craps extends Juego {
   private tirarDosDados(): number {
     let dado1: number = this.dado.arrojarDado();
     let dado2: number = this.dado.arrojarDado();
-    console.log(`\n${this.dado.imprimirCaraDado(dado1,dado2)}`);
+    console.log(`\n${this.dado.imprimirCaraDado(dado1, dado2)}`);
     return dado1 + dado2;
   }
 
