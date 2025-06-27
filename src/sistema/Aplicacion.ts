@@ -102,7 +102,7 @@ export class Aplicacion {
       };
       default: {
         this.ejecutarJuego(opcion);
-        break;
+        process.exit(1); //terminamos el proceso
       }
     }
   }
@@ -154,19 +154,20 @@ export class Aplicacion {
     console.log(`${colores.salir}0 Salir${colores.neutro}`);
     console.log("---------------");
     let op: number = this.preguntar(`Elije una opcion: `, 2);
-    if (op === 1) {
+    if (op == 1) {
       try {
-        if (!this.casino.getJuego(opcion - 1).leAlcanzaParaJugar(this.jugador.getMonedero())) {
-          throw new SaldoInsuficienteError();
-        }
+        if (!this.casino.getJuego(opcion - 1).leAlcanzaParaJugar(this.jugador.getMonedero())) throw new SaldoInsuficienteError();
+        this.ejecutarJuego(opcion);
       } catch (error) {
         console.clear();
         console.error(`${(error as SaldoInsuficienteError).message}\n`);
         this.mostrarMenu();
       }
-      this.ejecutarJuego(opcion);
-    } else if (op === 0) {
-      this.exportarSaldo(); return;
+    }
+    if (op == 0) {
+      this.exportarSaldo();
+      console.log(`${colores.salir}Gracias por jugar!${colores.neutro}`);
+      return;
     }
     else {
       console.clear();
@@ -195,7 +196,6 @@ export class Aplicacion {
       if (!fs.existsSync(carpeta)) { //si no existe la carpeta...
         fs.mkdirSync(carpeta); // la creamos con mkdirSync
       }
-
       fs.appendFileSync(`${carpeta}/${this.jugador.getNombre()}_saldo.txt`, `${fechaHora}\nDinero en cuenta: $${this.jugador.getMonedero()}\n\n`);
       console.log(`${colores.saludo}Saldo guardado correctamente.${colores.neutro} `);
     } catch (error) {
