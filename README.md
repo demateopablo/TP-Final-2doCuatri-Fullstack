@@ -8,6 +8,7 @@
 - [Instrucciones para ejecutar](#instrucciones-para-ejecutar-el-proyecto-localmente)
 - [Consideraciones](#consideraciones)
 - [Capturas de pantalla]()
+- [Links adicionales](#links-adicionales)
 
 ## 🎰 Casino Money.for{nothing}
 Este proyecto simula un casino virtual llamado Money.for{Nothing}, en el que se puede jugar y apostar dinero ficticio en distintos juegos de azar. Incluye los siguientes juegos:
@@ -135,3 +136,11 @@ npm run start
 ![image](https://github.com/user-attachments/assets/2a0b5469-fb6a-4551-8eaf-e92b04c5ca73)
 
 [Ir arriba ⬆️](#%C3%ADndice)
+
+--------------
+
+### Links adicionales
+
+Trello: https://trello.com/invite/b/682fab546ba3d5bb9a0348e6/ATTIe4a213e577c1836ba0bfff4f731930d5DDE43F33/moneyfornothing
+
+Diagrama: https://drive.google.com/file/d/1LY2iIGgpzLpWZNnEpw-nfDi_TgtMYw2W/view?usp=sharing (Lo abris con draw.io)
